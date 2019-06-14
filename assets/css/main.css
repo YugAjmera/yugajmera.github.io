@@ -3726,20 +3726,13 @@ input, select, textarea {
 		/* Nav */
 
 			#nav {
-				height: 44px;
-				line-height: 44px;
+				height: 7em;
+				margin-bottom: 1em;
 			}
 
-				#nav a {
-					padding: 0 0.75em;
-					height: inherit;
-					line-height: inherit;
-					border-radius: 0;
+			#header.alt {
+					padding: 7em 1em 0.5em 1em;
 				}
-
-					#nav a:hover {
-						background-color: transparent;
-					}
 	}
 
 
