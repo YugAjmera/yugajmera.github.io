@@ -3718,3 +3718,29 @@ input, select, textarea {
 			}
 
 		}
+
+/* Small */
+
+	@media screen and (max-width: 736px) {
+
+		/* Nav */
+
+			#nav {
+				height: 44px;
+				line-height: 44px;
+			}
+
+				#nav a {
+					padding: 0 0.75em;
+					height: inherit;
+					line-height: inherit;
+					border-radius: 0;
+				}
+
+					#nav a:hover {
+						background-color: transparent;
+					}
+	}
+
+
+		
