@@ -13,8 +13,7 @@
 			<div id="wrapper">
 
 				<!-- Header -->
-				<header id="header" class="alt">
-					<h1>Yug Ajmera</h1>
+				<header id="header">
 				</header>
 
 				<!-- Nav -->
@@ -23,7 +22,7 @@
 							<li><a href="index.html">Home</a></li>
 							<li><a href="#projects" class="active">Projects</a></li>
 							<li><a href="internships.html">Internships</a></li>
-							<li><a href="coc.html" >Co-Curriculars</a></li>
+							<li><a href="coc.html">Co-Curriculars</a></li>
 						</ul>
 					</nav>
                 
@@ -32,144 +31,162 @@
 
                         <!-- Project -->
                         <section id="projects" class="main">
-                            <div class="content">
-                                <header class="major">
+							<header class="major">
 									<h2>Projects</h2>
-								</header>
+							</header>
+                            <div class="content">
+                                <h2><strong><u>Mobile Robotics</u></strong></h2>
 							</div>
 							
 							<div class="box alt">
 								<div class="row gtr-uniform">
-									<div class="col-9">
-										<h2 style="font-weight: 600;">line_maze_ros</h2>
-										<h4>August 2019</h4><p></p>
-										<p>A ROS package for solving line mazes using OpenCV. Implemented multiple centroid tracking algorithm to follow lines and used the left-hand rule to solve the maze. The results of the algorithm were verified using Gazebo simulations.
-										</p>
-										<ul class="actions">
-											<li><a href="https://github.com/YugAjmera/line_maze_ros" target="_blank" class="button small">View Project</a></li>
-										</ul>
-									</div>
-									<div class="col-3"><span class="image fit"><img src="images/projects/maze.png" alt="" /></span></div>
 									
-									<div class="col-9">
-										<h2 style="font-weight: 600;">teleop_keyboard_omni3</h2>
-										<h4>March 2019</h4><p></p>
-                                		<p>A Generic keyboard teleop for three-wheeled omnidirectional robots. Performed motion analysis of three-wheeled robots and extended the results to develop the control algorithm.
-											This package has been added to ROS package index. The code was initially tested on a Gazebo simulation
-											and then extended to an actual robot.
-										</p>
-                                		<ul class="actions">
-                                   		 	<li><a href="https://github.com/YugAjmera/teleop_keyboard_omni3" target="_blank" class="button small">View Project</a></li>
+									<div class="col-7">
+										<h2>Telepresence Robot</h2>
+										<p>Worked under Dr. Arshad Javed for the development of a three-wheel omni-drive telepresence robot. The autonomous
+											control is achieved by recognizing the person to be tracked bi-directionally through an ego-centric framework.
+										<ul class="actions">
+											<li><a href="https://drive.google.com/file/d/1fAHnDjY4ETm32kIUIkoeciD73P8RBw8F/view?usp=sharing" target="_blank" class="button small">Link to Paper</a></li>
 										</ul>
+										</p>
+									</div>
+									<div class="col-5"><span class="image fit"><img src="images/projects/tele.png" alt="" /></span></div>
+									
+
+									<div class="col-5"><span class="image fit"><img src="images/projects/rui.png" alt="" /></span></div>
+									<div class="col-7">
+										<h2>Robot User Interface</h2>
+										<p>It is a suite of remote driving tools. Employed utilties such as robot web tools, roslibjs, rosbridge and roswww to create web interfaces that allow users
+											to teleoperate as well as autonomously navigate mobile robots in unknown environments.
+										</p>
+									</div>
+
+									<div class="col-9">
+										<h2>teleop_keyboard_omni3</h2>
+										<p>A Generic keyboard teleop for three-wheeled omnidirectional robots. Performed motion analysis of three-wheeled robots and extended the results to develop the control algorithm.
+												This package has been added to ROS package index. The code was initially tested on a Gazebo simulation
+												and then extended to an actual robot.
+										<ul class="actions">
+												<li><a href="https://github.com/YugAjmera/teleop_keyboard_omni3" target="_blank" class="button small">View Project</a></li>
+										</ul>
+										</p>
 									</div>
 									<div class="col-3"><span class="image fit"><img src="images/projects/teleop.png" alt="" /></span></div>
 									
-									<div class="col-9">
-										<h2 style="font-weight: 600;">navros_pkg</h2>
-										<h4>February 2019</h4><p></p>
-										<p>A ROS package for autonomous navigation of differential drive robots.  Implemented ROS Navigation stack on a Gazebo simulation of a differential driven car. SLAM algorithm is used for mapping and creating local and gloabal cost maps. Used Dijkstra's algorithm for path planning and the robot localization is carried out using Monte Carlo localization algorithm.</p>
+
+									<div class="col-4"><span class="image fit"><img src="images/projects/nav.png" alt="" /></span></div>
+									<div class="col-8">
+										<h2>Autonomous navigation of differential drive robots</h2>
+										<p>Implemented ROS Navigation stack on a Gazebo simulation of a differential driven car. SLAM algorithm is used for mapping and creating local and global cost maps. Used Dijkstra's algorithm for path planning and the robot localization is carried out using Monte Carlo localization algorithm.
                                 		<ul class="actions">
 											<li><a href="https://github.com/YugAjmera/navros_pkg" target="_blank" class="button small" >View Project</a></li>
 										</ul>
+										</p>
 									</div>
-									<div class="col-3"><span class="image fit"><img src="images/projects/nav.png" alt="" /></span></div>
-								
+								</div>
+							</div>
+							
+							<div class="content">
+									<h2><strong><u>Aerial Robotics</u></strong></h2>
+							</div>
 
-									<!-- Hidden Contents-->
-									<span id="dots"></span><span id="more">
-										<div class="row gtr-150">
+							<div class="box alt">
+								<div class="row gtr-uniform">
 
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Hexacopter</h2>
-												<h4>August 2018</h4><p></p>
-												<p>A six rotor drone built using the APM Flight controller. This project was funded under Student's Union Technical Challenge 2018.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/2018/08/hexcopter.html" target="_blank" class="button small" >View Project</a></li>
-												</ul>
+									<div class="col-7">
+										<h2>Visual navigation for quadrotor</h2>
+										<p>Implemented Monocular SLAM using PTAM (Parallel Tracking and Mapping) on a Gazebo simulation of a quadrotor.
+										<ul class="actions">
+											<li><a href="https://github.com/YugAjmera/quadrotor_ros" target="_blank" class="button small" >View Project</a></li>
+										</ul>
+										</p>
+									</div>
+									<div class="col-5"><span class="image fit"><img src="images/projects/vis.png" alt="" /></span></div>
+									
+
+									<div class="col-3"><span class="image fit"><img src="images/projects/auto.jpg" alt="" /></span></div>
+									<div class="col-9">
+										<h2>Autonomous control of Drone using on-board micro-controller</h2>
+										<p>Currently working under Dr.Paresh Saxena to build a Hexarotor based on Raspberry Pi equipped with RGB-D camera. The autonomous behavior will
+											be implemented onboard using the ROS framework.
+										</p>
+									</div>
+									</div>
+							</div>
+							
+							<div class="content">
+									<h2><strong><u>Industrial Robotics</u></strong></h2>
+							</div>
+
+							<div class="box alt">
+									<div class="row gtr-uniform">
+	
+											<div class="col-7">
+											<h2>Robotic Arm</h2>
+											<p>Created a custom URDF model of a manipulator robot in Gazebo and performed motion planning using MoveIt and
+												python scripts.
+											<ul class="actions">
+												<li><a href="https://github.com/YugAjmera/rosarm_pkg" target="_blank" class="button small" >View Project</a></li>
+											</ul>
+											</p>
 											</div>
-											<div class="col-3"><span class="image fit"><img src="images/projects/hex.png" alt="" /></span></div>
+											<div class="col-5"><span class="image fit"><img src="images/projects/rosarm.png" alt="" /></span></div>
 											
+									</div>
+							</div>
+
+							<div class="content">
+									<h2><strong><u>Medical Robotics</u></strong></h2>
+							</div>
+
+							<div class="box alt">
+									<div class="row gtr-uniform">
+	
+											<div class="col-8">
+											<h2>Smart Spoon</h2>
+											<p>Fabrication of Low-cost spoon for people with hand tremors.This project is being done under Dr.Sujith R. and Dr.Amrita Priyadarshini. The PID control algorithm will be used
+												to keep the spoon stable and the body will be 3D printed.</p>
+											</div>
+											<div class="col-4"><span class="image fit"><img src="images/projects/spoon.png" alt="" /></span></div>
+											
+									</div>
+							</div>
+
+
+							<div class="content">
+									<h2><strong><u>Arduino Projects</u></strong></h2>
+							</div>
+
+							<div class="box alt">
+									<div class="row gtr-uniform">
+	
 											<div class="col-9">
-												<h2 style="font-weight: 600;">Humanoid Robot</h2>
-												<h4>May 2018</h4><p></p>
-												<p>It is a 8 DOF biped robot capable of walking autonomously like Humans. Based on Arduino, this robot consists of legs made up of servo motors which rotate simultaneously to create human-like walking. Designed the robot on Solidworks and wrote the walking algorithm.</p>
+												<h2>Humanoid Robot</h2>
+												<p>This project deals with the development of a simple 8 DOF Biped Humanoid robot. Designed the robot on Solidworks and wrote the walking algorithm.</p>
 												<ul class="actions">
 													<li><a href="https://github.com/YugAjmera/Biped-Humanoid" target="_blank" class="button small" >View Project</a></li>
 												</ul>
 											</div>
 											<div class="col-3"><span class="image fit"><img src="images/projects/Capture2.JPG" alt="" /></span></div>
-
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Radar using Processing 3</h2>
-												<h4>March 2018</h4><p></p>
-												<p>A constantly moving scanner which measures the distance from the surroundings and shows it on screen using Processing 3 software. It is a object detection system that uses ultrasonic sensor to determine the distance.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/p/radar-sonar-using-processing-3.html" target="_blank" class="button small" >View Project</a></li>
-												</ul>
-											</div>
-											<div class="col-3"><span class="image fit"><img src="images/projects/radar.png" alt="" /></span></div>
+											
 												
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Voice Controlled Car</h2>
-												<h4>February 2018</h4><p></p>
-												<p>Most viewed project with 24k+ views on Arudino.cc. A robot which can be controlled using specific voice commands. Speech to Text functionality is used to convert voice commands to text that are then sent to Arduino through Bluetooth communication.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/p/voice-controlled-car.html" target="_blank" class="button small" >View Project</a></li>
-												</ul>
-											</div>
 											<div class="col-3"><span class="image fit"><img src="images/projects/voice.png" alt="" /></span></div>
+											<div class="col-9">
+												<h2>Voice Controlled Car</h2>
+												<h4>February 2018</h4>
+												<p>A robot that can be controlled using specific voice commands. Speech-to-Text is used to convert voice commands to text that are then sent to Arduino through Bluetooth communication. It is the most viewed project with 30K+ views on Arudino.cc.</p>
+												<ul class="actions">
+													<li><a href="https://create.arduino.cc/projecthub/Yug_Ajmera/voice-controlled-car-983ef1" target="_blank" class="button small" >View Project</a></li>
+												</ul>
+											</div>
 											
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Mobile Controlled Car</h2>
-												<h4>February 2018</h4><p></p>
-												<p>A robot which can be controlled by a mobile phone using an android application. The communication of mobile phone and Arduino is achieved with the use of Bluetooth. The robot can be controlled using a joystick or by tilt movements of the phone.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/p/mobile-controlled-car.html" target="_blank" class="button small" >View Project</a></li>
-												</ul>
-											</div>
-											<div class="col-3"><span class="image fit"><img src="images/projects/car.JPG" alt="" /></span></div>
-												
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Secret clap door lock</h2>
-												<h4>December 2017</h4><p></p>
-												<p>A door lock which opens only when a particular pattern of claps are detected. An Arduino based system is created which hears the pattern of claps and compares it with the saved pattern. If both matches, the lock opens.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/p/secret-clap-door-lock.html" target="_blank" class="button small" >View Project</a></li>
-												</ul>
-											</div>
-											<div class="col-3"><span class="image fit"><img src="images/projects/clap.png" alt="" /></span></div>
-
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Gesture Controlled Robot</h2>
-												<h4>September 2017</h4><p></p>
-												<p>Based on Arduino, it is an automated robot which is controlled by human hand gestures. Tilt of the hand actually determines the direction of the movement of the robot.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/p/i-navigate.html" target="_blank" class="button small" >View Project</a></li>
-												</ul>
-											</div>
-											<div class="col-3"><span class="image fit"><img src="images/projects/gesture.png" alt="" /></span></div>
 											
-											<div class="col-9">
-												<h2 style="font-weight: 600;">Line Follower</h2>
-												<h4>September 2017</h4><p></p>
-												<p>An autonomous mobile robot created using Arduino, that can detect and follow the line drawn on the floor followed by a feedback mechanism. Generally, the path is predefined and can be visible as a black line on a white surface.</p>
-												<ul class="actions">
-													<li><a href="https://yainnoware.blogspot.com/p/basics-line-follower.html" target="_blank" class="button small" >View Project</a></li>														</ul>
-											</div>
-											<div class="col-3"><span class="image fit"><img src="images/projects/line.png" alt="" /></span></div>
-										</div>
-									</span>
-									<ul class="actions special">
-										<button onclick="myFunction()" id="myBtn" class="button primary fit small">View All</button>		
-									</ul>
 								</div>
 							</div>
 
-								
-							</div>
                         </section>
 					</div>
-		<p></p>
+		
 		</div>
 
 	<!-- Scripts -->

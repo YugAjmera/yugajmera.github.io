@@ -99,11 +99,7 @@ input, select, textarea {
 	}
 
 	body {
-		background-color: #935d8c;
-		background-image: url("images/overlay.png"), -moz-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
-		background-image: url("images/overlay.png"), -webkit-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
-		background-image: url("images/overlay.png"), -ms-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
-		background-image: url("images/overlay.png"), linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
+		background-color: #ffffff;
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -120,8 +116,8 @@ input, select, textarea {
 /* Type */
 
 	body {
-		background-color: #935d8c;
-		color: rgba(255, 255, 255, 0.65);
+		background-color: #ffffff;
+		color: rgba(0, 0, 0, 0.65);
 	}
 
 	body, input, select, textarea {
@@ -194,9 +190,10 @@ input, select, textarea {
 		}
 
 	h1, h2, h3, h4, h5, h6 {
-		font-weight: 400;
+		font-weight: 300;
 		line-height: 1.5;
 		margin: 0 0 0.7em 0;
+		letter-spacing: -0.025em;
 	}
 
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
@@ -207,8 +204,6 @@ input, select, textarea {
 	h1 {
 		font-size: 2.5em;
 		line-height: 1.2;
-		font-weight: 600;
-                letter-spacing: 0.06em;
 	}
 
 	h2 {
@@ -221,7 +216,6 @@ input, select, textarea {
 
 	h4 {
 		font-size: 1.1em;
-		margin: 0 0 0em 0;
 	}
 
 	h5 {
@@ -235,7 +229,7 @@ input, select, textarea {
 	@media screen and (max-width: 736px) {
 
 		h1 {
-			font-size: 4em;
+			font-size: 2em;
 		}
 
 	}
@@ -332,7 +326,6 @@ input, select, textarea {
 	hr {
 		border-bottom-color: rgba(255, 255, 255, 0.35);
 	}
-
 /* Row */
 
 	.row {
@@ -2169,7 +2162,7 @@ input, select, textarea {
 
 		select option {
 			color: #ffffff;
-			background: #935d8c;
+			background: #ffffff;
 		}
 
 	input[type="checkbox"] + label,
@@ -2187,7 +2180,7 @@ input, select, textarea {
 	input[type="radio"]:checked + label:before {
 		background-color: #ffffff;
 		border-color: #ffffff;
-		color: #935d8c;
+		color: #ffffff;
 	}
 
 	input[type="checkbox"]:focus + label:before,
@@ -3004,6 +2997,7 @@ input, select, textarea {
 		.spotlight .image {
 			display: inline-block;
 			margin-left: 4em;
+			margin-top: 0em;
 			padding: 0.65em;
 			border-radius: 100%;
 			border: solid 1px;
@@ -3012,7 +3006,7 @@ input, select, textarea {
 			.spotlight .image img {
 				display: block;
 				border-radius: 100%;
-				width: 16em;
+				width: 12em;
 			}
 
 		@media screen and (max-width: 980px) {
@@ -3052,7 +3046,7 @@ input, select, textarea {
 					-ms-flex: 0 1 auto;
 					flex: 0 1 auto;
 					margin-left: 0;
-					margin-bottom: 2em;
+					margin-bottom: 0em;
 				}
 
 		}
@@ -3064,7 +3058,7 @@ input, select, textarea {
 			}
 
 				.spotlight .image img {
-					width: 12em;
+					width: 8em;
 				}
 
 		}
@@ -3076,7 +3070,7 @@ input, select, textarea {
 /* Header */
 
 	#header {
-		padding: 5em 5em 1em 5em ;
+		padding: 0em 5em 1em 5em ;
 		text-align: center;
 	}
 
@@ -3248,7 +3242,7 @@ input, select, textarea {
 			color: #383838;
 			text-decoration: none;
 			outline: 0;
-			font-weight: 500;
+			font-weight: 300;
 			border-top-left-radius: 0.25em;
 			border-top-right-radius: 0.25em;
 			border-bottom-left-radius: 0.25em;
@@ -3267,6 +3261,7 @@ input, select, textarea {
 			}
 
 			#nav a.active {
+				font-weight: 500;
                                 color: #383838;
 				background: #ffffff;
 			}
@@ -3574,7 +3569,7 @@ input, select, textarea {
 		@media screen and (max-width: 736px) {
 
 			#main > .main {
-				padding: 3em 2em 1em 2em ;
+				padding: 4.5em 2em 1em 2em ;
 			}
 
 				#main > .main > .image.main:first-child {
@@ -3587,7 +3582,7 @@ input, select, textarea {
 		@media screen and (max-width: 480px) {
 
 			#main > .main {
-				padding: 3em 1.5em 1em 1.5em ;
+				padding: 4.5em 1.5em 1em 1.5em ;
 			}
 
 				#main > .main > .image.main:first-child {
@@ -3604,7 +3599,7 @@ input, select, textarea {
 			}
 
 				#main > .main {
-					padding: 2.5em 1em 0.5em 1em ;
+					padding: 4.5em 1em 0.5em 1em ;
 				}
 
 					#main > .main > .image.main:first-child {
