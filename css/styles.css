@@ -92,19 +92,13 @@ p {
 }
 
 li{
-  margin-top: 0.5rem;
+  color: #515151;
 }
 
 .space{
   margin-bottom: 2rem;
 }
 
-.light{
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #515151;
-  line-height: 1.5;
-}
 
 abbr[title],
 abbr[data-original-title] {
