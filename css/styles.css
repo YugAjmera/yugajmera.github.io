@@ -103,6 +103,17 @@ li{
   margin-bottom: 4rem;
 }
 
+.table{
+  overflow-y:scroll;
+  height:100px;
+  display:block;
+  background-color: var(--light);
+}
+
+.light{
+  color: #515151;
+}
+
 
 abbr[title],
 abbr[data-original-title] {
