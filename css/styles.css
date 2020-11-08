@@ -91,10 +91,9 @@ p {
   color: #515151;
 }
 
-
-
-.space{
-  margin-bottom: 2rem;
+.smallsize {
+  margin-bottom: 0.5rem;
+  line-height: 1.9rem;
 }
 
 .bigspace{
@@ -183,12 +182,12 @@ sup {
 }
 
 a {
-  color: #268BD2;
+  color: #2a7ae2;
   text-decoration: none;
   background-color: transparent;
 }
 a:hover {
-  color: #268BD2;
+  color: #6da4eb;
   text-decoration: underline;
 }
 
