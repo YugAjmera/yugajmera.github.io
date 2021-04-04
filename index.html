@@ -34,9 +34,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#home">Home</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#portfolio">Experience</a></li> 
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#pubs">Publications</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#projs">Projects</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#und">Undergraduate Work</a></li>
                     </ul>
                 </div>
             </div>
@@ -100,236 +98,256 @@
             </div>
         </section>
 
-        <!-- Experience-->
-        <section class="page-section bg-light" id="portfolio">
+        <!-- Undergraduate -->
+        <section class="page-section bg-light" id="und">
             <div class="container">
                 <div class="text-center">
-                    <h2 class="section-heading">Experience</h2>
-                    <h4 class="subhead text-muted">Research Experience</h4>
+                    <h2 class="section-heading">Undergraduate Work</h2>
+                <h5>
+                <button class="btn-dark" onclick="document.getElementById('undexp').style.display = 'block', document.getElementById('undpub').style.display = 'none',  document.getElementById('undproj').style.display = 'none'">Experience</button>
+                <button class="btn-dark" onclick="document.getElementById('undexp').style.display = 'none', document.getElementById('undpub').style.display = 'block',  document.getElementById('undproj').style.display = 'none'">Publications</button>
+                <button class="btn-dark" onclick="document.getElementById('undexp').style.display = 'none', document.getElementById('undpub').style.display = 'none',  document.getElementById('undproj').style.display = 'block'">Projects</button>
+                </h5>
+            </div>
+        </section>
+
+        <!-- Experience-->
+        <div id="undexp" style="display:none;">
+            <section class="page-section bg-light" id="portfolio">
+                <div class="container">
+                    <div class="text-center">
+                        <h3 class="section-subheading">Research Experience</h3>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="portfolio-item">
+                                <a class="portfolio-link" data-toggle="modal" href="#tud">
+                                    <div class="portfolio-hover">
+                                        <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img class="img-fluid" src="assets/img/exp/ellenoid.jpg" alt="" />
+                                </a>
+                                <div class="portfolio-caption">
+                                    <div class="portfolio-caption-heading light">Intelligent Autonomous Systems Institute</div>
+                                    <div class="text-muted"><i>TU Darmstadt</i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="portfolio-item">
+                                <a class="portfolio-link" data-toggle="modal" href="#iml">
+                                    <div class="portfolio-hover">
+                                        <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img class="img-fluid" src="assets/img/exp/iml.png" alt="" />
+                                </a>
+                                <div class="portfolio-caption">
+                                    <div class="portfolio-caption-heading light">Intelligent Manipulation Lab</div>
+                                    <div class="text-muted"><i>University of Lincoln</i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="portfolio-item">
+                                <a class="portfolio-link" data-toggle="modal" href="#bits">
+                                    <div class="portfolio-hover">
+                                        <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img class="img-fluid" src="assets/img/exp/bh.png" alt="" />
+                                </a>
+                                <div class="portfolio-caption">
+                                    <div class="portfolio-caption-heading light">Robotics and Mechatronics Lab</div>
+                                    <div class="text-muted"><i>BITS Hyderabad</i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <p class="bigspace"></p>
+
+                    <h3 class="section-subheading text-center">Work Experience</h3>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="portfolio-item">
+                                <a class="portfolio-link" data-toggle="modal" href="#techno">
+                                    <div class="portfolio-hover">
+                                        <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img class="img-fluid" src="assets/img/exp/techno.png" alt="" />
+                                </a>
+                                <div class="portfolio-caption">
+                                    <div class="portfolio-caption-heading light">Technoyantra</div>
+                                    <div class="text-muted"><i>Robotics Intern</i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="portfolio-item">
+                                <a class="portfolio-link" data-toggle="modal" href="#aptri">
+                                    <div class="portfolio-hover">
+                                        <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img class="img-fluid" src="assets/img/exp/aptri.jpg" alt="" />
+                                </a>
+                                <div class="portfolio-caption">
+                                    <div class="portfolio-caption-heading light">APTRI Labs</div>
+                                    <div class="text-muted"><i>Summer Intern</i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 mb-4">
+                            <div class="portfolio-item">
+                                <a class="portfolio-link" data-toggle="modal" href="#vinnan">
+                                    <div class="portfolio-hover">
+                                        <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                    </div>
+                                    <img class="img-fluid" src="assets/img/exp/vinnan3.png" alt="" />
+                                </a>
+                                <div class="portfolio-caption">
+                                    <div class="portfolio-caption-heading light">Vinnan Labs</div>
+                                    <div class="text-muted"><i>Research Intern</i></div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="#tud">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                                </div>
-                                <img class="img-fluid" src="assets/img/exp/ellenoid.jpg" alt="" />
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading light">Intelligent Autonomous Systems Institute</div>
-                                <div class="text-muted"><i>TU Darmstadt</i></div>
-                            </div>
-                        </div>
+            </section>
+        </div>
+
+        <!-- Publications-->
+        <div id="undpub" style="display:none;">   
+            <section class="page-section bg-light" id="pubs">
+                <div class="container">
+                    <div class="text-center">
+                        <h3 class="section-subheading">Publications</h3>
                     </div>
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="#iml">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                                </div>
-                                <img class="img-fluid" src="assets/img/exp/iml.png" alt="" />
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading light">Intelligent Manipulation Lab</div>
-                                <div class="text-muted"><i>University of Lincoln</i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="#bits">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                                </div>
-                                <img class="img-fluid" src="assets/img/exp/bh.png" alt="" />
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading light">Robotics and Mechatronics Lab</div>
-                                <div class="text-muted"><i>BITS Hyderabad</i></div>
-                            </div>
-                        </div>
-                    </div>
+
+                    <p class="bigspace"></p>
+
+                    <ul>
+                        <li>
+                            <p>
+                            R. Mishra, <b>Y. Ajmera</b>, N. Mishra, and A. Javed, "Ego-Centric framework for a three-wheel omni-drive Telepresence robot", in <i>2019 IEEE International Conference on Advanced Robotics and its Social Impacts (ARSO)</i>.
+                            <a href="https://ieeexplore.ieee.org/document/8948789" target="_blank">[Paper]</a>
+                        </p>
+                        </li>
+
+                        <p class="smallspace"></p> 
+
+                        <li>
+                            <p>
+                                <b>Y. Ajmera</b> and A. Javed, “Shared Autonomy in Web-Based Human Robot Interaction”, in <i>Proceedings of SAI Intelligent Systems Conference 2020</i>, Advances in Intelligent Systems and Computing, Springer.
+                            <a href="https://link.springer.com/chapter/10.1007/978-3-030-55190-2_55" target="_blank">[Paper]</a> <a href="https://drive.google.com/file/d/1ove0Qhy3wSoUMDC7wtdMdf1DFUIf-C5B/view?usp=sharing" target="_blank">[Talk]</a>    
+                        </p>
+                        </li>
+
+                        <p class="smallspace"></p> 
+
+                        <li>
+                            <p>
+                                <b>Y. Ajmera</b> and S.P. Singh, “Autonomous UAV-based Target Search, Tracking and Following using Reinforcement Learning and YOLOFlow”, in <i>2020 IEEE International Symposium on Safety, Security, and Rescue Robotics (SSRR)</i>.
+                        
+                            <a href="https://ieeexplore.ieee.org/abstract/document/9292630" target="_blank">[Paper]</a> <a href="https://drive.google.com/file/d/15rKVVIdKCDM4k0NY-_uAGe8pO0jSXiLP/view?usp=sharing" target="_blank">[Talk]</a>
+                        </p>
+                        </li>
+                    </ul>
                 </div>
+            </section>
+        </div>
+
+            
+        <!-- Projects-->
+        <div id="undproj" style="display:none;">
+            <section class="page-section bg-light" id="projs">
+                <div class="container">
+                    <div class="text-center">
+                        <h3 class="section-subheading">Past Projects</h3>
+                    </div>
+
+                    <p class="bigspace"></p>
+
+            
+                    <ul>
+                        <li>
+                            <p><b>Autonomous UAV framework for search and rescue mission</b>: Applied approximated Q-learning algorithm with a PID position controller to search for a target in an unknown cluttered
+                                environment. Uniquely combined YOLO with Optical Flow to track and follow the target victim until rescue.
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Biped-humanoid robot</b>: Designed the robot on Solidworks, integrated the electronics, fabricated and assembled it. Developed a static walking
+                                algorithm and validated it on the robot.
+                                <a href="https://github.com/YugAjmera/Biped-Humanoid" target="_blank">[code]</a>
+                                <a href="https://www.youtube.com/watch?v=5w3RGbZgTs0" target="_blank">[video]</a>
+                            </p>
+                        </li>
+
+                        <li>
+                            <p><b>Smart spoon</b>: Fabricated a 3D printed low-cost spoon for people with hand tremors. Used an inertial measurement unit(IMU) to sense tremors and applied a PID control algorithm to keep the spoon stable. 
+                            </p>
+                        </li>
+
+                        <li>
+                            <p><b>Line Maze solver using OpenCV & ROS</b>: Implemented multiple centroid tracking algorithm to follow lines and used the left-hand rule to solve the maze. The
+                                results of the algorithm were verified using Gazebo simulations.
+                            <a href="https://github.com/YugAjmera/line_maze_ros" target="_blank">[code]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Hexacopter</b>: Successfully built a Hexarotor based on the pixhawk flight controller equipped with GPS and telemetry modules.
+                            <a href="https://yainnoware.blogspot.com/2018/08/hexcopter.html" target="_blank">[link]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Robotic arm</b>: Created custom urdf model of a robot manipulator in gazebo and performed motion planning using Moveit and python scripts.
+                            <a href="https://github.com/YugAjmera/rosarm_pkg" target="_blank">[code]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Voice Controlled Car</b>: Built a car that can be controlled using specific voice commands. It has about 50K+ views on Arudino.cc.
+                            <a href="https://create.arduino.cc/projecthub/Yug_Ajmera/voice-controlled-car-983ef1" target="_blank">[link]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Visual navigation for quadrotor</b>: Implemented Monocular SLAM using PTAM (Parallel Tracking and Mapping) on a Gazebo simulation of a quadrotor.
+                            <a href="https://github.com/YugAjmera/quadrotor_ros" target="_blank">[code]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Radar using Processing 3</b>: Object detection system that measures the distance from the surroundings and shows it on screen using the Processing 3 software.
+                            <a href="https://yainnoware.blogspot.com/p/radar-sonar-using-processing-3.html" target="_blank">[link]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Mobile Controlled Car</b>: Developed a mobile robot that can be controlled by a mobile phone using an android application.
+                                <a href="https://yainnoware.blogspot.com/p/mobile-controlled-car.html" target="_blank">[link]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Secret Clap door lock</b>: Built arduino based system that hears the pattern of claps and compares it with the saved pattern. If both matches, the lock opens.
+                            <a href="https://yainnoware.blogspot.com/p/secret-clap-door-lock.html" target="_blank">[link]</a>
+                            </p>
+                        </li>
+                        <li>
+                            <p><b>Gesture controlled car</b>: Created a mobile robot that can be controlled by human hand gestures. Tilt of the hand determines the direction of the movement of the car.
+                            <a href="https://yainnoware.blogspot.com/p/i-navigate.html" target="_blank">[link]</a>
+                            </p>
+                        </li>
+                    </ul>
                 
 
                 <p class="bigspace"></p>
 
-                <h4 class="subhead text-center text-muted">Work Experience</h4>
                 <div class="row">
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="#techno">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                                </div>
-                                <img class="img-fluid" src="assets/img/exp/techno.png" alt="" />
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading light">Technoyantra</div>
-                                <div class="text-muted"><i>Robotics Intern</i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="#aptri">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                                </div>
-                                <img class="img-fluid" src="assets/img/exp/aptri.jpg" alt="" />
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading light">APTRI Labs</div>
-                                <div class="text-muted"><i>Summer Intern</i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="portfolio-item">
-                            <a class="portfolio-link" data-toggle="modal" href="#vinnan">
-                                <div class="portfolio-hover">
-                                    <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
-                                </div>
-                                <img class="img-fluid" src="assets/img/exp/vinnan3.png" alt="" />
-                            </a>
-                            <div class="portfolio-caption">
-                                <div class="portfolio-caption-heading light">Vinnan Labs</div>
-                                <div class="text-muted"><i>Research Intern</i></div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </section>
-    
-
-        <!-- Publications-->
-        <section class="page-section" id="pubs">
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-heading">Publications</h2>
+                    <img class="img-fluid" src="assets/img/projects/final.png" alt="" /> 
                 </div>
-
-                <p class="bigspace"></p>
-
-                <ul>
-                    <li>
-                        <p>
-                        R. Mishra, <b>Y. Ajmera</b>, N. Mishra, and A. Javed, "Ego-Centric framework for a three-wheel omni-drive Telepresence robot", in <i>2019 IEEE International Conference on Advanced Robotics and its Social Impacts (ARSO)</i>.
-                        <a href="https://ieeexplore.ieee.org/document/8948789" target="_blank">[Paper]</a>
-                    </p>
-                    </li>
-
-                    <p class="smallspace"></p> 
-
-                    <li>
-                        <p>
-                            <b>Y. Ajmera</b> and A. Javed, “Shared Autonomy in Web-Based Human Robot Interaction”, in <i>Proceedings of SAI Intelligent Systems Conference 2020</i>, Advances in Intelligent Systems and Computing, Springer.
-                        <a href="https://link.springer.com/chapter/10.1007/978-3-030-55190-2_55" target="_blank">[Paper]</a> <a href="https://drive.google.com/file/d/1ove0Qhy3wSoUMDC7wtdMdf1DFUIf-C5B/view?usp=sharing" target="_blank">[Talk]</a>    
-                    </p>
-                    </li>
-
-                    <p class="smallspace"></p> 
-
-                    <li>
-                        <p>
-                            <b>Y. Ajmera</b> and S.P. Singh, “Autonomous UAV-based Target Search, Tracking and Following using Reinforcement Learning and YOLOFlow”, in <i>2020 IEEE International Symposium on Safety, Security, and Rescue Robotics (SSRR)</i>.
-                       
-                        <a href="https://ieeexplore.ieee.org/abstract/document/9292630" target="_blank">[Paper]</a> <a href="https://drive.google.com/file/d/15rKVVIdKCDM4k0NY-_uAGe8pO0jSXiLP/view?usp=sharing" target="_blank">[Talk]</a>
-                    </p>
-                    </li>
-                </ul>
             </div>
-        </section>
-
-         <!-- Projects-->
-         <section class="page-section bg-light" id="projs">
-            <div class="container">
-                <div class="text-center">
-                    <h2 class="section-heading">Past Projects</h2>
-                </div>
-
-                <p class="bigspace"></p>
-
-        
-                <ul>
-                    <li>
-                        <p><b>Autonomous UAV framework for search and rescue mission</b>: Applied approximated Q-learning algorithm with a PID position controller to search for a target in an unknown cluttered
-                            environment. Uniquely combined YOLO with Optical Flow to track and follow the target victim until rescue.
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Biped-humanoid robot</b>: Designed the robot on Solidworks, integrated the electronics, fabricated and assembled it. Developed a static walking
-                            algorithm and validated it on the robot.
-                            <a href="https://github.com/YugAjmera/Biped-Humanoid" target="_blank">[code]</a>
-                            <a href="https://www.youtube.com/watch?v=5w3RGbZgTs0" target="_blank">[video]</a>
-                        </p>
-                    </li>
-
-                    <li>
-                        <p><b>Smart spoon</b>: Fabricated a 3D printed low-cost spoon for people with hand tremors. Used an inertial measurement unit(IMU) to sense tremors and applied a PID control algorithm to keep the spoon stable. 
-                        </p>
-                    </li>
-
-                    <li>
-                        <p><b>Line Maze solver using OpenCV & ROS</b>: Implemented multiple centroid tracking algorithm to follow lines and used the left-hand rule to solve the maze. The
-                            results of the algorithm were verified using Gazebo simulations.
-                        <a href="https://github.com/YugAjmera/line_maze_ros" target="_blank">[code]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Hexacopter</b>: Successfully built a Hexarotor based on the pixhawk flight controller equipped with GPS and telemetry modules.
-                        <a href="https://yainnoware.blogspot.com/2018/08/hexcopter.html" target="_blank">[link]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Robotic arm</b>: Created custom urdf model of a robot manipulator in gazebo and performed motion planning using Moveit and python scripts.
-                        <a href="https://github.com/YugAjmera/rosarm_pkg" target="_blank">[code]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Voice Controlled Car</b>: Built a car that can be controlled using specific voice commands. It has about 50K+ views on Arudino.cc.
-                        <a href="https://create.arduino.cc/projecthub/Yug_Ajmera/voice-controlled-car-983ef1" target="_blank">[link]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Visual navigation for quadrotor</b>: Implemented Monocular SLAM using PTAM (Parallel Tracking and Mapping) on a Gazebo simulation of a quadrotor.
-                        <a href="https://github.com/YugAjmera/quadrotor_ros" target="_blank">[code]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Radar using Processing 3</b>: Object detection system that measures the distance from the surroundings and shows it on screen using the Processing 3 software.
-                        <a href="https://yainnoware.blogspot.com/p/radar-sonar-using-processing-3.html" target="_blank">[link]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Mobile Controlled Car</b>: Developed a mobile robot that can be controlled by a mobile phone using an android application.
-                            <a href="https://yainnoware.blogspot.com/p/mobile-controlled-car.html" target="_blank">[link]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Secret Clap door lock</b>: Built arduino based system that hears the pattern of claps and compares it with the saved pattern. If both matches, the lock opens.
-                        <a href="https://yainnoware.blogspot.com/p/secret-clap-door-lock.html" target="_blank">[link]</a>
-                        </p>
-                    </li>
-                    <li>
-                        <p><b>Gesture controlled car</b>: Created a mobile robot that can be controlled by human hand gestures. Tilt of the hand determines the direction of the movement of the car.
-                        <a href="https://yainnoware.blogspot.com/p/i-navigate.html" target="_blank">[link]</a>
-                        </p>
-                    </li>
-                </ul>
-            
-
-            <p class="bigspace"></p>
-
-            <div class="row">
-                <img class="img-fluid" src="assets/img/projects/final.png" alt="" /> 
-            </div>
+            </section>
         </div>
-        </section>
+    
+       
 
-        
-        <!-- Footer-->
+    <!-- Footer-->
         <footer class="footer py-4">
             <div class="container">
                 <div class="row align-items-center">
