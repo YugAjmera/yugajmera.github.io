@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Decoding Diffusion Models | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/diffusion-models/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/diffusion-models/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Decoding Diffusion Models" />
+<meta property="og:description" content="Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/diffusion-models/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-20T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Decoding Diffusion Models"/>
+<meta name="twitter:description" content="Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Decoding Diffusion Models",
+      "item": "https://yugajmera.github.io/posts/diffusion-models/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Decoding Diffusion Models",
+  "name": "Decoding Diffusion Models",
+  "description": "Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho. et al in 2020.\nThe basic idea behind diffusion models is rather simple. It takes an input image $\\mathbf{x}_0$ and gradually adds Gaussian noise to it through a series of $T$ time steps. We will call this the forward process. A network is then trained to recover the original image by reversing the noising process. By being able to model the reverse process, we can start from random noise and denoise it step-by-step to generate new data.\nForward Diffusion Process Consider an image $\\mathbf{x}_0$ sampled from the real data distribution (or the training set). The subscript denotes the number of time step. The forward process denoted by $q$ is modeled as a Markov chain, where the distribution at a particular time step depends only on the sample from the previous step. The distribution of corrupted samples can be written as, \\begin{align*} q(\\mathbf{x}_{1:T} | \\mathbf{x}_0) \u0026= \\prod_{t=1}^T q(\\mathbf{x}_{t} | \\mathbf{x}_{t-1}) \\tag{1} \\end{align*}\nAt each step of the Markov chain, we add Gaussian noise to $\\mathbf{x}_{t-1}$ producing a new latent variable $\\mathbf{x}_t$. The transition distribution forms a unimodal diagonal Gaussian as, \\begin{equation*} q(\\mathbf{x}_{t} | \\mathbf{x}_{t-1}) = \\mathcal{N} (\\mathbf{x}_t; \\; \\mu_t = \\sqrt{1 - \\beta_t} \\; \\mathbf{x}_{t-1}, \\; \\Sigma_t = \\beta_t \\mathbf{I}) \\tag{2} \\end{equation*} where $\\beta_t$ is the variance of Gaussian at a time step $t$. It is a hyperparameter that follows a fixed schedule such that it increases with time and lies in the range $[0, 1]$.\nHo et al. sets a linear schedule for the variance starting from $\\beta_1 = 10^{-4}$ to $\\beta_T = 0.02$, and $T = 1000$.\nA latent variable $\\mathbf{x}_t$ can be sampled from the distribution $q(\\mathbf{x}_{t} | \\mathbf{x}_{t-1})$ by using the reparameterization trick is as, \\begin{equation*} \\mathbf{x}_{t} = \\sqrt{1 - \\beta_t} \\; \\mathbf{x}_{t-1} + \\sqrt{\\beta_t} \\; \\epsilon_t \\tag{3} \\end{equation*} where $\\epsilon_t \\sim \\mathcal{N}(0, 1)$.\nEquation 3 shows that we need to compute all the previous samples $\\mathbf{x}_{t-1}, …, \\mathbf{x}_{0}$ in order to obtain $\\mathbf{x}_t$, making it expensive. To solve this problem, we define, \\begin{align*} \u0026\\alpha_t = (1 - \\beta_t), \u0026\\bar{\\alpha_t} = \\prod_{s=0}^T \\alpha_s \\end{align*} and rewrite equation 3 in a recursive manner, \\begin{align*} \\mathbf{x}_{t} \u0026= \\sqrt{\\alpha_t} \\; \\mathbf{x}_{t-1} + \\sqrt{1 - \\alpha_t} \\; \\epsilon_t \\\\ \u0026= \\sqrt{\\alpha_t} \\; \\left[ \\sqrt{\\alpha_{t-1}} \\; \\mathbf{x}_{t-2} + \\sqrt{1 - \\alpha_{t-1}} \\; \\epsilon_t \\right] + \\sqrt{1 - \\alpha_t} \\; \\epsilon_t \\\\ \u0026= \\sqrt{\\alpha_t \\alpha_{t-1}} \\; \\mathbf{x}_{t-2} + \\sqrt{ (\\alpha_t)(1 - \\alpha_{t-1}) + (1 - \\alpha_t)} \\; \\epsilon_t \\\\ \u0026= \\sqrt{\\alpha_t \\alpha_{t-1}} \\; \\mathbf{x}_{t-2} + \\sqrt{1 - \\alpha_{t} \\alpha_{t-1}} \\; \\epsilon_t \\\\ \u0026 … \\\\ \u0026= \\sqrt{\\alpha_t \\alpha_{t-1} \\; …\\; \\alpha_{0}} \\; \\mathbf{x}_{0} + \\sqrt{1 - \\alpha_{t} \\alpha_{t-1} \\; … \\; \\alpha_0} \\; \\epsilon_t \\\\ \u0026= \\sqrt{\\bar{\\alpha_t}} \\; \\mathbf{x}_{0} + \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t \\tag{4} \\end{align*}\nThe close-form sampling at any arbitrary timestep can be carried out using the following distribution, \\begin{align*} \\mathbf{x}_{t} \\sim q(\\mathbf{x}_{t} | \\mathbf{x}_{0}) = \\mathcal{N} (\\mathbf{x}_{t}; \\; \\mu_t = \\sqrt{\\bar{\\alpha_t}} \\; \\mathbf{x}_{0}, \\; \\Sigma_t = (1 - \\bar{\\alpha_t}) \\mathbf{I}) \\tag{5} \\end{align*} Since $\\beta_t$ is a hyperparameter that is fixed beforehand, we can precompute $\\alpha_t$ and $\\bar{\\alpha_t}$ for all timesteps and use Equation 4 to sample the latent variable $\\mathbf{x}_t$ in one go.\nReverse Diffusion Process As $T \\xrightarrow{} \\infty$, $\\bar{\\alpha_t} \\xrightarrow{} 0$, the distribution $q(\\mathbf{x}_{T} | \\mathbf{x}_0) \\approx \\mathcal{N}(0, \\mathbf{I})$ (also called isotropic Gaussian distribution), losing all information about the original sample. Therefore if we manage to learn the reverse distribution, we can sample $\\mathbf{x}_T \\sim \\mathcal{N}(0, \\mathbf{I})$, and run the denoising process step-wise to generate a new sample.\nWith a small enough step size ($\\beta_t \\ll 1$), the reverse process has the same functional form as the forward process. Therefore, the reverse distribution can also be modeled as a unimodal diagonal Gaussian. Unfortunately, it is not straightforward to estimate $q(\\mathbf{x}_{t-1}| \\mathbf{x}_{t})$, as it needs to use the entire dataset (It’s intractable since it requires knowing the distribution of all possible images in order to calculate this conditional probability).\nHence, we use a network to learn this Gaussian by parameterizing the mean and variance, \\begin{equation*} p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t}) = \\mathcal{N} (\\mathbf{x}_{t-1}; \\; \\mu_\\theta(\\mathbf{x}_{t}, t), \\; \\Sigma_\\theta(\\mathbf{x}_{t}, t)) \\tag{6} \\end{equation*} Apart from the latent sample $\\mathbf{x}_{t}$, the model also takes time step $t$ as input. Different time steps are associated with different noise levels, and the model learns to undo these individually.\nLike the forward process, the reverse process can also be set up as a Markov chain. We can write the joint probability of the sequence of samples as, \\begin{equation*} p_\\theta (x_{0:T}) = p(\\mathbf{x}_{T}) \\prod_{t=1}^T p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t}) \\tag{7} \\end{equation*} Here, $p(\\mathbf{x}_{T}) = \\mathcal{N}(0, \\mathbf{I})$ as we start training with a sample from pure noise distribution.\nTraining Objective (Loss function) The forward process is fixed and it’s the reverse process that we solely focus on learning. Diffusion models can be seen as latent variable models, and are similar to variational autoencoders (VAEs), where $\\mathbf{x}_{0}$ is an observed variable and $\\mathbf{x}_{1}, \\mathbf{x}_{2}, …, \\mathbf{x}_{T}$ are latent variables.\nMaximizing the variational lower bound (also called evidence lower bound ELBO) on the marginal log-likelihood forms the objective in VAEs. For an observed variable $x$ and latent variable $z$, this lower bound can be written as, \\begin{align*} \\log p_\\theta (x) \\ge \\mathbf{E}_{q(z|x)} [\\log p_\\theta (x|z)] - \\mathbf{D}_{KL} \\left( q (z|x) \\; || \\; p_\\theta(z) \\right) \\end{align*}\nRewriting it in the diffusion model framework we get, \\begin{align*} \\text{ELBO} \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} [\\log p_\\theta (\\mathbf{x}_{0}|\\mathbf{x}_{1:T})] - \\mathbf{D}_{KL} \\left( q (\\mathbf{x}_{1:T}|\\mathbf{x}_{0}) \\; || \\; p_\\theta(\\mathbf{x}_{1:T}) \\right) \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} [\\log p_\\theta (\\mathbf{x}_{0}|\\mathbf{x}_{1:T})] - \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log \\frac{q (\\mathbf{x}_{1:T}|\\mathbf{x}_{0})}{p_\\theta(\\mathbf{x}_{1:T})} \\right] \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log \\frac{p_\\theta (\\mathbf{x}_{0}|\\mathbf{x}_{1:T}) \\; p_\\theta(\\mathbf{x}_{1:T}) }{q (\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\right] \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log \\frac{p_\\theta (\\mathbf{x}_{0:T})}{q (\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\right] \\\\ \\\\ \u0026\\text{Using equation 1 and 5,} \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log p(\\mathbf{x}_{T}) + \\sum_{t=1}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t}|\\mathbf{x}_{t-1})} \\right] \\\\ \\\\ \u0026\\text{Taking the edge case $t=1$ out,} \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log p(\\mathbf{x}_{T}) + \\log \\frac{p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})}{q (\\mathbf{x}_{1}|\\mathbf{x}_{0})} + \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t}|\\mathbf{x}_{t-1})} \\right] \\\\ \\\\ \u0026\\text{Using Markov property and then Bayes’ rule we can write,} \\\\ \u0026\\text{$q (\\mathbf{x}_{t}|\\mathbf{x}_{t-1}) = q (\\mathbf{x}_{t}|\\mathbf{x}_{t-1}, \\mathbf{x}_{0}) = \\frac{ q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) \\; q (\\mathbf{x}_{t}|\\mathbf{x}_{0})}{ q (\\mathbf{x}_{t-1}, \\mathbf{x}_{0})}$ and replace,} \\\\ \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log p(\\mathbf{x}_{T}) + \\log \\frac{p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})}{q (\\mathbf{x}_{1}|\\mathbf{x}_{0})} + \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t}) \\; q (\\mathbf{x}_{t-1}|\\mathbf{x}_{0})}{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) \\; q (\\mathbf{x}_{t}|\\mathbf{x}_{0})} \\right] \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log p(\\mathbf{x}_{T}) + \\log \\frac{p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})}{q (\\mathbf{x}_{1}|\\mathbf{x}_{0})} + \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})} + \\sum_{t=2}^T \\log \\frac{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{0})}{q (\\mathbf{x}_{t}|\\mathbf{x}_{0})} \\right] \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log p(\\mathbf{x}_{T}) + \\log \\frac{p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})}{q (\\mathbf{x}_{1}|\\mathbf{x}_{0})} + \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})} + \\log \\frac{ q (\\mathbf{x}_{1}|\\mathbf{x}_{0}) \\; \\cancel{q (\\mathbf{x}_{2}|\\mathbf{x}_{0})} \\; … \\; \\cancel{q (\\mathbf{x}_{T-1}|\\mathbf{x}_{0})}}{ \\cancel{q (\\mathbf{x}_{2}|\\mathbf{x}_{0})} \\; q \\cancel{(\\mathbf{x}_{3}|\\mathbf{x}_{0})} \\; … \\; q (\\mathbf{x}_{T}|\\mathbf{x}_{0})} \\right]\\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log {\\color{blue}{p(\\mathbf{x}_{T})}} + \\log \\frac{p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})}{\\color{red}q (\\mathbf{x}_{1}|\\mathbf{x}_{0})} + \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})} + \\log \\frac{ \\color{red}{q (\\mathbf{x}_{1}|\\mathbf{x}_{0})}}{\\color{blue}{q (\\mathbf{x}_{T}|\\mathbf{x}_{0})}} \\right]\\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1:T}|\\mathbf{x}_{0})} \\left[ \\log p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1}) + \\log {\\color{blue}\\frac{p(\\mathbf{x}_{T})}{q (\\mathbf{x}_{T}|\\mathbf{x}_{0})}} + \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})} \\right] \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1}|\\mathbf{x}_{0})} [\\log p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})] + \\mathbf{E}_{q(\\mathbf{x}_{T}|\\mathbf{x}_{0})} \\left[ \\log {\\frac{p(\\mathbf{x}_{T})}{q (\\mathbf{x}_{T}|\\mathbf{x}_{0})}} \\right] + \\mathbf{E}_{q(\\mathbf{x}_{t-1}, \\mathbf{x}_{t}|\\mathbf{x}_{0})} \\left[ \\sum_{t=2}^T \\log \\frac{p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})}{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})} \\right] \\\\ \u0026= \\mathbf{E}_{q(\\mathbf{x}_{1}|\\mathbf{x}_{0})} [\\log p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1})] - \\mathbf{D}_{KL} (q (\\mathbf{x}_{T}|\\mathbf{x}_{0}) \\; || \\; p(\\mathbf{x}_{T})) - \\sum_{t\u003e1} \\mathbf{E}_{q(\\mathbf{x}_{t}|\\mathbf{x}_{0})} \\left[ \\mathbf{D}_{KL} ( q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) \\; || \\; p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})) \\right] \\end{align*}\nThe objective of maximizing this lower bound is equivalent to minimizing a loss function that is its negation, \\begin{align*} L_{vlb} = \\underbrace{\\mathbf{D}_{KL} (q (\\mathbf{x}_{T}|\\mathbf{x}_{0}) \\; || \\; p(\\mathbf{x}_{T}))}_{L_{T}} + \\sum_{t\u003e1} \\mathbf{E}_{q(\\mathbf{x}_{t}|\\mathbf{x}_{0})} [ \\underbrace{\\mathbf{D}_{KL} ( q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) \\; || \\; p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t}))}_{L_{t-1}} ] \\; \\underbrace{- \\mathbf{E}_{q(\\mathbf{x}_{1}|\\mathbf{x}_{0})} \\left[ \\log p_\\theta (\\mathbf{x}_{0} | \\mathbf{x}_{1}) \\right]}_{L_0} \\tag{8} \\end{align*}\nThe term $L_T$ has no trainable parameters so it’s ignored during training, furthermore, as we have assumed a large enough $T$ such that the final distribution is Gaussian, this term effectively becomes zero.\n$L_0$ can be interpreted as a reconstruction term (similar to VAE).\nThe term $L_{t-1}$ formulates the difference between the predicted denoising steps $p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})$ and the reverse diffusion step $q(\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})$ (which is given as a target to the model). It is explicitly conditioned on the original sample $\\mathbf{x}_{0}$ in the loss function so that the distribution $q(\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0})$ takes the form of Gaussian. \\begin{align*} q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) = \\mathcal{N} (\\mathbf{x}_{t-1}; \\; \\tilde{\\mu}_t(\\mathbf{x}_t, \\mathbf{x}_0) \\; \\tilde{\\beta_t}) \\end{align*}\nBut why do we need it to be Gaussian?\nSince the model output, $p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})$ is already parameterized as a Gaussian, every KL term compares two Gaussian distributions and therefore they can be computed in closed form. This makes the loss function tractable.\nIntuitively, a painter (our generative model) needs a reference image ($\\mathbf{x}_{0}$) to slowly draw (reverse diffusion step $q(\\mathbf{x}_{t-1} | \\mathbf{x}_t)$) an image. Thus, we can take a small step backward, meaning from noise to generate an image, if and only if we have $\\mathbf{x}_{0}$ as a reference.\nUsing Bayes’ rule we can write, \\begin{align*} q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) \u0026= q (\\mathbf{x}_{t}|\\mathbf{x}_{t-1}, \\mathbf{x}_{0}) \\; \\frac{q (\\mathbf{x}_{t-1}|\\mathbf{x}_{0})}{q (\\mathbf{x}_{t}| \\mathbf{x}_{0})} \\\\ \\\\ \u0026\\text{Using equation 2 and 4,} \\\\ \u0026= \\mathcal{N} (\\mathbf{x}_t; \\; \\sqrt{1 - \\beta_t} \\; \\mathbf{x}_{t-1}, \\; \\beta_t \\mathbf{I}) \\; \\frac{ \\mathcal{N} (\\mathbf{x}_{t-1}; \\; \\sqrt{\\bar{\\alpha}_{t-1}} \\; \\mathbf{x}_{0}, \\; (1 - \\bar{\\alpha}_{t-1}) \\mathbf{I})}{ \\mathcal{N} (\\mathbf{x}_{t}; \\; \\sqrt{\\bar{\\alpha}_{t}} \\; \\mathbf{x}_{0}, \\; (1 - \\bar{\\alpha}_{t}) \\mathbf{I})} \\\\ \\\\ \u0026\\text{Replacing $1 - \\beta_t = \\alpha_t$,} \\\\ \u0026= \\mathcal{N} (\\mathbf{x}_t; \\; \\sqrt{\\alpha_t} \\; \\mathbf{x}_{t-1}, \\; \\beta_t \\mathbf{I}) \\; \\frac{ \\mathcal{N} (\\mathbf{x}_{t-1}; \\; \\sqrt{\\bar{\\alpha}_{t-1}} \\; \\mathbf{x}_{0}, \\; (1 - \\bar{\\alpha}_{t-1}) \\mathbf{I})}{ \\mathcal{N} (\\mathbf{x}_{t}; \\; \\sqrt{\\bar{\\alpha}_{t}} \\; \\mathbf{x}_{0}, \\; (1 - \\bar{\\alpha}_{t}) \\mathbf{I})} \\\\ \u0026 \\propto \\text{exp} \\left[ -\\frac{1}{2} \\left( \\frac{(\\mathbf{x}_t - \\sqrt{\\alpha_t} \\; \\mathbf{x}_{t-1})^2}{\\beta_t} + \\frac{(\\mathbf{x}_{t-1} - \\sqrt{\\bar{\\alpha}_{t-1}} \\; \\mathbf{x}_{0})^2}{(1 - \\bar{\\alpha}_{t-1})} - \\frac{(\\mathbf{x}_{t} - \\sqrt{\\bar{\\alpha}_{t}} \\; \\mathbf{x}_{0})^2}{(1 - \\bar{\\alpha}_{t})} \\right) \\right] \\\\ \u0026= \\text{exp} \\left[ -\\frac{1}{2} \\left( \\frac{\\mathbf{x}_t^2 + \\alpha_t \\; \\mathbf{x}_{t-1}^2 - 2 \\; \\mathbf{x}_t \\sqrt{\\alpha_t} \\; \\mathbf{x}_{t-1}}{\\beta_t} + \\frac{\\mathbf{x}_{t-1}^2 + \\bar{\\alpha}_{t-1} \\; \\mathbf{x}_{0}^2 - 2\\; \\mathbf{x}_{t-1} \\sqrt{\\bar{\\alpha}_{t-1}} \\; \\mathbf{x}_{0}}{(1 - \\bar{\\alpha}_{t-1})}- \\frac{(\\mathbf{x}_{t} - \\sqrt{\\bar{\\alpha}_{t}} \\; \\mathbf{x}_{0})^2}{(1 - \\bar{\\alpha}_{t})} \\right) \\right] \\\\ \u0026= \\text{exp} \\left[ -\\frac{1}{2} \\left( \\mathbf{x}_{t-1}^2 \\left( \\frac{\\alpha_t}{\\beta_t} + \\frac{1}{1 - \\bar{\\alpha}_{t-1}} \\right) + \\mathbf{x}_{t-1} \\left( \\frac{- 2 \\; \\mathbf{x}_t \\sqrt{\\alpha_t}}{\\beta_t} + \\frac{- 2\\; \\sqrt{\\bar{\\alpha}_{t-1}} \\mathbf{x}_0}{1 - \\bar{\\alpha}_{t-1}} \\right) + C(\\mathbf{x}_t, \\mathbf{x}_0)) \\right) \\right] \\\\ \\\\ \u0026\\text{where C is a function whose details are omitted for readability.} \\\\ \u0026= \\text{exp} \\left[ -\\frac{1}{2} \\left( \\mathbf{x}_{t-1}^2 \\left( \\frac{\\alpha_t}{\\beta_t} + \\frac{1}{1 - \\bar{\\alpha}_{t-1}} \\right) - 2 \\; \\mathbf{x}_{t-1} \\left( \\frac{\\mathbf{x}_t \\sqrt{\\alpha_t}}{\\beta_t} + \\frac{\\sqrt{\\bar{\\alpha}_{t-1}} \\mathbf{x}_0}{1 - \\bar{\\alpha}_{t-1}} \\right) + C(\\mathbf{x}_t, \\mathbf{x}_0)) \\right) \\right] \\\\ \\\\ \u0026\\text{which can be written in the form,} \\\\ \u0026= \\text{exp} \\left[ -\\frac{1}{2} \\left( \\frac{(\\mathbf{x}_{t-1} - \\tilde{\\mu}_t(\\mathbf{x}_t, \\mathbf{x}_0))^2}{\\tilde{\\beta}_t} \\right) \\right] \\end{align*}\nSuch that the variance is, \\begin{align*} \\tilde{\\beta_t} \u0026= \\left( \\frac{\\alpha_t}{\\beta_t} + \\frac{1}{1 - \\bar{\\alpha}_{t-1}} \\right)^{-1} = \\frac{(1 - \\bar{\\alpha}_{t-1}) \\; \\beta_t }{\\alpha_t - \\alpha_t \\; \\bar{\\alpha}_{t-1} + \\beta_t} = \\frac{(1 - \\bar{\\alpha}_{t-1}) \\beta_t }{1 - \\alpha_t \\; \\bar{\\alpha}_{t-1} } \\\\ \u0026= \\frac{1 - \\bar{\\alpha}_{t-1}}{1 - \\bar{\\alpha}_{t}} \\; \\beta_t \\tag{9} \\end{align*}\nand the mean is, \\begin{align*} \\tilde{\\mu}_t(\\mathbf{x}_t, \\mathbf{x}_0) \u0026= \\left( \\frac{\\mathbf{x}_t \\sqrt{\\alpha_t}}{\\beta_t} + \\frac{\\sqrt{\\bar{\\alpha}_{t-1}} \\mathbf{x}_0}{1 - \\bar{\\alpha}_{t-1}} \\right) \\; \\left( \\frac{\\alpha_t}{\\beta_t} + \\frac{1}{1 - \\bar{\\alpha}_{t-1}} \\right)^{-1} \\\\ \u0026= \\frac{\\sqrt{\\alpha_t} \\; (1 - \\bar{\\alpha}_{t-1}) \\; \\mathbf{x}_t + \\beta_t \\; \\sqrt{\\bar{\\alpha}_{t-1}} \\; \\mathbf{x}_0 }{\\alpha_t - \\alpha_t \\; \\bar{\\alpha}_{t-1} + \\beta_t} \\\\ \u0026= \\frac{\\sqrt{\\alpha_t} \\; (1 - \\bar{\\alpha}_{t-1})}{1 - \\bar{\\alpha}_{t}} \\mathbf{x}_t + \\frac{\\beta_t \\; \\sqrt{\\bar{\\alpha}_{t-1}}}{1 - \\bar{\\alpha}_{t}} \\; \\mathbf{x}_0 \\end{align*}\nEquation 4 is $\\mathbf{x}_t = \\sqrt{\\bar{\\alpha_t}} \\; \\mathbf{x}_{0} + \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t$, which can be rewritten as, $\\mathbf{x}_{0} = \\frac{\\mathbf{x}_t - \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t}{\\sqrt{\\bar{\\alpha_t}}}$. Substituting, \\begin{align*} \\tilde{\\mu}_t \u0026= \\frac{\\sqrt{\\alpha_t} \\; (1 - \\bar{\\alpha}_{t-1})}{1 - \\bar{\\alpha}_{t}} \\mathbf{x}_t + \\frac{\\beta_t \\; \\sqrt{\\bar{\\alpha}_{t-1}}}{1 - \\bar{\\alpha}_{t}} \\; \\frac{\\mathbf{x}_t - \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t}{\\sqrt{\\bar{\\alpha_t}}} \\\\ \u0026= \\frac{\\sqrt{\\alpha_t} \\; (1 - \\bar{\\alpha}_{t-1})}{1 - \\bar{\\alpha}_{t}} \\mathbf{x}_t + \\frac{\\beta_t}{1 - \\bar{\\alpha}_{t}} \\; \\frac{\\mathbf{x}_t - \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t}{\\sqrt{\\alpha_t}} \\\\ \u0026= \\frac{ \\left( \\alpha_t \\; (1 - \\bar{\\alpha}_{t-1}) + \\beta_t \\right) \\mathbf{x}_t - \\beta_t \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t }{\\sqrt{\\alpha_t} \\; (1 - \\bar{\\alpha_{t}})} \\\\ \u0026= \\frac{ \\left( 1 - \\bar{\\alpha_{t}} \\right) \\mathbf{x}_t - \\beta_t \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t }{\\sqrt{\\alpha_t} \\; (1 - \\bar{\\alpha_{t}})} \\\\ \u0026= \\frac{1}{\\sqrt{\\alpha_t}} \\left( \\mathbf{x}_t - \\frac{\\beta_t}{\\sqrt{1 - \\bar{\\alpha_{t}}}} \\; \\epsilon_t \\right) \\tag{10} \\end{align*}\nTherefore, the term $L_{t-1}$ estimates the KL-divergence between, \\begin{align*} \\text{Predicted: } \u0026 p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t}) = \\mathcal{N} (\\mathbf{x}_{t-1}; \\; \\mu_\\theta(\\mathbf{x}_{t}, t), \\; \\Sigma_\\theta(\\mathbf{x}_{t}, t))\\\\ \\text{Target: } \u0026 q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) = \\mathcal{N} (\\mathbf{x}_{t-1}; \\; \\tilde{\\mu}_t(\\mathbf{x}_t), \\; \\tilde{\\beta_t}) \\\\ \\end{align*}\nRecall that we learn a neural network that predicts the mean and diagonal variance of the Gaussian distribution of the reverse process. Ho et al. decided to keep the predicted variances fixed to time-dependent constants because they found that learning them leads to unstable training and poorer sample quality. They set $\\Sigma_\\theta(\\mathbf{x}_{t}, t) = \\sigma_t^2 \\; \\mathbf{I}$, where $\\sigma_t^2 = \\beta_t$ or $\\tilde{\\beta}_t$ (both gave same results).\nBecause $\\mathbf{x}_t$ is available as input at training time, instead of predicting the mean (equation 10), we make it predict the noise term $\\epsilon_t$ using $\\epsilon_\\theta$. We can then write the predicted mean as, \\begin{align*} \\mu_\\theta(\\mathbf{x}_{t}, t) = \\frac{1}{\\sqrt{\\alpha_t}} \\left( \\mathbf{x}_t - \\frac{\\beta_t}{\\sqrt{1 - \\bar{\\alpha_{t}}}} \\; \\epsilon_\\theta(\\mathbf{x}_{t}, t) \\right) \\tag{11} \\end{align*}\nand the predicted de-noised sample can be written using the reparameterization trick as, \\begin{align*} \\mathbf{x}_{t-1} \u0026= \\mu_\\theta(\\mathbf{x}_{t}, t) + \\sqrt{\\Sigma_\\theta(\\mathbf{x}_{t}, t)} \\; z_t \\\\ \u0026= \\frac{1}{\\sqrt{\\alpha_t}} \\left( \\mathbf{x}_t - \\frac{\\beta_t}{\\sqrt{1 - \\bar{\\alpha_{t}}}} \\; \\epsilon_\\theta(\\mathbf{x}_{t}, t) \\right) + \\sigma_t z_t \\tag{12} \\end{align*} where $z \\sim \\mathcal{N}(0, 1)$ at each time step.\nThus, the network predicts only the noise term at each time step $t$. Let’s simplify the term $L_{t-1}$, given that the variances are equal. KL-divergence b/w two Gaussians is given as:, \\begin{align*} D_{KL}(p||q) = \\frac{1}{2}\\left[\\log\\frac{|\\Sigma_q|}{|\\Sigma_p|} - k + (\\mu_p-\\mu_q)^T\\Sigma_q^{-1}(\\mu_p-\\mu_q) + tr\\left\\{\\Sigma_q^{-1}\\Sigma_p\\right\\}\\right] \\end{align*} where $k$ is number of dimensions.\n\\begin{align*} L_{t-1} \u0026= \\mathbf{D}_{KL} ( q (\\mathbf{x}_{t-1}|\\mathbf{x}_{t}, \\mathbf{x}_{0}) \\; || \\; p_\\theta (\\mathbf{x}_{t-1} | \\mathbf{x}_{t})) \\\\ \u0026= \\frac{1}{2}\\left[- k + \\frac{ (\\tilde{\\mu}_t - \\mu_\\theta(\\mathbf{x}_{t}, t)) (\\tilde{\\mu}_t - \\mu_\\theta(\\mathbf{x}_{t}, t))^T }{\\sigma_t^2} + tr\\left\\{\\mathbf{I} \\right\\}\\right] \\\\ \u0026= \\frac{1}{2}\\left[- k + \\frac{ (\\tilde{\\mu}_t - \\mu_\\theta(\\mathbf{x}_{t}, t)) (\\tilde{\\mu}_t - \\mu_\\theta(\\mathbf{x}_{t}, t))^T }{\\sigma_t^2} + k \\right] \\\\ \u0026= \\frac{1}{2 \\sigma_t^2} || \\tilde{\\mu}_t - \\mu_\\theta(\\mathbf{x}_{t}, t) ||^2 \\\\ \u0026= \\frac{1}{2 \\sigma_t^2} \\Vert \\frac{1}{\\sqrt{\\alpha_t}} \\left( \\mathbf{x}_t - \\frac{\\beta_t}{\\sqrt{1 - \\bar{\\alpha_{t}}}} \\; \\epsilon_t \\right) - \\frac{1}{\\sqrt{\\alpha_t}} \\left( \\mathbf{x}_t - \\frac{\\beta_t}{\\sqrt{1 - \\bar{\\alpha_{t}}}} \\; \\epsilon_\\theta(\\mathbf{x}_{t}, t) \\right) \\Vert^2 \\\\ \u0026=\\frac{\\beta_t^2}{2 \\sigma_t^2 \\; \\alpha_t \\; (1 - \\bar{\\alpha_{t}}) } || \\epsilon_t - \\epsilon_\\theta(\\mathbf{x}_{t}, t) ||^2 \\tag{13} \\end{align*} The objective reduces to a weighted L2-loss between the noises and second term of the loss function becomes, $\\mathbf{E}_{q}[L_{t-1}] = \\mathbf{E}_{\\mathbf{x}_{t}, \\epsilon_t} [w_t \\; || \\epsilon_t - \\epsilon_\\theta(\\mathbf{x}_{t}, t) ||^2 ]$\nEmpirically, Ho et al. found that training the diffusion model works better with a simplified objective that ignores the weighting term in $L_{t-1}$. They also got rid of the term $L_0$ by altering the sampling method, such that at the end of sampling ($t$ = 1), we obtain $\\mathbf{x}_0 = \\mu_\\theta(\\mathbf{x}_0, t=1)$.\nThe simplified loss function for DDPM is given as, \\begin{align*} L_{simple} \u0026= \\mathbf{E}_{\\mathbf{x}_{t}, \\epsilon_t} \\left[|| \\epsilon_t - \\epsilon_\\theta(\\mathbf{x}_{t}, t) ||^2 \\right] \\tag{14.1} \\\\ \u0026= \\mathbf{E}_{\\mathbf{x}_{0}, \\epsilon_t} \\left[|| \\epsilon_t - \\epsilon_\\theta(\\sqrt{\\bar{\\alpha_t}} \\; \\mathbf{x}_{0} + \\sqrt{1 - \\bar{\\alpha_{t}}} \\; \\epsilon_t, t) ||^2 \\right] \\tag{14.2} \\end{align*}\n",
+  "wordCount" : "2588",
+  "inLanguage": "en",
+  "datePublished": "2022-11-20T00:00:00Z",
+  "dateModified": "2022-11-20T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/diffusion-models/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Decoding Diffusion Models
+    </h1>
+    <div class="post-meta"><span title='2022-11-20 00:00:00 +0000 UTC'>November 20, 2022</span>&nbsp;·&nbsp;13 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#forward-diffusion-process" aria-label="Forward Diffusion Process">Forward Diffusion Process</a></li>
+                <li>
+                    <a href="#reverse-diffusion-process" aria-label="Reverse Diffusion Process">Reverse Diffusion Process</a></li>
+                <li>
+                    <a href="#training-objective-loss-function" aria-label="Training Objective (Loss function)">Training Objective (Loss function)</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by <a href="https://arxiv.org/abs/1503.03585">Sohl-Dickstein et al</a> in 2015 and then improved by <a href="https://arxiv.org/abs/2006.11239">Ho. et al</a> in 2020.</p>
+<p><img loading="lazy" src="https://yugajmera.github.io/posts/diffusion-models/image.png" alt=""  />
+</p>
+<p>The basic idea behind diffusion models is rather simple. It takes an input image $\mathbf{x}_0$ and gradually adds Gaussian noise to it through a series of $T$ time steps. We will call this the forward process. A network is then trained to recover the original image by reversing the noising process. By being able to model the reverse process, we can start from random noise and denoise it step-by-step to generate new data.</p>
+<p> </p>
+<h3 id="forward-diffusion-process"><strong>Forward Diffusion Process</strong><a hidden class="anchor" aria-hidden="true" href="#forward-diffusion-process">#</a></h3>
+<p>Consider an image $\mathbf{x}_0$ sampled from the real data distribution (or the training set). The subscript denotes the number of time step. The forward process denoted by $q$ is modeled as a Markov chain, where the distribution at a particular time step depends only on the sample from the previous step. The distribution of corrupted samples can be written as, \begin{align*} q(\mathbf{x}_{1:T} | \mathbf{x}_0) &amp;= \prod_{t=1}^T q(\mathbf{x}_{t} | \mathbf{x}_{t-1}) \tag{1} \end{align*}</p>
+<p>At each step of the Markov chain, we add Gaussian noise to $\mathbf{x}_{t-1}$ producing a new latent variable $\mathbf{x}_t$. The transition distribution forms a unimodal diagonal Gaussian as, \begin{equation*} q(\mathbf{x}_{t} | \mathbf{x}_{t-1}) = \mathcal{N} (\mathbf{x}_t; \; \mu_t = \sqrt{1 - \beta_t} \; \mathbf{x}_{t-1}, \; \Sigma_t = \beta_t \mathbf{I}) \tag{2} \end{equation*} where $\beta_t$ is the variance of Gaussian at a time step $t$. It is a hyperparameter that follows a fixed schedule such that it increases with time and lies in the range $[0, 1]$.</p>
+<p>Ho et al. sets a linear schedule for the variance starting from $\beta_1 = 10^{-4}$ to $\beta_T = 0.02$, and $T = 1000$.</p>
+<p><img loading="lazy" src="https://yugajmera.github.io/posts/diffusion-models/forward-diffusion.png" alt=""  />
+</p>
+<p>A latent variable $\mathbf{x}_t$ can be sampled from the distribution $q(\mathbf{x}_{t} | \mathbf{x}_{t-1})$ by using the reparameterization trick is as, \begin{equation*} \mathbf{x}_{t} = \sqrt{1 - \beta_t} \; \mathbf{x}_{t-1} + \sqrt{\beta_t} \; \epsilon_t \tag{3} \end{equation*} where $\epsilon_t \sim \mathcal{N}(0, 1)$.</p>
+<p>Equation 3 shows that we need to compute all the previous samples $\mathbf{x}_{t-1}, &hellip;, \mathbf{x}_{0}$ in order to obtain $\mathbf{x}_t$, making it expensive. To solve this problem, we define, \begin{align*} &amp;\alpha_t = (1 - \beta_t), &amp;\bar{\alpha_t} = \prod_{s=0}^T \alpha_s \end{align*} and rewrite equation 3 in a recursive manner, \begin{align*} \mathbf{x}_{t} &amp;= \sqrt{\alpha_t} \; \mathbf{x}_{t-1} + \sqrt{1 - \alpha_t} \; \epsilon_t \\ &amp;= \sqrt{\alpha_t} \; \left[ \sqrt{\alpha_{t-1}} \; \mathbf{x}_{t-2} + \sqrt{1 - \alpha_{t-1}} \; \epsilon_t \right] + \sqrt{1 - \alpha_t} \; \epsilon_t \\ &amp;= \sqrt{\alpha_t \alpha_{t-1}} \; \mathbf{x}_{t-2} + \sqrt{ (\alpha_t)(1 - \alpha_{t-1}) + (1 - \alpha_t)} \; \epsilon_t \\ &amp;= \sqrt{\alpha_t \alpha_{t-1}} \; \mathbf{x}_{t-2} + \sqrt{1 - \alpha_{t} \alpha_{t-1}} \; \epsilon_t \\ &amp; &hellip; \\ &amp;= \sqrt{\alpha_t \alpha_{t-1} \; &hellip;\; \alpha_{0}} \; \mathbf{x}_{0} + \sqrt{1 - \alpha_{t} \alpha_{t-1} \; &hellip; \; \alpha_0} \; \epsilon_t \\ &amp;= \sqrt{\bar{\alpha_t}} \; \mathbf{x}_{0} + \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t \tag{4} \end{align*}</p>
+<p>The close-form sampling at any arbitrary timestep can be carried out using the following distribution, \begin{align*} \mathbf{x}_{t} \sim q(\mathbf{x}_{t} | \mathbf{x}_{0}) = \mathcal{N} (\mathbf{x}_{t}; \; \mu_t = \sqrt{\bar{\alpha_t}} \; \mathbf{x}_{0}, \; \Sigma_t = (1 - \bar{\alpha_t}) \mathbf{I}) \tag{5} \end{align*} Since $\beta_t$ is a hyperparameter that is fixed beforehand, we can precompute $\alpha_t$ and $\bar{\alpha_t}$ for all timesteps and use Equation 4 to sample the latent variable $\mathbf{x}_t$ in one go.</p>
+<p> </p>
+<h3 id="reverse-diffusion-process"><strong>Reverse Diffusion Process</strong><a hidden class="anchor" aria-hidden="true" href="#reverse-diffusion-process">#</a></h3>
+<p>As $T \xrightarrow{} \infty$, $\bar{\alpha_t} \xrightarrow{} 0$, the distribution $q(\mathbf{x}_{T} | \mathbf{x}_0) \approx \mathcal{N}(0, \mathbf{I})$ (also called isotropic Gaussian distribution), losing all information about the original sample. Therefore if we manage to learn the reverse distribution, we can sample $\mathbf{x}_T \sim \mathcal{N}(0, \mathbf{I})$, and run the denoising process step-wise to generate a new sample.</p>
+<p>With a small enough step size ($\beta_t \ll 1$), the reverse process has the same functional form as the forward process. Therefore, the reverse distribution can also be modeled as a unimodal diagonal Gaussian. Unfortunately, it is not straightforward to estimate $q(\mathbf{x}_{t-1}| \mathbf{x}_{t})$, as it needs to use the entire dataset (It&rsquo;s intractable since it requires knowing the distribution of all possible images in order to calculate this conditional probability).</p>
+<p>Hence, we use a network to learn this Gaussian by parameterizing the mean and variance, \begin{equation*} p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t}) = \mathcal{N} (\mathbf{x}_{t-1}; \; \mu_\theta(\mathbf{x}_{t}, t), \; \Sigma_\theta(\mathbf{x}_{t}, t)) \tag{6} \end{equation*} Apart from the latent sample $\mathbf{x}_{t}$, the model also takes time step $t$ as input. Different time steps are associated with different noise levels, and the model learns to undo these individually.</p>
+<p><img loading="lazy" src="https://yugajmera.github.io/posts/diffusion-models/reverse-diffusion.png" alt=""  />
+</p>
+<p>Like the forward process, the reverse process can also be set up as a Markov chain. We can write the joint probability of the sequence of samples as, \begin{equation*} p_\theta (x_{0:T}) = p(\mathbf{x}_{T}) \prod_{t=1}^T p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t}) \tag{7} \end{equation*} Here, $p(\mathbf{x}_{T}) = \mathcal{N}(0, \mathbf{I})$ as we start training with a sample from pure noise distribution.</p>
+<p> </p>
+<h3 id="training-objective-loss-function"><strong>Training Objective (Loss function)</strong><a hidden class="anchor" aria-hidden="true" href="#training-objective-loss-function">#</a></h3>
+<p>The forward process is fixed and it&rsquo;s the reverse process that we solely focus on learning. Diffusion models can be seen as latent variable models, and are similar to variational autoencoders (VAEs), where $\mathbf{x}_{0}$ is an observed variable and $\mathbf{x}_{1}, \mathbf{x}_{2}, &hellip;, \mathbf{x}_{T}$ are latent variables.</p>
+<p>Maximizing the variational lower bound (also called evidence lower bound ELBO) on the marginal log-likelihood forms the objective in VAEs. For an observed variable $x$ and latent variable $z$, this lower bound can be written as, \begin{align*} \log p_\theta (x) \ge \mathbf{E}_{q(z|x)} [\log p_\theta (x|z)] - \mathbf{D}_{KL} \left( q (z|x) \; || \; p_\theta(z) \right) \end{align*}</p>
+<p>Rewriting it in the diffusion model framework we get, \begin{align*} \text{ELBO} &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} [\log p_\theta (\mathbf{x}_{0}|\mathbf{x}_{1:T})] - \mathbf{D}_{KL} \left( q (\mathbf{x}_{1:T}|\mathbf{x}_{0}) \; || \; p_\theta(\mathbf{x}_{1:T}) \right) \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} [\log p_\theta (\mathbf{x}_{0}|\mathbf{x}_{1:T})] - \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log \frac{q (\mathbf{x}_{1:T}|\mathbf{x}_{0})}{p_\theta(\mathbf{x}_{1:T})} \right] \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log \frac{p_\theta (\mathbf{x}_{0}|\mathbf{x}_{1:T}) \; p_\theta(\mathbf{x}_{1:T}) }{q (\mathbf{x}_{1:T}|\mathbf{x}_{0})} \right] \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log \frac{p_\theta (\mathbf{x}_{0:T})}{q (\mathbf{x}_{1:T}|\mathbf{x}_{0})} \right] \\ \\ &amp;\text{Using equation 1 and 5,} \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log p(\mathbf{x}_{T}) + \sum_{t=1}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t}|\mathbf{x}_{t-1})} \right] \\ \\ &amp;\text{Taking the edge case $t=1$ out,} \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log p(\mathbf{x}_{T}) + \log \frac{p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})}{q (\mathbf{x}_{1}|\mathbf{x}_{0})} + \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t}|\mathbf{x}_{t-1})} \right] \\ \\ &amp;\text{Using Markov property and then Bayes’ rule we can write,} \\ &amp;\text{$q (\mathbf{x}_{t}|\mathbf{x}_{t-1}) = q (\mathbf{x}_{t}|\mathbf{x}_{t-1}, \mathbf{x}_{0}) = \frac{ q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) \; q (\mathbf{x}_{t}|\mathbf{x}_{0})}{ q (\mathbf{x}_{t-1}, \mathbf{x}_{0})}$ and replace,} \\ \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log p(\mathbf{x}_{T}) + \log \frac{p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})}{q (\mathbf{x}_{1}|\mathbf{x}_{0})} + \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t}) \; q (\mathbf{x}_{t-1}|\mathbf{x}_{0})}{q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) \; q (\mathbf{x}_{t}|\mathbf{x}_{0})} \right] \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log p(\mathbf{x}_{T}) + \log \frac{p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})}{q (\mathbf{x}_{1}|\mathbf{x}_{0})} + \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})} + \sum_{t=2}^T \log \frac{q (\mathbf{x}_{t-1}|\mathbf{x}_{0})}{q (\mathbf{x}_{t}|\mathbf{x}_{0})} \right] \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log p(\mathbf{x}_{T}) + \log \frac{p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})}{q (\mathbf{x}_{1}|\mathbf{x}_{0})} + \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})} + \log \frac{ q (\mathbf{x}_{1}|\mathbf{x}_{0}) \; \cancel{q (\mathbf{x}_{2}|\mathbf{x}_{0})} \; &hellip; \; \cancel{q (\mathbf{x}_{T-1}|\mathbf{x}_{0})}}{ \cancel{q (\mathbf{x}_{2}|\mathbf{x}_{0})} \; q \cancel{(\mathbf{x}_{3}|\mathbf{x}_{0})} \; &hellip; \; q (\mathbf{x}_{T}|\mathbf{x}_{0})} \right]\\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log {\color{blue}{p(\mathbf{x}_{T})}} + \log \frac{p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})}{\color{red}q (\mathbf{x}_{1}|\mathbf{x}_{0})} + \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})} + \log \frac{ \color{red}{q (\mathbf{x}_{1}|\mathbf{x}_{0})}}{\color{blue}{q (\mathbf{x}_{T}|\mathbf{x}_{0})}} \right]\\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1:T}|\mathbf{x}_{0})} \left[ \log p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1}) + \log {\color{blue}\frac{p(\mathbf{x}_{T})}{q (\mathbf{x}_{T}|\mathbf{x}_{0})}} + \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})} \right] \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1}|\mathbf{x}_{0})} [\log p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})] + \mathbf{E}_{q(\mathbf{x}_{T}|\mathbf{x}_{0})} \left[ \log {\frac{p(\mathbf{x}_{T})}{q (\mathbf{x}_{T}|\mathbf{x}_{0})}} \right] + \mathbf{E}_{q(\mathbf{x}_{t-1}, \mathbf{x}_{t}|\mathbf{x}_{0})} \left[ \sum_{t=2}^T \log \frac{p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})}{q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})} \right] \\ &amp;= \mathbf{E}_{q(\mathbf{x}_{1}|\mathbf{x}_{0})} [\log p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1})] - \mathbf{D}_{KL} (q (\mathbf{x}_{T}|\mathbf{x}_{0}) \; || \; p(\mathbf{x}_{T})) - \sum_{t&gt;1} \mathbf{E}_{q(\mathbf{x}_{t}|\mathbf{x}_{0})} \left[ \mathbf{D}_{KL} ( q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) \; || \; p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})) \right] \end{align*}</p>
+<p>The objective of maximizing this lower bound is equivalent to minimizing a loss function that is its negation, \begin{align*} L_{vlb} = \underbrace{\mathbf{D}_{KL} (q (\mathbf{x}_{T}|\mathbf{x}_{0}) \; || \; p(\mathbf{x}_{T}))}_{L_{T}} + \sum_{t&gt;1} \mathbf{E}_{q(\mathbf{x}_{t}|\mathbf{x}_{0})} [ \underbrace{\mathbf{D}_{KL} ( q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) \; || \; p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t}))}_{L_{t-1}} ] \; \underbrace{- \mathbf{E}_{q(\mathbf{x}_{1}|\mathbf{x}_{0})} \left[ \log p_\theta (\mathbf{x}_{0} | \mathbf{x}_{1}) \right]}_{L_0} \tag{8} \end{align*}</p>
+<p>The term $L_T$ has no trainable parameters so it&rsquo;s ignored during training, furthermore, as we have assumed a large enough $T$ such that the final distribution is Gaussian, this term effectively becomes zero.</p>
+<p>$L_0$ can be interpreted as a reconstruction term (similar to VAE).</p>
+<p>The term $L_{t-1}$ formulates the difference between the predicted denoising steps $p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})$ and the reverse diffusion step $q(\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})$ (which is given as a target to the model). It is explicitly conditioned on the original sample $\mathbf{x}_{0}$ in the loss function so that the distribution $q(\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0})$ takes the form of Gaussian. \begin{align*} q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) = \mathcal{N} (\mathbf{x}_{t-1}; \; \tilde{\mu}_t(\mathbf{x}_t, \mathbf{x}_0) \; \tilde{\beta_t}) \end{align*}</p>
+<p>But why do we need it to be Gaussian?</p>
+<p>Since the model output, $p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})$ is already parameterized as a Gaussian, every KL term compares two Gaussian distributions and therefore they can be computed in closed form. This makes the loss function tractable.</p>
+<p>Intuitively, a painter (our generative model) needs a reference image ($\mathbf{x}_{0}$) to slowly draw (reverse diffusion step $q(\mathbf{x}_{t-1} | \mathbf{x}_t)$) an image. Thus, we can take a small step backward, meaning from noise to generate an image, if and only if we have $\mathbf{x}_{0}$ as a reference.</p>
+<p> </p>
+<p>Using Bayes&rsquo; rule we can write, \begin{align*} q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) &amp;= q (\mathbf{x}_{t}|\mathbf{x}_{t-1}, \mathbf{x}_{0}) \; \frac{q (\mathbf{x}_{t-1}|\mathbf{x}_{0})}{q (\mathbf{x}_{t}| \mathbf{x}_{0})} \\ \\ &amp;\text{Using equation 2 and 4,} \\ &amp;= \mathcal{N} (\mathbf{x}_t; \; \sqrt{1 - \beta_t} \; \mathbf{x}_{t-1}, \; \beta_t \mathbf{I}) \; \frac{ \mathcal{N} (\mathbf{x}_{t-1}; \; \sqrt{\bar{\alpha}_{t-1}} \; \mathbf{x}_{0}, \; (1 - \bar{\alpha}_{t-1}) \mathbf{I})}{ \mathcal{N} (\mathbf{x}_{t}; \; \sqrt{\bar{\alpha}_{t}} \; \mathbf{x}_{0}, \; (1 - \bar{\alpha}_{t}) \mathbf{I})} \\ \\ &amp;\text{Replacing $1 - \beta_t = \alpha_t$,} \\ &amp;= \mathcal{N} (\mathbf{x}_t; \; \sqrt{\alpha_t} \; \mathbf{x}_{t-1}, \; \beta_t \mathbf{I}) \; \frac{ \mathcal{N} (\mathbf{x}_{t-1}; \; \sqrt{\bar{\alpha}_{t-1}} \; \mathbf{x}_{0}, \; (1 - \bar{\alpha}_{t-1}) \mathbf{I})}{ \mathcal{N} (\mathbf{x}_{t}; \; \sqrt{\bar{\alpha}_{t}} \; \mathbf{x}_{0}, \; (1 - \bar{\alpha}_{t}) \mathbf{I})} \\ &amp; \propto \text{exp} \left[ -\frac{1}{2} \left( \frac{(\mathbf{x}_t - \sqrt{\alpha_t} \; \mathbf{x}_{t-1})^2}{\beta_t} + \frac{(\mathbf{x}_{t-1} - \sqrt{\bar{\alpha}_{t-1}} \; \mathbf{x}_{0})^2}{(1 - \bar{\alpha}_{t-1})} - \frac{(\mathbf{x}_{t} - \sqrt{\bar{\alpha}_{t}} \; \mathbf{x}_{0})^2}{(1 - \bar{\alpha}_{t})} \right) \right] \\ &amp;= \text{exp} \left[ -\frac{1}{2} \left( \frac{\mathbf{x}_t^2 + \alpha_t \; \mathbf{x}_{t-1}^2 - 2 \; \mathbf{x}_t \sqrt{\alpha_t} \; \mathbf{x}_{t-1}}{\beta_t} + \frac{\mathbf{x}_{t-1}^2 + \bar{\alpha}_{t-1} \; \mathbf{x}_{0}^2 - 2\; \mathbf{x}_{t-1} \sqrt{\bar{\alpha}_{t-1}} \; \mathbf{x}_{0}}{(1 - \bar{\alpha}_{t-1})}- \frac{(\mathbf{x}_{t} - \sqrt{\bar{\alpha}_{t}} \; \mathbf{x}_{0})^2}{(1 - \bar{\alpha}_{t})} \right) \right] \\ &amp;= \text{exp} \left[ -\frac{1}{2} \left( \mathbf{x}_{t-1}^2 \left( \frac{\alpha_t}{\beta_t} + \frac{1}{1 - \bar{\alpha}_{t-1}} \right) + \mathbf{x}_{t-1} \left( \frac{- 2 \; \mathbf{x}_t \sqrt{\alpha_t}}{\beta_t} + \frac{- 2\; \sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0}{1 - \bar{\alpha}_{t-1}} \right) + C(\mathbf{x}_t, \mathbf{x}_0)) \right) \right] \\ \\ &amp;\text{where C is a function whose details are omitted for readability.} \\ &amp;= \text{exp} \left[ -\frac{1}{2} \left( \mathbf{x}_{t-1}^2 \left( \frac{\alpha_t}{\beta_t} + \frac{1}{1 - \bar{\alpha}_{t-1}} \right) - 2 \; \mathbf{x}_{t-1} \left( \frac{\mathbf{x}_t \sqrt{\alpha_t}}{\beta_t} + \frac{\sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0}{1 - \bar{\alpha}_{t-1}} \right) + C(\mathbf{x}_t, \mathbf{x}_0)) \right) \right] \\ \\ &amp;\text{which can be written in the form,} \\ &amp;= \text{exp} \left[ -\frac{1}{2} \left( \frac{(\mathbf{x}_{t-1} - \tilde{\mu}_t(\mathbf{x}_t, \mathbf{x}_0))^2}{\tilde{\beta}_t} \right) \right] \end{align*}</p>
+<p>Such that the variance is, \begin{align*} \tilde{\beta_t} &amp;= \left( \frac{\alpha_t}{\beta_t} + \frac{1}{1 - \bar{\alpha}_{t-1}} \right)^{-1} = \frac{(1 - \bar{\alpha}_{t-1}) \; \beta_t }{\alpha_t - \alpha_t \; \bar{\alpha}_{t-1} + \beta_t} = \frac{(1 - \bar{\alpha}_{t-1}) \beta_t }{1 - \alpha_t \; \bar{\alpha}_{t-1} } \\ &amp;= \frac{1 - \bar{\alpha}_{t-1}}{1 - \bar{\alpha}_{t}} \; \beta_t \tag{9} \end{align*}</p>
+<p>and the mean is, \begin{align*} \tilde{\mu}_t(\mathbf{x}_t, \mathbf{x}_0) &amp;= \left( \frac{\mathbf{x}_t \sqrt{\alpha_t}}{\beta_t} + \frac{\sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0}{1 - \bar{\alpha}_{t-1}} \right) \; \left( \frac{\alpha_t}{\beta_t} + \frac{1}{1 - \bar{\alpha}_{t-1}} \right)^{-1} \\ &amp;= \frac{\sqrt{\alpha_t} \; (1 - \bar{\alpha}_{t-1}) \; \mathbf{x}_t + \beta_t \; \sqrt{\bar{\alpha}_{t-1}} \; \mathbf{x}_0 }{\alpha_t - \alpha_t \; \bar{\alpha}_{t-1} + \beta_t} \\ &amp;= \frac{\sqrt{\alpha_t} \; (1 - \bar{\alpha}_{t-1})}{1 - \bar{\alpha}_{t}} \mathbf{x}_t + \frac{\beta_t \; \sqrt{\bar{\alpha}_{t-1}}}{1 - \bar{\alpha}_{t}} \; \mathbf{x}_0 \end{align*}</p>
+<p>Equation 4 is $\mathbf{x}_t = \sqrt{\bar{\alpha_t}} \; \mathbf{x}_{0} + \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t$, which can be rewritten as, $\mathbf{x}_{0} = \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t}{\sqrt{\bar{\alpha_t}}}$. Substituting, \begin{align*} \tilde{\mu}_t &amp;= \frac{\sqrt{\alpha_t} \; (1 - \bar{\alpha}_{t-1})}{1 - \bar{\alpha}_{t}} \mathbf{x}_t + \frac{\beta_t \; \sqrt{\bar{\alpha}_{t-1}}}{1 - \bar{\alpha}_{t}} \; \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t}{\sqrt{\bar{\alpha_t}}} \\ &amp;= \frac{\sqrt{\alpha_t} \; (1 - \bar{\alpha}_{t-1})}{1 - \bar{\alpha}_{t}} \mathbf{x}_t + \frac{\beta_t}{1 - \bar{\alpha}_{t}} \; \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t}{\sqrt{\alpha_t}} \\ &amp;= \frac{ \left( \alpha_t \; (1 - \bar{\alpha}_{t-1}) + \beta_t \right) \mathbf{x}_t - \beta_t \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t }{\sqrt{\alpha_t} \; (1 - \bar{\alpha_{t}})} \\ &amp;= \frac{ \left( 1 - \bar{\alpha_{t}} \right) \mathbf{x}_t - \beta_t \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t }{\sqrt{\alpha_t} \; (1 - \bar{\alpha_{t}})} \\ &amp;= \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha_{t}}}} \; \epsilon_t \right) \tag{10} \end{align*}</p>
+<p>Therefore, the term $L_{t-1}$ estimates the KL-divergence between, \begin{align*} \text{Predicted: } &amp; p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t}) = \mathcal{N} (\mathbf{x}_{t-1}; \; \mu_\theta(\mathbf{x}_{t}, t), \; \Sigma_\theta(\mathbf{x}_{t}, t))\\ \text{Target: } &amp; q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) = \mathcal{N} (\mathbf{x}_{t-1}; \; \tilde{\mu}_t(\mathbf{x}_t), \; \tilde{\beta_t}) \\ \end{align*}</p>
+<p>Recall that we learn a neural network that predicts the mean and diagonal variance of the Gaussian distribution of the reverse process. Ho et al. decided to keep the predicted variances fixed to time-dependent constants because they found that learning them leads to unstable training and poorer sample quality. They set $\Sigma_\theta(\mathbf{x}_{t}, t) = \sigma_t^2 \; \mathbf{I}$, where $\sigma_t^2 = \beta_t$ or $\tilde{\beta}_t$ (both gave same results).</p>
+<p>Because $\mathbf{x}_t$ is available as input at training time, instead of predicting the mean (equation 10), we make it predict the noise term $\epsilon_t$ using $\epsilon_\theta$. We can then write the predicted mean as, \begin{align*} \mu_\theta(\mathbf{x}_{t}, t) = \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha_{t}}}} \; \epsilon_\theta(\mathbf{x}_{t}, t) \right) \tag{11} \end{align*}</p>
+<p>and the predicted de-noised sample can be written using the reparameterization trick as, \begin{align*} \mathbf{x}_{t-1} &amp;= \mu_\theta(\mathbf{x}_{t}, t) + \sqrt{\Sigma_\theta(\mathbf{x}_{t}, t)} \; z_t \\ &amp;= \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha_{t}}}} \; \epsilon_\theta(\mathbf{x}_{t}, t) \right) + \sigma_t z_t \tag{12} \end{align*} where $z \sim \mathcal{N}(0, 1)$ at each time step.</p>
+<p>Thus, the network predicts only the noise term at each time step $t$. Let&rsquo;s simplify the term $L_{t-1}$, given that the variances are equal. <a href="https://mr-easy.github.io/2020-04-16-kl-divergence-between-2-gaussian-distributions/">KL-divergence b/w two Gaussians</a> is given as:, \begin{align*} D_{KL}(p||q) = \frac{1}{2}\left[\log\frac{|\Sigma_q|}{|\Sigma_p|} - k + (\mu_p-\mu_q)^T\Sigma_q^{-1}(\mu_p-\mu_q) + tr\left\{\Sigma_q^{-1}\Sigma_p\right\}\right] \end{align*} where $k$ is number of dimensions.</p>
+<p>\begin{align*} L_{t-1} &amp;= \mathbf{D}_{KL} ( q (\mathbf{x}_{t-1}|\mathbf{x}_{t}, \mathbf{x}_{0}) \; || \; p_\theta (\mathbf{x}_{t-1} | \mathbf{x}_{t})) \\ &amp;= \frac{1}{2}\left[- k + \frac{ (\tilde{\mu}_t - \mu_\theta(\mathbf{x}_{t}, t)) (\tilde{\mu}_t - \mu_\theta(\mathbf{x}_{t}, t))^T }{\sigma_t^2} + tr\left\{\mathbf{I} \right\}\right] \\ &amp;= \frac{1}{2}\left[- k + \frac{ (\tilde{\mu}_t - \mu_\theta(\mathbf{x}_{t}, t)) (\tilde{\mu}_t - \mu_\theta(\mathbf{x}_{t}, t))^T }{\sigma_t^2} + k \right] \\ &amp;= \frac{1}{2 \sigma_t^2} || \tilde{\mu}_t - \mu_\theta(\mathbf{x}_{t}, t) ||^2 \\ &amp;= \frac{1}{2 \sigma_t^2} \Vert \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha_{t}}}} \; \epsilon_t \right) - \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha_{t}}}} \; \epsilon_\theta(\mathbf{x}_{t}, t) \right) \Vert^2 \\ &amp;=\frac{\beta_t^2}{2 \sigma_t^2 \; \alpha_t \; (1 - \bar{\alpha_{t}}) } || \epsilon_t - \epsilon_\theta(\mathbf{x}_{t}, t) ||^2 \tag{13} \end{align*} The objective reduces to a weighted L2-loss between the noises and second term of the loss function becomes, $\mathbf{E}_{q}[L_{t-1}] = \mathbf{E}_{\mathbf{x}_{t}, \epsilon_t} [w_t \; || \epsilon_t - \epsilon_\theta(\mathbf{x}_{t}, t) ||^2 ]$</p>
+<p>Empirically, Ho et al. found that training the diffusion model works better with a simplified objective that ignores the weighting term in $L_{t-1}$. They also got rid of the term $L_0$ by altering the sampling method, such that at the end of sampling ($t$ = 1), we obtain $\mathbf{x}_0 = \mu_\theta(\mathbf{x}_0, t=1)$.</p>
+<p>The simplified loss function for DDPM is given as, \begin{align*} L_{simple} &amp;= \mathbf{E}_{\mathbf{x}_{t}, \epsilon_t} \left[|| \epsilon_t - \epsilon_\theta(\mathbf{x}_{t}, t) ||^2 \right] \tag{14.1} \\ &amp;= \mathbf{E}_{\mathbf{x}_{0}, \epsilon_t} \left[|| \epsilon_t - \epsilon_\theta(\sqrt{\bar{\alpha_t}} \; \mathbf{x}_{0} + \sqrt{1 - \bar{\alpha_{t}}} \; \epsilon_t, t) ||^2 \right] \tag{14.2} \end{align*}</p>
+<p><img loading="lazy" src="https://yugajmera.github.io/posts/diffusion-models/DDPM-algo.png" alt="The training and sampling algorithms in the DDPM paper (Ho et al.)"  />
+</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/nerf/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Understanding Neural Radiance Fields (NeRFs)</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/gan/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Generative Adversarial Networks: A Two-player game</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

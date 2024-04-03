@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>AlexNet: The First CNN to win ImageNet Challenge | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let&rsquo;s look at the different CNN architectures that have performed well in the past on image classification tasks.
+The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/alexnet/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/alexnet/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="AlexNet: The First CNN to win ImageNet Challenge" />
+<meta property="og:description" content="Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let&rsquo;s look at the different CNN architectures that have performed well in the past on image classification tasks.
+The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/alexnet/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-10-09T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="AlexNet: The First CNN to win ImageNet Challenge"/>
+<meta name="twitter:description" content="Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let&rsquo;s look at the different CNN architectures that have performed well in the past on image classification tasks.
+The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "AlexNet: The First CNN to win ImageNet Challenge",
+      "item": "https://yugajmera.github.io/posts/alexnet/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "AlexNet: The First CNN to win ImageNet Challenge",
+  "name": "AlexNet: The First CNN to win ImageNet Challenge",
+  "description": "Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let\u0026rsquo;s look at the different CNN architectures that have performed well in the past on image classification tasks.\nThe ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let’s look at the different CNN architectures that have performed well in the past on image classification tasks.\nThe ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models. This competition uses a subset of ImageNet’s images containing 1.2 million high-resolution images with 1000 different classes and challenges researchers to achieve the lowest top-1 and top-5 error rates (top-5 error rate would be the percent of test images where the correct label is not one of the model’s five most likely labels).\nFor the first two years (2010 and 2011), the winning systems were not neural network-based at all. They used multiple layers of hand-designed feature extractors with linear neural networks on top.\nTraining CNNs were prohibitively expensive to apply on large scale to high-resolution images during that time. It was in 2012 with the introduction of GPUs paired with a highly-optimized implementation of 2D convolutions and the ImageNet dataset containing enough labeled examples, it became easy to train such models without severe overfitting.\nAlexNet was the largest convolutional neural network trained at that time and achieved the best results ever reported on the ImageNet dataset, crushing all the other competitors by a big margin. This made CNNs a mainstream topic in the field of computer vision and AlexNet can undoubtedly be called one of the most influential research works in this field (the number of citations this paper has is just crazy!).\nData Manipulation: Since the images of the dataset are of variable size, they are first downsampled to a fixed size of 256 $\\times$ 256. This is done by rescaling the shortest side of a rectangular image to a length of 256 and then cropping out the central 256 $\\times$ 256 patches. The mean image is then subtracted from the training set.\nTwo forms of data augmentation techniques are applied to the training data to reduce overfitting, which is performed on the fly on the CPU while the GPUs train the previous batch of data, so essentially is computationally free.\nThe first form consists of extracting random 224 $\\times$ 224 patches (and their horizontal reflections) from the original image, increasing the size of the training set by a factor of 2048. At test time, the network makes a prediction by extracting five 224 $\\times$ 224 patches (the four corner patches and the center patch) as well as their horizontal reflections (ten patches in total), and averaging the predictions on them.\nThe second form is called PCA Color Augmentation (also called Fancy PCA) which consists of altering the intensities of the RGB channels in the training images. More details about this method and the code to implement it can be found here: Fancy PCA. This scheme approximately captures an important property of images that object identity is invariant to changes in the intensity and color of the illumination and reduces the top-1 error rate by over 1%.\nArchitecture: The model has 8 layers: 5 Convolution Layers and 3 Fully-connected layers. The authors mention that this depth is vital as it was found that removing any convolution layer resulted in inferior performance. The output of the last fully-connected layer is fed to a 1000-way softmax (which produces a distribution over the 1000 class labels).\nThe original paper mentions an input image shape of 224 $\\times$ 224 and uses a pad of 3 in the first convolution. In practice, we begin with an image of size 227 $\\times$ 227, and the padding is made zero, so as to encompass more information from the image (as padding of zero has no information)\nTanh non-linearity was commonly used during that time, and AlexNet was the first CNN architecture that used ReLU (called it non-saturating nonlinearity). The authors argued that CNNs train several times faster with ReLU than their equivalent tanh units because tanh saturates for large absolute values of activations killing the gradient (vanishing gradient problem). Today, ReLU is the default choice of the activation function.\nMax-pooling layers are included in the network with a kernel size of 3 and stride of 2, and they call it “overlapping pooling”. Compared to local pooling (kernel size = 2 and stride = 2), overlapping pooling reduces the top-1 and top-5 error rates by 0.4% and 0.3% respectively because they are slightly more difficult to overfit.\nDropout layers with a probability of 0.5 are also added in the first two fully-connected layers to prevent overfitting during training. Without dropout, the network exhibits substantial overfitting. It roughly doubles the number of iterations required to converge.\nAlexNet uses “Local Response Normalization” that reduces top-1 and top-5 error rates by 1.4% and 1.2% respectively. This is not used anymore so we won’t talk about it, but it was an early precursor to batch normalization.\nTraining: The model was trained on the Cross-entropy loss function using stochastic gradient descent with a batch size of 128 examples, momentum of 0.9, and weight decay of 0.0005. It was found that this small amount of weight decay was important for the model to learn as it is not merely a regularizer, but it also reduces the model’s training error.\nThe weights for each layer were initialized from a zero-mean Gaussian distribution with a standard deviation of 0.01. The biases in the second, fourth, and fifth convolutional layers, as well as in the fully-connected layers, are initialized with the constant 1 and for the remaining layers with the constant 0.\nAn equal learning rate is used for all the layers. The learning rate was initialized at 0.01 and reduced three times prior to termination, which was divided by 10 when the validation error rate stopped improving with the current learning rate.\nAbove is a typical AlexNet architecture image that you would see almost everywhere. The model was spread across two GTX 580 3GB GPUs as the model was too big to fit on one GPU memory, and they communicated only in certain layers to save computation. However, we don’t need such a complicated scheme anymore as we can train the entire model on a single GPU (Google colab provides 12GB/16GB GPUs today).\nIt took about 90 epochs through the training set of 1.2 million images, which took five to six days on these two GPUs.\nOverall AlexNet showed the power of the convolutional neural network in achieving record-breaking results on an image classification task. Important design choices of the paper are,\n8 Layers: 5 CNN layers + 3 Fully-connected layers Activation Function: ReLU Data pre-processing: subtract mean image Heavy data augmentation Regularization: L2 Weight decay ($\\lambda$ = 5e-4), Dropout (p=0.5) Learning rate: 0.01 and reduced (divided by 10) when val accuracy plateaus Optimization Method: SGD + Momentum (m=0.9) with batch size of 128 Loss function: Cross-Entropy loss Link to the Paper: ImageNet Classification with Deep Convolutional Neural Networks\n",
+  "wordCount" : "1182",
+  "inLanguage": "en",
+  "datePublished": "2022-10-09T00:00:00Z",
+  "dateModified": "2022-10-09T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/alexnet/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      AlexNet: The First CNN to win ImageNet Challenge
+    </h1>
+    <div class="post-meta"><span title='2022-10-09 00:00:00 +0000 UTC'>October 9, 2022</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p>Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let&rsquo;s look at the different CNN architectures that have performed well in the past on image classification tasks.</p>
+<p>The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models. This competition uses a subset of ImageNet&rsquo;s images containing 1.2 million high-resolution images with 1000 different classes and challenges researchers to achieve the lowest top-1 and top-5 error rates (top-5 error rate would be the percent of test images where the correct label is not one of the model&rsquo;s five most likely labels).</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgC6IXiiTCyUZJvqEr6IkPeO-zIKFqwG4WrAykjRTzTF8uWBAHD8d_G9POJ9W6MiFmai7AOM-IA742e2i3ywfdgiyKBkj6uwKYQxA4dno3k2VhxO5QOy62nY3uG7cz4oj-hcH2a8dVJWKIOXAF5_4yEkx3scVjaWTX-RkUyHmRHRvxzwEJaNJtSxTaRjg/s698/graph.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgC6IXiiTCyUZJvqEr6IkPeO-zIKFqwG4WrAykjRTzTF8uWBAHD8d_G9POJ9W6MiFmai7AOM-IA742e2i3ywfdgiyKBkj6uwKYQxA4dno3k2VhxO5QOy62nY3uG7cz4oj-hcH2a8dVJWKIOXAF5_4yEkx3scVjaWTX-RkUyHmRHRvxzwEJaNJtSxTaRjg/s320/graph.PNG" alt=""  />
+</a></p>
+<p>For the first two years (2010 and 2011), the winning systems were not neural network-based at all. They used multiple layers of hand-designed feature extractors with linear neural networks on top.</p>
+<p>Training CNNs were prohibitively expensive to apply on large scale to high-resolution images during that time. It was in 2012 with the introduction of GPUs paired with a highly-optimized implementation of 2D convolutions and the ImageNet dataset containing enough labeled examples, it became easy to train such models without severe overfitting.</p>
+<p>AlexNet was the largest convolutional neural network trained at that time and achieved the best results ever reported on the ImageNet dataset, crushing all the other competitors by a big margin. This made CNNs a mainstream topic in the field of computer vision and AlexNet can undoubtedly be called one of the most influential research works in this field (the number of citations this paper has is just crazy!).</p>
+<p><strong>Data Manipulation</strong>: Since the images of the dataset are of variable size, they are first downsampled to a fixed size of 256 $\times$ 256. This is done by rescaling the shortest side of a rectangular image to a length of 256 and then cropping out the central 256 $\times$ 256 patches. The mean image is then subtracted from the training set.</p>
+<p>Two forms of data augmentation techniques are applied to the training data to reduce overfitting, which is performed on the fly on the CPU while the GPUs train the previous batch of data, so essentially is computationally free.</p>
+<ol>
+<li>
+<p>The first form consists of extracting random 224 $\times$ 224 patches (and their horizontal reflections) from the original image, increasing the size of the training set by a factor of 2048. At test time, the network makes a prediction by extracting five 224 $\times$ 224 patches (the four corner patches and the center patch) as well as their horizontal reflections (ten patches in total), and averaging the predictions on them.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirkqoz4qSdffCaBJqEHRrGEwpr8l5a_fxwYDg4xunp2wEA-VZZt27Dz6waWHDugbq-9K-HnT4InaVhXz1yr5vskM8sWtUAelQVLovPvz50zZN8-D8t1YkOQvfzPq6O5z7tAOjDmWLZ74_SLG4UHc1pS-FnslyKc8U-I-Jjmm9aCb2ULN1bG4lhCnYH-A/s1173/AlexNet-dataaug1.jpg"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirkqoz4qSdffCaBJqEHRrGEwpr8l5a_fxwYDg4xunp2wEA-VZZt27Dz6waWHDugbq-9K-HnT4InaVhXz1yr5vskM8sWtUAelQVLovPvz50zZN8-D8t1YkOQvfzPq6O5z7tAOjDmWLZ74_SLG4UHc1pS-FnslyKc8U-I-Jjmm9aCb2ULN1bG4lhCnYH-A/w640-h198/AlexNet-dataaug1.jpg" alt=""  />
+</a></p>
+</li>
+<li>
+<p>The second form is called PCA Color Augmentation (also called Fancy PCA) which consists of altering the intensities of the RGB channels in the training images. More details about this method and the code to implement it can be found here: <a href="https://aparico.github.io/">Fancy PCA</a>. This scheme approximately captures an important property of images that object identity is invariant to changes in the intensity and color of the illumination and reduces the top-1 error rate by over 1%.</p>
+</li>
+</ol>
+<p><strong>Architecture</strong>: The model has 8 layers: 5 Convolution Layers and 3 Fully-connected layers. The authors mention that this depth is vital as it was found that removing any convolution layer resulted in inferior performance. The output of the last fully-connected layer is fed to a 1000-way softmax (which produces a distribution over the 1000 class labels).</p>
+<p>The original paper mentions an input image shape of 224 $\times$ 224 and uses a pad of 3 in the first convolution. In practice, we begin with an image of size 227 $\times$ 227, and the padding is made zero, so as to encompass more information from the image (as padding of zero has no information)</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCGSJRYAVBWctcRv12fZHRP0ywDlJxkA05O7YmaheswiH5OGwW4fv1Fpa6c_xmElE2RAdhvdxXxBh_X_zANhqYCST3dmt3bNml-cLtbNtXPJO5He9wFNL-QFVHbqzLkN3K5muRDHC5DJEsJMLNP-yDHlxih95ml7E1hOSXQOmYw33IzUHsNoJLpliT0g/s1440/alexnet.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiCGSJRYAVBWctcRv12fZHRP0ywDlJxkA05O7YmaheswiH5OGwW4fv1Fpa6c_xmElE2RAdhvdxXxBh_X_zANhqYCST3dmt3bNml-cLtbNtXPJO5He9wFNL-QFVHbqzLkN3K5muRDHC5DJEsJMLNP-yDHlxih95ml7E1hOSXQOmYw33IzUHsNoJLpliT0g/w640-h304/alexnet.png" alt=""  />
+</a></p>
+<p>Tanh non-linearity was commonly used during that time, and AlexNet was the first CNN architecture that used ReLU (called it non-saturating nonlinearity). The authors argued that CNNs train several times faster with ReLU than their equivalent tanh units because tanh saturates for large absolute values of activations killing the gradient (vanishing gradient problem). Today, ReLU is the default choice of the activation function.</p>
+<p>Max-pooling layers are included in the network with a kernel size of 3 and stride of 2, and they call it &ldquo;overlapping pooling&rdquo;. Compared to local pooling (kernel size = 2 and stride = 2), overlapping pooling reduces the top-1 and top-5 error rates by 0.4% and 0.3% respectively because they are slightly more difficult to overfit.</p>
+<p>Dropout layers with a probability of 0.5 are also added in the first two fully-connected layers to prevent overfitting during training. Without dropout, the network exhibits substantial overfitting. It roughly doubles the number of iterations required to converge.</p>
+<p>AlexNet uses &ldquo;Local Response Normalization&rdquo; that reduces top-1 and top-5 error rates by 1.4% and 1.2% respectively. This is not used anymore so we won&rsquo;t talk about it, but it was an early precursor to batch normalization.</p>
+<p><strong>Training</strong>: The model was trained on the Cross-entropy loss function using stochastic gradient descent with a batch size of 128 examples, momentum of 0.9, and weight decay of 0.0005. It was found that this small amount of weight decay was important for the model to learn as it is not merely a regularizer, but it also reduces the model&rsquo;s training error.</p>
+<p>The weights for each layer were initialized from a zero-mean Gaussian distribution with a standard deviation of 0.01. The biases in the second, fourth, and fifth convolutional layers, as well as in the fully-connected layers, are initialized with the constant 1 and for the remaining layers with the constant 0.</p>
+<p>An equal learning rate is used for all the layers. The learning rate was initialized at 0.01 and reduced three times prior to termination, which was divided by 10 when the validation error rate stopped improving with the current learning rate.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhDS72F8GI3cK9BsClFRBR18dZ62T7qI6B-BsSiXa2ExZH_r893ue_jBYxWwo3U4flonTVYsu1S2q_XISE4dxlRDd_qeYYOWRMiZD6RwQXPpj311owInv0IfwPZRI8iU5HbB5urKSvVzspbcXbjLoiqRKE0BbsN5n_1gf5CDGOS2E8makzb56jtQ4Mn0w/s1400/alexnetog.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhDS72F8GI3cK9BsClFRBR18dZ62T7qI6B-BsSiXa2ExZH_r893ue_jBYxWwo3U4flonTVYsu1S2q_XISE4dxlRDd_qeYYOWRMiZD6RwQXPpj311owInv0IfwPZRI8iU5HbB5urKSvVzspbcXbjLoiqRKE0BbsN5n_1gf5CDGOS2E8makzb56jtQ4Mn0w/w640-h220/alexnetog.png" alt=""  />
+</a></p>
+<p>Above is a typical AlexNet architecture image that you would see almost everywhere. The model was spread across two GTX 580 3GB GPUs as the model was too big to fit on one GPU memory, and they communicated only in certain layers to save computation. However, we don&rsquo;t need such a complicated scheme anymore as we can train the entire model on a single GPU (Google colab provides 12GB/16GB GPUs today).</p>
+<p>It took about 90 epochs through the training set of 1.2 million images, which took five to six days on these two GPUs.</p>
+<p>Overall AlexNet showed the power of the convolutional neural network in achieving record-breaking results on an image classification task. Important design choices of the paper are,</p>
+<ul>
+<li>8 Layers: 5 CNN layers + 3 Fully-connected layers</li>
+<li>Activation Function: ReLU</li>
+<li>Data pre-processing: subtract mean image</li>
+<li>Heavy data augmentation</li>
+<li>Regularization: L2 Weight decay ($\lambda$ = 5e-4), Dropout (p=0.5)</li>
+<li>Learning rate: 0.01 and reduced (divided by 10) when val accuracy plateaus</li>
+<li>Optimization Method: SGD + Momentum (m=0.9) with batch size of 128</li>
+<li>Loss function: Cross-Entropy loss</li>
+</ul>
+<p>Link to the Paper: <a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">ImageNet Classification with Deep Convolutional Neural Networks</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/vggnet/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>VGGNet: Very Deep Convolutional Networks</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/img-classification-mnist/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Image Classification using CNNs: MNIST dataset</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

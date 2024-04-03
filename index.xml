@@ -10,11 +10,141 @@
     <atom:link href="https://yugajmera.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Understanding Neural Radiance Fields (NeRFs)</title>
-      <link>https://yugajmera.github.io/posts/nerf/nerf/</link>
+      <link>https://yugajmera.github.io/posts/nerf/post/</link>
       <pubDate>Sun, 05 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/nerf/nerf/</guid>
+      <guid>https://yugajmera.github.io/posts/nerf/post/</guid>
       <description>Imagine being able to generate photorealistic 3D models of objects and scenes that can be viewed from any angle, with details so realistic that they are indistinguishable from reality. That&amp;rsquo;s what the Neural Radiance Fields (NeRF) is capable of doing and much more. With more than 50 papers related to NeRFs in the CVPR 2022, it is one of the most influential papers of all time.
 Neural fields A neural field is a neural network that parametrizes a signal.</description>
+    </item>
+    <item>
+      <title>Decoding Diffusion Models</title>
+      <link>https://yugajmera.github.io/posts/diffusion-models/post/</link>
+      <pubDate>Sun, 20 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/diffusion-models/post/</guid>
+      <description>Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho.</description>
+    </item>
+    <item>
+      <title>Generative Adversarial Networks: A Two-player game</title>
+      <link>https://yugajmera.github.io/posts/gan/post/</link>
+      <pubDate>Sat, 19 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/gan/post/</guid>
+      <description>Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.
+With GANs, we don&amp;rsquo;t explicitly learn the distribution of the data $p_{\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.
+A latent variable is sampled from a prior $\mathbf{z} \sim p(\mathbf{z})$ and passed through the Generator to obtain a fake sample $\mathbf{x} = G(\mathbf{z})$.</description>
+    </item>
+    <item>
+      <title>Generative Modeling with Variational Autoencoders</title>
+      <link>https://yugajmera.github.io/posts/variational-autoencoder/post/</link>
+      <pubDate>Fri, 18 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/variational-autoencoder/post/</guid>
+      <description>Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\mathbf{x}$ to predict labels $\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.
+The other side of machine learning is called unsupervised learning where we just have data $\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model.</description>
+    </item>
+    <item>
+      <title>ResNet: The Revolution of Depth</title>
+      <link>https://yugajmera.github.io/posts/resnet/post/</link>
+      <pubDate>Sun, 13 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/resnet/post/</guid>
+      <description>In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.
+Another major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models.</description>
+    </item>
+    <item>
+      <title>InceptionNet: Google&#39;s comeback for ImageNet Challenge</title>
+      <link>https://yugajmera.github.io/posts/inceptionnet/post/</link>
+      <pubDate>Sat, 12 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/inceptionnet/post/</guid>
+      <description>The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).
+But with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources.</description>
+    </item>
+    <item>
+      <title>VGGNet: Very Deep Convolutional Networks</title>
+      <link>https://yugajmera.github.io/posts/vggnet/post/</link>
+      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/vggnet/post/</guid>
+      <description>With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.
+ZFNet used 7 $\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\times$ 11 filters with a stride of 4.</description>
+    </item>
+    <item>
+      <title>AlexNet: The First CNN to win ImageNet Challenge</title>
+      <link>https://yugajmera.github.io/posts/alexnet/post/</link>
+      <pubDate>Sun, 09 Oct 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/alexnet/post/</guid>
+      <description>Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let&amp;rsquo;s look at the different CNN architectures that have performed well in the past on image classification tasks.
+The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models.</description>
+    </item>
+    <item>
+      <title>Image Classification using CNNs: MNIST dataset</title>
+      <link>https://yugajmera.github.io/posts/img-classification-mnist/post/</link>
+      <pubDate>Mon, 19 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/img-classification-mnist/post/</guid>
+      <description>Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
+Now that we have all the ingredients required to code up our deep learning architecture, let&amp;rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch.</description>
+    </item>
+    <item>
+      <title>Neural Network for Images: Convolutional Neural Networks (CNNs)</title>
+      <link>https://yugajmera.github.io/posts/cnn/post/</link>
+      <pubDate>Sun, 18 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/cnn/post/</guid>
+      <description>Linear Neural Networks that we have talked about till this point do not work when dealing with image data, as they don&amp;rsquo;t respect the spatial structure of images. When a neural network is applied to a 2D image, it flattens it out in 1D and then uses it as input. This creates a need for a new computational node that operates on images - Convolutional Neural Networks (CNNs).
+A convolution layer has a 3D image tensor (3 X H X W) as an input and a 3D filter (also called a kernel) that convolves over the image, i.</description>
+    </item>
+    <item>
+      <title>Understanding Batch Normalization</title>
+      <link>https://yugajmera.github.io/posts/batch-norm/post/</link>
+      <pubDate>Sun, 18 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/batch-norm/post/</guid>
+      <description>In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.
+The idea is to normalize the outputs of a layer so that they have zero mean and unit variance.</description>
+    </item>
+    <item>
+      <title>Data Manipulation for Deep Learning</title>
+      <link>https://yugajmera.github.io/posts/data-manipulation/post/</link>
+      <pubDate>Sun, 21 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/data-manipulation/post/</guid>
+      <description>Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model.</description>
+    </item>
+    <item>
+      <title>Regularization: Weight decay, Dropout, Early stopping</title>
+      <link>https://yugajmera.github.io/posts/regularization/post/</link>
+      <pubDate>Mon, 15 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/regularization/post/</guid>
+      <description>Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly.</description>
+    </item>
+    <item>
+      <title>Using Learning Rate Schedules for Training</title>
+      <link>https://yugajmera.github.io/posts/learning-rates/post/</link>
+      <pubDate>Sat, 06 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/learning-rates/post/</guid>
+      <description>All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.
+But it is not always possible to come up with one &amp;ldquo;perfect&amp;rdquo; learning rate by trial and error.</description>
+    </item>
+    <item>
+      <title>Implementing Backpropagation</title>
+      <link>https://yugajmera.github.io/posts/backprop/post/</link>
+      <pubDate>Fri, 05 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/backprop/post/</guid>
+      <description>While we have talked about how optimization algorithms use the negative gradient of the loss function with respect to the weights to update the parameters of our model, we will now focus on how to actually compute these gradients on an arbitrary loss function. We use a backpropagation technique that creates a computation graph to perform a forward and backward pass on the model. In the forward pass, we compute outputs of each layer of our neural network sequentially.</description>
+    </item>
+    <item>
+      <title>Neural Networks: Activation functions and Weight Initialization</title>
+      <link>https://yugajmera.github.io/posts/neural-networks/post/</link>
+      <pubDate>Fri, 05 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/neural-networks/post/</guid>
+      <description>In this post, we will make choices for components of our deep neural network architecture, including activation functions and how the weights of each layer get initialized to ease the optimization process. A neural network is composed of interconnected layers, with every neuron in one layer connecting to every neuron in the next layer. Such a fully connected neural network is often called Multi-layer Perceptron (MLP). Let&amp;rsquo;s dive right into defining our deep neural network architecture.</description>
+    </item>
+    <item>
+      <title>Optimization Methods: SGD, Momentum, AdaGrad, RMSProp, Adam</title>
+      <link>https://yugajmera.github.io/posts/optimization/post/</link>
+      <pubDate>Mon, 01 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/optimization/post/</guid>
+      <description>The loss function tells us how good our current classifier (with our current weights) is. Since we are a greedy bunch of people, we want to find those specific sets of weights that incurs a minimal loss on our training dataset to fit the data as well as we can to achieve the maximum possible accuracy on the test set. We generally initialize our model with some weights and then optimize them to obtain the best model.</description>
+    </item>
+    <item>
+      <title>Loss functions in Deep Learning</title>
+      <link>https://yugajmera.github.io/posts/loss-function/post/</link>
+      <pubDate>Sat, 30 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/loss-function/post/</guid>
+      <description>While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!</description>
     </item>
     <item>
       <title>My 1st post</title>

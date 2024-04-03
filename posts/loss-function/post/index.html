@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Loss functions in Deep Learning | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/loss-function/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/loss-function/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Loss functions in Deep Learning" />
+<meta property="og:description" content="While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/loss-function/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-07-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-07-30T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Loss functions in Deep Learning"/>
+<meta name="twitter:description" content="While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Loss functions in Deep Learning",
+      "item": "https://yugajmera.github.io/posts/loss-function/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Loss functions in Deep Learning",
+  "name": "Loss functions in Deep Learning",
+  "description": "While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!",
+  "keywords": [
+    
+  ],
+  "articleBody": "While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function! I call it the “Oxygen of Deep Learning” because, without a loss function, a neural network cannot be trained (so it would just be dead).\nA loss function also called an objective function or a cost function, shows us “how” bad our neural network’s predictions are or quantify our unhappiness with scores (another word for predictions) across the training data. So lower the loss, the better our model is. An abstract formulation can be (on image classification task) as follows - Given an image $x_i$ from the training data of an image classification task and its label (or true class) $y_i$, we feed $x_i$ into our model to obtain scores for each class. In the picture below we feed an image of a cat, car, and frog into our model to generate scores as shown.\nThe scores of the true class are in bold. The class with the maximum score is the predicted label (a class to which the image belongs according to our model). Based on these scores, a loss is computed for each of the input image. The final loss is the average of the losses of all input images. We talk about two of the most commonly used loss functions in deep learning - SVM loss and Softmax loss.\nSVM Loss\nThe intuition behind Support Vector Machine (SVM) loss is that the score of the correct class should be higher than all the other scores by some threshold value. This seems reasonable as we would want our classifier to assign a high score for the right category and low scores for all the other wrong categories. The SVM loss has the form, \\begin{align} L_i = \\sum_{j \\neq y_i} \\text{max}(0, \\underbrace{s_j}_{\\text{score of jth class}} - \\underbrace{s_{y_i}}_{\\text{score of true class}} + \\underbrace{1}_{\\text{margin}}) \\end{align} Note that there is zero loss for predicting the true class.\nThe SVM loss is also called Hinge Loss because of its shape like a door hinge. If the score of the correct class is greater than all the other scores plus a margin, the loss is zero. Otherwise, the loss increases linearly.\nLet’s derive the SVM loss for our example. For the cat image, the true score $s_{y_i} = 3.2$. The loss is computed on the car and frog classes as, \\begin{equation*} L_1 = \\text{max}(0, 5.1 - 3.2 + 1) + \\text{max}(0, -1.7 - 3.2 + 1) = 2.9 + 0 = 2.9 \\end{equation*} Similarly for the other two training examples, \\begin{align*} L_2 \u0026= \\text{max}(0, 1.3 - 4.9 + 1) + \\text{max}(0, 2 - 4.9 + 1) = 0 \\\\ L_3 \u0026= \\text{max}(0, 2.2 + 3.1 + 1) + \\text{max}(0, 2.5 + 3.1 + 1) = 6.3 + 6.6 = 12.9 \\end{align*} The final loss of the model is the average of all losses: $L_{\\text{svm}} = 5.26$.\nCross-Entropy Loss\nCross-Entropy loss or Logistic Loss interprets the raw classifier scores as probabilities. We take the raw scores and run them through the exponential function. This makes sure that all the probabilities are positive. We then normalize these probabilites to obtain a distribution over categories. This transformation is called the softmax function. Lets do this on our first cat image example.\nThe cross-entropy between a “true” distribution $p$ and an estimated distribution $q$ is defined as: \\begin{equation*} H(p,q) = - \\sum_x p(x) \\text{ log} (q(x)) \\end{equation*} The softmax function gives our estimated distribution $q$. The true or desired distribution is where all probability mass is on the correct class (i.e. $p = [0, .. 1, .. , 0]$ contains a single 1 at the $y_i$th position). Hence the cross-entropy would be the negative log of the probability of true class. For the above cat image, the loss is $L_1 = -log(0.13) = 2.04$. The cross-entropy loss has the form, \\begin{equation} L_i = -\\text{log} \\underbrace{\\left( \\frac{e^{s_{y_i}}}{\\sum_j e^{s_j}} \\right)}_{\\text{softmax function}} \\end{equation}\nWhile these are the two most commonly used loss functions, a complete list of all loss functions can be found here - Loss Functions\n",
+  "wordCount" : "743",
+  "inLanguage": "en",
+  "datePublished": "2022-07-30T00:00:00Z",
+  "dateModified": "2022-07-30T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/loss-function/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Loss functions in Deep Learning
+    </h1>
+    <div class="post-meta"><span title='2022-07-30 00:00:00 +0000 UTC'>July 30, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p>While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function! I call it the &ldquo;Oxygen of Deep Learning&rdquo; because, without a loss function, a neural network cannot be trained (so it would just be dead).</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirlfHbFBMJNvbZ39hA3EshIe8eQc80yVE-uqxZrE7Rj0z0uuyxo2VtPAn1PLf6VzQJDAhOnG09SRjpikFq8w6FkwNMNRCPNi1DZxPWFcLrMD-azR2-gEjyjC-DVaUnmrEVTxrBysRlY8f1Hvz6SdYzg1vkbHZXte-7QRfgOh5guRmdmyNcEtalf6HXhg/s1145/loss.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirlfHbFBMJNvbZ39hA3EshIe8eQc80yVE-uqxZrE7Rj0z0uuyxo2VtPAn1PLf6VzQJDAhOnG09SRjpikFq8w6FkwNMNRCPNi1DZxPWFcLrMD-azR2-gEjyjC-DVaUnmrEVTxrBysRlY8f1Hvz6SdYzg1vkbHZXte-7QRfgOh5guRmdmyNcEtalf6HXhg/w640-h238/loss.PNG" alt=""  />
+</a></p>
+<p>A loss function also called an objective function or a cost function, shows us &ldquo;how&rdquo; bad our neural network&rsquo;s predictions are or quantify our unhappiness with scores (another word for predictions) across the training data. So lower the loss, the better our model is. An abstract formulation can be (on image classification task) as follows - Given an image $x_i$ from the training data of an image classification task and its label (or true class) $y_i$, we feed $x_i$ into our model to obtain scores for each class. In the picture below we feed an image of a cat, car, and frog into our model to generate scores as shown.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgucUL7zdLKqyUHzOUnNvDDoFCw7Zv1oi52Cxmw3z07ko5ygOrP1WhYyphWZw-ub3CuofEfkyFAnxdt7WK0TXgYEnN0p9Df2S49OC3y3vnQK1JfpSxTEQT5gkmkYkuVznhmKolSEjFd0CpuvN3w4i_KGH6PDGhZcHWV5UEHI08-ncxSMrF6R6x7v6jRdw/s707/dataset.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgucUL7zdLKqyUHzOUnNvDDoFCw7Zv1oi52Cxmw3z07ko5ygOrP1WhYyphWZw-ub3CuofEfkyFAnxdt7WK0TXgYEnN0p9Df2S49OC3y3vnQK1JfpSxTEQT5gkmkYkuVznhmKolSEjFd0CpuvN3w4i_KGH6PDGhZcHWV5UEHI08-ncxSMrF6R6x7v6jRdw/w400-h235/dataset.PNG" alt=""  />
+</a></p>
+<p>The scores of the true class are in bold. The class with the maximum score is the predicted label (a class to which the image belongs according to our model). Based on these scores, a loss is computed for each of the input image. The final loss is the average of the losses of all input images. We talk about two of the most commonly used loss functions in deep learning - SVM loss and Softmax loss.</p>
+<p><strong>SVM Loss</strong></p>
+<p>The intuition behind Support Vector Machine (SVM) loss is that the score of the correct class should be higher than all the other scores by some threshold value. This seems reasonable as we would want our classifier to assign a high score for the right category and low scores for all the other wrong categories. The SVM loss has the form, \begin{align} L_i = \sum_{j \neq y_i} \text{max}(0, \underbrace{s_j}_{\text{score of jth class}} - \underbrace{s_{y_i}}_{\text{score of true class}} + \underbrace{1}_{\text{margin}}) \end{align} Note that there is zero loss for predicting the true class.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhJ1OCj0t1fniJWu4phgFGerMiAQNqHVfwhVxfpNSrb8JS93CWfSuILnq3oi97G15W7PpIi5uyOwrqWIWOTUN0o8oamXdNSehas6NyoHA-wXyj80fYnJTvEg2P0eEYAemohGKSj-XDaEXgutePYwFdGm8E2oTmS91KeEGqK5wJwcxTRVoRcGrViiItUJg/s436/hinge2.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhJ1OCj0t1fniJWu4phgFGerMiAQNqHVfwhVxfpNSrb8JS93CWfSuILnq3oi97G15W7PpIi5uyOwrqWIWOTUN0o8oamXdNSehas6NyoHA-wXyj80fYnJTvEg2P0eEYAemohGKSj-XDaEXgutePYwFdGm8E2oTmS91KeEGqK5wJwcxTRVoRcGrViiItUJg/s320/hinge2.png" alt=""  />
+</a></p>
+<p>The SVM loss is also called Hinge Loss because of its shape like a door hinge. If the score of the correct class is greater than all the other scores plus a margin, the loss is zero. Otherwise, the loss increases linearly.</p>
+<p>Let&rsquo;s derive the SVM loss for our example. For the cat image, the true score $s_{y_i} = 3.2$. The loss is computed on the car and frog classes as, \begin{equation*} L_1 = \text{max}(0, 5.1 - 3.2 + 1) + \text{max}(0, -1.7 - 3.2 + 1) = 2.9 + 0 = 2.9 \end{equation*} Similarly for the other two training examples, \begin{align*} L_2 &amp;= \text{max}(0, 1.3 - 4.9 + 1) + \text{max}(0, 2 - 4.9 + 1) = 0 \\ L_3 &amp;= \text{max}(0, 2.2 + 3.1 + 1) + \text{max}(0, 2.5 + 3.1 + 1) = 6.3 + 6.6 = 12.9 \end{align*} The final loss of the model is the average of all losses: $L_{\text{svm}} = 5.26$.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhZZ7TtRGx3nRHi8lqykU4y7rwHeJVu2_2vs7-Jl5ElsmNfuq0TW6K8-lHuZXheLffYDLKRAey0PuleKLDDfnKAr1zwUsF7kvEzHP4pmitIv2JiIgaHuR1a7lOKXYQ-YgtRNUnxlTyc3dEiuUv3FMpQSUEWlE2UxuGi9Znn8888aWVj5MS0UHfeN7gdcg/s707/loss.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhZZ7TtRGx3nRHi8lqykU4y7rwHeJVu2_2vs7-Jl5ElsmNfuq0TW6K8-lHuZXheLffYDLKRAey0PuleKLDDfnKAr1zwUsF7kvEzHP4pmitIv2JiIgaHuR1a7lOKXYQ-YgtRNUnxlTyc3dEiuUv3FMpQSUEWlE2UxuGi9Znn8888aWVj5MS0UHfeN7gdcg/w400-h270/loss.PNG" alt=""  />
+</a></p>
+<p><strong>Cross-Entropy Loss</strong></p>
+<p>Cross-Entropy loss or Logistic Loss interprets the raw classifier scores as probabilities. We take the raw scores and run them through the exponential function. This makes sure that all the probabilities are positive. We then normalize these probabilites to obtain a distribution over categories. This transformation is called the softmax function. Lets do this on our first cat image example.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibVv-1ktgARYNReVSrNvWbfdBBXT0o6z352hYIpJqaCNftFK-FiZ8CsXvlJ6BAJQnKjTjpkH1NGg_ba6hXsagChSR6t7j9-12eDB1f4WdR7BrKjhJe9aR3Hj2r_zEFV-Wk-5j62KSAsXPXnnrw2dQG-SllgjYUgespJuJeFTz0y8pd2sm0RBPTUqiGqw/s1060/Untitled.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibVv-1ktgARYNReVSrNvWbfdBBXT0o6z352hYIpJqaCNftFK-FiZ8CsXvlJ6BAJQnKjTjpkH1NGg_ba6hXsagChSR6t7j9-12eDB1f4WdR7BrKjhJe9aR3Hj2r_zEFV-Wk-5j62KSAsXPXnnrw2dQG-SllgjYUgespJuJeFTz0y8pd2sm0RBPTUqiGqw/w640-h308/Untitled.png" alt=""  />
+</a></p>
+<p>The cross-entropy between a &ldquo;true&rdquo; distribution $p$ and an estimated distribution $q$ is defined as: \begin{equation*} H(p,q) = - \sum_x p(x) \text{ log} (q(x)) \end{equation*} The softmax function gives our estimated distribution $q$. The true or desired distribution is where all probability mass is on the correct class (i.e. $p = [0, .. 1, .. , 0]$ contains a single 1 at the $y_i$th position). Hence the cross-entropy would be the negative log of the probability of true class. For the above cat image, the loss is $L_1 = -log(0.13) = 2.04$. The cross-entropy loss has the form, \begin{equation} L_i = -\text{log} \underbrace{\left( \frac{e^{s_{y_i}}}{\sum_j e^{s_j}} \right)}_{\text{softmax function}} \end{equation}</p>
+<p>While these are the two most commonly used loss functions, a complete list of all loss functions can be found here - <a href="https://pytorch.org/docs/stable/nn.functional.html#loss-functions">Loss Functions</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/optimization/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Optimization Methods: SGD, Momentum, AdaGrad, RMSProp, Adam</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/sample_post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>My 1st post</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

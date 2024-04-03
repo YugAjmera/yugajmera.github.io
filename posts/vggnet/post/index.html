@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>VGGNet: Very Deep Convolutional Networks | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.
+ZFNet used 7 $\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\times$ 11 filters with a stride of 4.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/vggnet/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/vggnet/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="VGGNet: Very Deep Convolutional Networks" />
+<meta property="og:description" content="With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.
+ZFNet used 7 $\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\times$ 11 filters with a stride of 4." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/vggnet/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-10-18T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="VGGNet: Very Deep Convolutional Networks"/>
+<meta name="twitter:description" content="With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.
+ZFNet used 7 $\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\times$ 11 filters with a stride of 4."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "VGGNet: Very Deep Convolutional Networks",
+      "item": "https://yugajmera.github.io/posts/vggnet/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "VGGNet: Very Deep Convolutional Networks",
+  "name": "VGGNet: Very Deep Convolutional Networks",
+  "description": "With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.\nZFNet used 7 $\\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\\times$ 11 filters with a stride of 4.",
+  "keywords": [
+    
+  ],
+  "articleBody": " With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.\nZFNet used 7 $\\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\\times$ 11 filters with a stride of 4. The intuition behind this is that we were losing a lot of pixel information (aggressively downsampling the input), which can be retained by having smaller filter sizes and small strides. The padding is removed for the first two conv layers (to match the subsequent conv layers shapes of AlexNet). With just these two changes, they are able to achieve a reasonably large increase in performance over AlexNet.\nAlexNet or ZFNet were designed in somewhat an ad-hoc manner with some arbitrary number of convolution layers, and pooling layers and the configurations of each layer were set by trial and error. This makes it very hard to scale them.\nIn 2014, the 2nd place winner of this challenge was VGGNet, which was one of the first architectures that had a principled design throughout to guide the overall configuration of the network. With such a method, they were able to create deeper networks (16-19 layers!) and achieve significant improvement over the prior configurations.\nArchitecture: VGGNet has very clean and simple design principles where the configuration of each layer is fixed as,\nAll convolution layers are fixed to have a kernel size of 3 $\\times$ 3 with a stride 1 and pad 1. All max-pooling layers have a size of 2 $\\times$ 2 with stride 2. After each pooling layer, double the number of channels. While AlexNet had 5 convolutional layers, VGGNet has 5 stages,\nStage 1: conv-conv-pool\nStage 2: conv-conv-pool\nStage 3: conv-conv-pool\nStage 4: conv-conv-conv-[conv]-pool\nStage 5: conv-conv-conv-[conv]-pool\nThe authors presented two variants, VGG-16 and VGG-19 with 16 and 19 layers respectively. VGG-19 has 4 convolutions in stages 4 and 5.\nInspirations from AlexNet: VGGNet uses ReLU non-linearities; the stack of convolution layers is followed by 3 fully-connected layers, with a softmax layer at the end; Dropout layers are added after the first two fully-connected layers (dropout ratio set to 0.5).\nA 3 $\\times$ 3 convolutions is used as it is the smallest size to capture the notion of left/right, up/down, and center. A stack of two such 3 $\\times$ 3 conv layers have an effective receptive field of 5 $\\times$ 5, and three such layers that a 7 $\\times$ 7 effective receptive field. So what have we gained by using, for instance, a stack of three 3 $\\times$ 3 conv layers instead of a single 7×7 layer?\nThree non-linearities instead of one - makes the decision function more discriminative Decrease in the number of parameters - For input and output C channels, three 3 $\\times$ 3 would have $3(3 * 3 * C^2) = 27C^2$ params, whereas a 7 $\\times$ 7 layers woudl have $7 * 7 * C^2 = 49C^2$ params. A padding of 1 is used so that the spatial dimension is preserved after convolution(‘same’ padding).\nNo kind of normalization is used in the network as it does not improve the performance on the dataset but instead leads to increased memory consumption and computation time.\nTraining: The training hyperparameters and choices follows AlexNet. The model was trained on the Cross-entropy loss function using mini-batch gradient descent with a batch size of 256 and momentum of 0.9. The training was regularized with an L2 weight decay of 0.0005.\nThe learning rate was initialized at 0.01 and then decreased by a factor of 10 when the validation set accuracy stopped improving. In total, the learning rate was decreased 3 times, and the learning was stopped after 74 epochs.\nIn spite of a larger number of parameters and the greater depth as compared to AlexNet, VGGNet required fewer epochs to converge due to (a) implicit regularisation imposed by greater depth and smaller conv filter sizes, (b) better initialization of weights and biases - they used Xavier initialization.\nOverall VGGNet highlighted the importance of depth in achieving better performance on the image classification task. Important design choices of the paper are,\n5 Stages: Each conv 3 $\\times$ 3, s=1, p=1; Each max-pool 2 $\\times$ 2, s = 2 Number of channels: 64, 128, 256, 512 No Normalization used Activation Function: ReLU Data pre-processing: subtract per-channel mean (mean RGB value from each pixel) Weight Initialization: Xavier Regularization: L2 Weight decay ($\\lambda$ = 5e-4), Dropout (p=0.5) Learning rate: 0.01 and reduced (divided by 10) when val accuracy plateaus Optimization Method: SGD + Momentum (m=0.9) with batch size of 256 Loss function: Cross-Entropy loss Link to the Papers: Visualizing and Understanding Convolutional Networks , Very Deep Convolutional Networks for Large-Scale Image Recognition\nTrivia: VGGNet is named after the Visual Geometry Group at Oxford where a grad student (Karen Simonyan) and a faculty member (Andrew Zisserman) came up with this idea and managed to come very close to GoogLeNet’s performance which was built by the whole team at Google with access to lots of resources!\n",
+  "wordCount" : "876",
+  "inLanguage": "en",
+  "datePublished": "2022-10-18T00:00:00Z",
+  "dateModified": "2022-10-18T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/vggnet/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      VGGNet: Very Deep Convolutional Networks
+    </h1>
+    <div class="post-meta"><span title='2022-10-18 00:00:00 +0000 UTC'>October 18, 2022</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjaITPIfp_vL5Dz4sRSaR0dB66YMNOsBuS3ocqU1nVKtAmPm8s8M3KTqHHJ-GszFnUtS6QNT1-i9HbaanoNSJSXO_Xgs8hVESkgRR5cm549nOvW4QlYU-OhfQxXIi3U2ahlm9DJdDRHRfJs198ozmXAlvdEbPqpXFMZFylm1mhlZrV-gLyv_Z32pHoC4g/s850/graph2.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjaITPIfp_vL5Dz4sRSaR0dB66YMNOsBuS3ocqU1nVKtAmPm8s8M3KTqHHJ-GszFnUtS6QNT1-i9HbaanoNSJSXO_Xgs8hVESkgRR5cm549nOvW4QlYU-OhfQxXIi3U2ahlm9DJdDRHRfJs198ozmXAlvdEbPqpXFMZFylm1mhlZrV-gLyv_Z32pHoC4g/w400-h326/graph2.PNG" alt=""  />
+</a></p>
+<p>With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.</p>
+<p>ZFNet used 7 $\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\times$ 11 filters with a stride of 4. The intuition behind this is that we were losing a lot of pixel information (aggressively downsampling the input), which can be retained by having smaller filter sizes and small strides. The padding is removed for the first two conv layers (to match the subsequent conv layers shapes of AlexNet). With just these two changes, they are able to achieve a reasonably large increase in performance over AlexNet.</p>
+<p>AlexNet or ZFNet were designed in somewhat an ad-hoc manner with some arbitrary number of convolution layers, and pooling layers and the configurations of each layer were set by trial and error. This makes it very hard to scale them.</p>
+<p>In 2014, the 2nd place winner of this challenge was VGGNet, which was one of the first architectures that had a principled design throughout to guide the overall configuration of the network. With such a method, they were able to create deeper networks (16-19 layers!) and achieve significant improvement over the prior configurations.</p>
+<p><strong>Architecture:</strong> VGGNet has very clean and simple design principles where the configuration of each layer is fixed as,</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhIMSWXJifgbOZ4PIWUZnozrfVy3U3CZvFkXlLINmiI-2VjWWrO0jg_nuxhAb0zFjZgodftyZWZLE2XE4G79LuAML9CGlcye2Onco1ByeP9UUcaqRkWDLwysA5v_QbASkE0pqR926EFvhjtHn1W401J80nvvxFg4WVCdlEveHEWtzPbufaK9nF5CRfTPw/s739/vggca.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhIMSWXJifgbOZ4PIWUZnozrfVy3U3CZvFkXlLINmiI-2VjWWrO0jg_nuxhAb0zFjZgodftyZWZLE2XE4G79LuAML9CGlcye2Onco1ByeP9UUcaqRkWDLwysA5v_QbASkE0pqR926EFvhjtHn1W401J80nvvxFg4WVCdlEveHEWtzPbufaK9nF5CRfTPw/w299-h400/vggca.PNG" alt=""  />
+</a></p>
+<ul>
+<li>All convolution layers are fixed to have a kernel size of 3 $\times$ 3 with a stride 1 and pad 1.</li>
+<li>All max-pooling layers have a size of 2 $\times$ 2 with stride 2.</li>
+<li>After each pooling layer, double the number of channels.</li>
+</ul>
+<p>While AlexNet had 5 convolutional layers, VGGNet has 5 stages,</p>
+<p>Stage 1: conv-conv-pool<br>
+Stage 2: conv-conv-pool<br>
+Stage 3: conv-conv-pool<br>
+Stage 4: conv-conv-conv-[conv]-pool<br>
+Stage 5: conv-conv-conv-[conv]-pool</p>
+<p>The authors presented two variants, VGG-16 and VGG-19 with 16 and 19 layers respectively. VGG-19 has 4 convolutions in stages 4 and 5.</p>
+<p>Inspirations from AlexNet: VGGNet uses ReLU non-linearities; the stack of convolution layers is followed by 3 fully-connected layers, with a softmax layer at the end; Dropout layers are added after the first two fully-connected layers (dropout ratio set to 0.5).</p>
+<p>A 3 $\times$ 3 convolutions is used as it is the smallest size to capture the notion of left/right, up/down, and center. A stack of two such 3 $\times$ 3 conv layers have an effective receptive field of 5 $\times$ 5, and three such layers that a 7 $\times$ 7 effective receptive field. So what have we gained by using, for instance, a stack of three 3 $\times$ 3 conv layers instead of a single 7×7 layer?</p>
+<ol>
+<li>Three non-linearities instead of one - makes the decision function more discriminative</li>
+<li>Decrease in the number of parameters - For input and output C channels, three 3 $\times$ 3 would have $3(3 * 3 * C^2) = 27C^2$ params, whereas a 7 $\times$ 7 layers woudl have $7 * 7 * C^2 = 49C^2$ params.</li>
+</ol>
+<p>A padding of 1 is used so that the spatial dimension is preserved after convolution(&lsquo;same&rsquo; padding).</p>
+<p>No kind of normalization is used in the network as it does not improve the performance on the dataset but instead leads to increased memory consumption and computation time.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi4oO91UPj9QsV0HXtxl-142HmRFwYUZ_18PhTF6NyXj_tKPk1q3Lvkq2JAM027oYxHBnLkc7bllfaPbMhZlPilrepnxR4yizWwTx1k2eb8UuNeOL7QKt-JttUhLN6lr8ftA0IXi57LIW7YV8wv4mVZzbDyyXyRrBVdAss90gXmUnR9yQ8vJFHJSkrvjA/s1416/vgg.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi4oO91UPj9QsV0HXtxl-142HmRFwYUZ_18PhTF6NyXj_tKPk1q3Lvkq2JAM027oYxHBnLkc7bllfaPbMhZlPilrepnxR4yizWwTx1k2eb8UuNeOL7QKt-JttUhLN6lr8ftA0IXi57LIW7YV8wv4mVZzbDyyXyRrBVdAss90gXmUnR9yQ8vJFHJSkrvjA/w640-h454/vgg.png" alt=""  />
+</a></p>
+<p><strong>Training</strong>: The training hyperparameters and choices follows AlexNet. The model was trained on the Cross-entropy loss function using mini-batch gradient descent with a batch size of 256 and momentum of 0.9. The training was regularized with an L2 weight decay of 0.0005.</p>
+<p>The learning rate was initialized at 0.01 and then decreased by a factor of 10 when the validation set accuracy stopped improving. In total, the learning rate was decreased 3 times, and the learning was stopped after 74 epochs.</p>
+<p>In spite of a larger number of parameters and the greater depth as compared to AlexNet, VGGNet required fewer epochs to converge due to (a) implicit regularisation imposed by greater depth and smaller conv filter sizes, (b) better initialization of weights and biases - they used Xavier initialization.</p>
+<p>Overall VGGNet highlighted the importance of depth in achieving better performance on the image classification task. Important design choices of the paper are,</p>
+<ul>
+<li>5 Stages: Each conv 3 $\times$ 3, s=1, p=1; Each max-pool 2 $\times$ 2, s = 2</li>
+<li>Number of channels: 64, 128, 256, 512</li>
+<li>No Normalization used</li>
+<li>Activation Function: ReLU</li>
+<li>Data pre-processing: subtract per-channel mean (mean RGB value from each pixel)</li>
+<li>Weight Initialization: Xavier</li>
+<li>Regularization: L2 Weight decay ($\lambda$ = 5e-4), Dropout (p=0.5)</li>
+<li>Learning rate: 0.01 and reduced (divided by 10) when val accuracy plateaus</li>
+<li>Optimization Method: SGD + Momentum (m=0.9) with batch size of 256</li>
+<li>Loss function: Cross-Entropy loss</li>
+</ul>
+<p>Link to the Papers: <a href="https://arxiv.org/abs/1311.2901">Visualizing and Understanding Convolutional Networks</a> , <a href="https://arxiv.org/abs/1409.1556">Very Deep Convolutional Networks for Large-Scale Image Recognition</a></p>
+<p><em>Trivia</em>: VGGNet is named after the Visual Geometry Group at Oxford where a grad student (Karen Simonyan) and a faculty member (Andrew Zisserman) came up with this idea and managed to come very close to GoogLeNet&rsquo;s performance which was built by the whole team at Google with access to lots of resources!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/inceptionnet/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>InceptionNet: Google&#39;s comeback for ImageNet Challenge</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/alexnet/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>AlexNet: The First CNN to win ImageNet Challenge</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

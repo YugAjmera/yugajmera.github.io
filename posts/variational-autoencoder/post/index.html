@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Generative Modeling with Variational Autoencoders | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\mathbf{x}$ to predict labels $\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.
+The other side of machine learning is called unsupervised learning where we just have data $\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/variational-autoencoder/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/variational-autoencoder/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Generative Modeling with Variational Autoencoders" />
+<meta property="og:description" content="Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\mathbf{x}$ to predict labels $\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.
+The other side of machine learning is called unsupervised learning where we just have data $\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/variational-autoencoder/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-18T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Generative Modeling with Variational Autoencoders"/>
+<meta name="twitter:description" content="Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\mathbf{x}$ to predict labels $\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.
+The other side of machine learning is called unsupervised learning where we just have data $\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Generative Modeling with Variational Autoencoders",
+      "item": "https://yugajmera.github.io/posts/variational-autoencoder/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Generative Modeling with Variational Autoencoders",
+  "name": "Generative Modeling with Variational Autoencoders",
+  "description": "Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\\mathbf{x}$ to predict labels $\\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.\nThe other side of machine learning is called unsupervised learning where we just have data $\\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\\mathbf{x}$ to predict labels $\\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.\nThe other side of machine learning is called unsupervised learning where we just have data $\\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model. Through this approach, we aim to learn the distribution of the data $p(\\mathbf{x})$ and then sample from it to generate new data, in our case images.\nAutoencoders An autoencoder is a bottleneck structure that extracts features $\\mathbf{z}$ from the input images $\\mathbf{x}$ and uses them to reconstruct the original data $\\mathbf{x}’$, learning an identity mapping.\nEncoder: network that compresses the input into a latent-space representation (of a lower dimension) Decoder: network that reconstructs the output from this representation Since we want the autoencoder to learn to reconstruct the input data, the loss objective is a simple L2-loss between the input and the reconstructed output $\\mathbf{x}’ = f_\\theta(g_\\phi(\\mathbf{x}))$. \\begin{equation*} L_\\text{AE}(\\theta, \\phi) = || \\mathbf{x} - f_\\theta(g_\\phi(\\mathbf{x})) ||_2^2 \\tag{1} \\end{equation*}\nThis approach is used for learning a lower-dimensional feature representation from the training data that captures meaningful factors of variation in it. After training, we get rid of the decoder and use the encoder to obtain features that contain useful information about the input that can be used for downstream tasks.\nAutoencoders are generally used for dimensionality reduction (or data compression) and to initialize a supervised model. Since it is not probabilistic, we cannot sample new data from the learned model, and new images cannot be generated$^*$.\nVariantional Autoencoders (VAEs) VAEs, introduced in Auto-Encoding Variational Bayes paper are a probabilistic version of autoencoder that lets you sample from the model to generate new data. Instead of mapping the input into a fixed vector, we want to map it into a distribution, denoted as $p_\\theta$.\nPrior $p_\\theta (\\mathbf{z})$: Prob distribution over the latent variables (fixed and often assumed to be a simple Gaussian) Posterior $p_\\theta (\\mathbf{x}|\\mathbf{z})$: Prob distribution over images conditioned on the latent variables Likelihood $p_\\theta (\\mathbf{z}|\\mathbf{x})$: Prob distribution over latent variables given input data Assuming that we know the real parameter $\\theta^*$ for this distribution, we can generate new samples for a real data point $\\mathbf{x}^{(i)}$ as,\nFirst, sample a $\\mathbf{z}^{(i)}$ from a true prior distribution $p_{\\theta^*}(\\mathbf{z})$. Feed it into the decoder model to obtain the posterior $p_{\\theta^*}(\\mathbf{x} \\vert \\mathbf{z} = \\mathbf{z}^{(i)})$. Then sample a new data point $\\mathbf{x’}^{(i)}$ from this true posterior. As you would be wondering a neural network cannot output a probability distribution so, instead the decoder predicts the mean $\\mu_{\\mathbf{x} \\vert \\mathbf{z}}$ and diagonal variance $\\Sigma_{\\mathbf{x} \\vert \\mathbf{z}}$ of the posterior, assuming it to be also Gaussian such that $p_\\theta (\\mathbf{x}|\\mathbf{z}) = \\mathcal{N}(\\mu_{\\mathbf{x} \\vert \\mathbf{z}}, \\Sigma_{\\mathbf{x} \\vert \\mathbf{z}})$.\nThere is an inherent assumption here that the pixels of the generated image are conditionally independent given the latent variable and this is the reason why VAEs tend to generate blurry images.\nIn order to estimate the true parameter $\\theta^*$, we learn the model parameters that maximize the probability of generating real data samples (maximum likelihood estimation), \\begin{align*} \\theta^{*} \u0026= \\arg\\max_\\theta \\prod_{i=1}^n p_\\theta(\\mathbf{x}^{(i)}) \\\\ \u0026= \\arg\\max_\\theta \\sum_{i=1}^n \\log p_\\theta(\\mathbf{x}^{(i)}) \\tag{2} \\end{align*}\nBefore moving further, let’s see how we can obtain the distribution of the data $p_\\theta(\\mathbf{x})$.\nMarginalize out the latent variable to simplify as, \\begin{align*} p_\\theta(\\mathbf{x}) \u0026= \\int p_\\theta(\\mathbf{x}, \\mathbf{z}) d\\mathbf{z} = \\int \\underbrace{p_\\theta(\\mathbf{x}\\vert\\mathbf{z})}_{\\text{posterior}} \\; \\underbrace{p_\\theta(\\mathbf{z})}_{\\text{prior}} d\\mathbf{z} \\\\ \\end{align*}\nThe terms in the integral - prior (fixed) and posterior (estimated by the decoder) are straightforward to compute. However, it is impossible to integrate over all $\\mathbf{z}$ as it is expensive to check all the possible values of $\\mathbf{z}$ and sum them up.\nAnother idea is to use Baye’s rule, \\begin{align*} p_\\theta(\\mathbf{x}) = \\frac{p_\\theta(\\mathbf{x}\\vert\\mathbf{z}) \\; p_\\theta(\\mathbf{z})}{p_\\theta(\\mathbf{z}\\vert\\mathbf{x})} \\approx \\frac{p_\\theta(\\mathbf{x}\\vert\\mathbf{z}) \\; p_\\theta(\\mathbf{z})}{q_\\phi(\\mathbf{z}\\vert\\mathbf{x})} \\end{align*}\nThe numerator has the same terms as above. The denominator has the likelihood term that can be approximated by another neural network (encoder) as $q_\\phi(\\mathbf{z}\\vert\\mathbf{x}) \\approx p_\\theta (\\mathbf{z}|\\mathbf{x})$.\nAgain, we assume that is follows a Gaussian distribution as $q_\\phi (\\mathbf{z}\\vert\\mathbf{x}) = \\mathcal{N}(\\mu_{\\mathbf{z} \\vert \\mathbf{x}}, \\Sigma_{\\mathbf{z} \\vert \\mathbf{x}})$, and the encoder predicts the mean $\\mu_{\\mathbf{z} \\vert \\mathbf{x}}$ and diagonal variance $\\Sigma_{\\mathbf{z} \\vert \\mathbf{x}}$.\nThe encoder, therefore, outputs a distribution of latent variables $\\mathbf{z}$ given the input data $\\mathbf{x}$. The training process looks like,\nInput a real data point $\\mathbf{x}^{(i)}$ to the encoder to obtain the likelihood $q_\\phi (\\mathbf{z}\\vert\\mathbf{x} = \\mathbf{x}^{(i)})$. Sample a latent variable from this likelihood $\\mathbf{z}^{(i)} \\sim \\mathcal{N}(\\mu_{\\mathbf{z} \\vert \\mathbf{x}}, \\Sigma_{\\mathbf{z} \\vert \\mathbf{x}})$ Feed it into the decoder to obtain the posterior $p_{\\theta^*}(\\mathbf{x} \\vert \\mathbf{z} = \\mathbf{z}^{(i)})$. Then sample a new data point from this posterior $\\mathbf{x’}^{(i)} \\sim \\mathcal{N}(\\mu_{\\mathbf{x} \\vert \\mathbf{z}}, \\Sigma_{\\mathbf{x} \\vert \\mathbf{z}})$ Sampling is a stochastic process and therefore we cannot backpropagate the gradient. To make it trainable, the reparameterization trick is introduced such that, \\begin{align*} \\mathbf{z} \u0026\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) = \\mathcal{N}(\\mathbf{z}; \\boldsymbol{\\mu}^{(i)}, \\boldsymbol{\\sigma}^{2(i)}\\boldsymbol{I})\\\\ \\mathbf{z} \u0026= \\boldsymbol{\\mu} + \\boldsymbol{\\sigma} \\odot \\boldsymbol{\\epsilon} \\text{, where } \\boldsymbol{\\epsilon} \\sim \\mathcal{N}(0, \\boldsymbol{I}) \\end{align*} where $\\odot$ refers to an element-wise product.\nDeriving ELBO Loss In order to obtain the loss objective of a VAE, we further simpify Equation 2 by first multipying $1 = \\int q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\; dz$ with $\\log p_\\theta(\\mathbf{x}^{(i)})$ and then solving, \\begin{align*} \\log p_\\theta(\\mathbf{x}^{(i)}) \u0026= \\log p_\\theta(\\mathbf{x}^{(i)}) \\int q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\; dz = \\int q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\log p_\\theta(\\mathbf{x}^{(i)}) \\; dz \\\\ \u0026=\\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} [\\log p_\\theta(\\mathbf{x}^{(i)})] \\\\ \\\\ \u0026\\text{applying Baye’s rule,}\\\\ \u0026= \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\log \\frac{p_\\theta(\\mathbf{x}^{(i)}\\vert\\mathbf{z}) \\; p_\\theta(\\mathbf{z})}{p_\\theta(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\right] \\\\ \\\\ \u0026\\text{multipy \u0026 divide by same term}\\\\ \u0026= \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\log \\frac{p_\\theta(\\mathbf{x}^{(i)}\\vert\\mathbf{z}) \\; p_\\theta(\\mathbf{z})}{p_\\theta(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\frac{q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})}{q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\right] \\\\ \\\\ \u0026\\text{rearranging}\\\\ \u0026= \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\log p_\\theta(\\mathbf{x}^{(i)}\\vert\\mathbf{z}) \\right] + \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\frac{p_\\theta(\\mathbf{z})}{q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\right] + \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\frac{q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})}{p_\\theta(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\right] \\\\ \u0026= \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\log p_\\theta(\\mathbf{x}^{(i)}\\vert\\mathbf{z}) \\right] - \\mathbf{D}_{KL}\\left( q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\; || \\; p_\\theta(\\mathbf{z}) \\right) + \\underbrace{\\mathbf{D}_{KL} \\left( q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\; || \\; p_\\theta(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\right)}_{\\text{cannot be computed but KL-Divergence} \\ge 0 \\text{ always}} \\\\ \u0026\\ge \\underbrace{\\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\log p_\\theta(\\mathbf{x}^{(i)}\\vert\\mathbf{z}) \\right]}_{\\text{reconstruction term}} - \\underbrace{\\mathbf{D}_{KL} \\left( q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\; || \\; p_\\theta(\\mathbf{z}) \\right)}_{\\text{prior matching term}} \\end{align*}\nThe first term is the data reconstruction term that measures the reconstruction likelihood of the decoder from our variational distribution. It ensures that the learned distribution is modeling effective latents that the original data can be regenerated from.\nThe second term measures how similar the learned variational distribution is to a prior belief held over latent variables. Since both the distributions are Gaussians, KL-divergence can be computer in closed form.\nThis gives us a lower bound on the log-likelihood of the data and we jointly train both the encoder and decoder to maximize it. \\begin{align*} \\theta^{*} \u0026= \\arg\\max_\\theta \\sum_{i=1}^n \\log p_\\theta(\\mathbf{x}^{(i)}) \\\\ \u0026\\ge \\arg\\max_{\\theta, \\phi} \\sum_{i=1}^n \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)})} \\left[ \\log p_\\theta(\\mathbf{x}^{(i)}\\vert\\mathbf{z}) \\right]- \\mathbf{D}_{KL}(q_\\phi(\\mathbf{z}\\vert\\mathbf{x}^{(i)}) \\; || \\; p_\\theta(\\mathbf{z})) \\end{align*} It is known as the variational lower bound, or evidence lower bound (ELBO).\nThe loss function (that we minimize) is given as, \\begin{equation*} L_{\\text{VAE}}(\\theta, \\phi) = - \\mathbf{E}_{\\mathbf{z}\\sim q_\\phi(\\mathbf{z}\\vert\\mathbf{x})} \\left[ \\log p_\\theta(\\mathbf{x}\\vert\\mathbf{z}) \\right] + \\mathbf{D}_{KL}\\left( q_\\phi(\\mathbf{z}\\vert\\mathbf{x}) \\; || \\; p_\\theta(\\mathbf{z}) \\right) \\tag{3} \\end{equation*}\n$*$ - I have tried generating new images using an autoencoder by first obtaining the latent representation of two images and then performing the reconstruction on the linear interpolation between them. Below are the results on the CIFAR10 dataset, with the first two columns showing original images and the last one showing the new image.\n",
+  "wordCount" : "1233",
+  "inLanguage": "en",
+  "datePublished": "2022-11-18T00:00:00Z",
+  "dateModified": "2022-11-18T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/variational-autoencoder/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Generative Modeling with Variational Autoencoders
+    </h1>
+    <div class="post-meta"><span title='2022-11-18 00:00:00 +0000 UTC'>November 18, 2022</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#autoencoders" aria-label="Autoencoders">Autoencoders</a></li>
+                <li>
+                    <a href="#variantional-autoencoders-vaes" aria-label="Variantional Autoencoders (VAEs)">Variantional Autoencoders (VAEs)</a><ul>
+                        
+                <li>
+                    <a href="#deriving-elbo-loss" aria-label="Deriving ELBO Loss">Deriving ELBO Loss</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\mathbf{x}$ to predict labels $\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.</p>
+<p>The other side of machine learning is called unsupervised learning where we just have data $\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model. Through this approach, we aim to learn the distribution of the data $p(\mathbf{x})$ and then sample from it to generate new data, in our case images.</p>
+<h2 id="autoencoders">Autoencoders<a hidden class="anchor" aria-hidden="true" href="#autoencoders">#</a></h2>
+<p>An autoencoder is a bottleneck structure that extracts features $\mathbf{z}$ from the input images $\mathbf{x}$ and uses them to reconstruct the original data $\mathbf{x}&rsquo;$, learning an identity mapping.</p>
+<ul>
+<li>Encoder: network that compresses the input into a latent-space representation (of a lower dimension)</li>
+<li>Decoder: network that reconstructs the output from this representation</li>
+</ul>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_tMk-uobu7qz0tAUqwXsH90pgnOAxXIYm_w-leK-Aq4Eno-3udQR38Kl8YJgw4x7Le2-Vp0mhNUvsrBiLaMcytJp-Iqc75P9uL-kpv6pzAOhUw2fD7A_VO2lh7mbU4ZIeguGC_wBqEqtRkWuZJ8KR_G7bkfcpkxp-upz-xWDEcFSP3HmLB07rye5GHQ/s1700/autoencoder-architecture.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj_tMk-uobu7qz0tAUqwXsH90pgnOAxXIYm_w-leK-Aq4Eno-3udQR38Kl8YJgw4x7Le2-Vp0mhNUvsrBiLaMcytJp-Iqc75P9uL-kpv6pzAOhUw2fD7A_VO2lh7mbU4ZIeguGC_wBqEqtRkWuZJ8KR_G7bkfcpkxp-upz-xWDEcFSP3HmLB07rye5GHQ/w640-h298/autoencoder-architecture.png" alt=""  />
+</a></p>
+<p>Since we want the autoencoder to learn to reconstruct the input data, the loss objective is a simple L2-loss between the input and the reconstructed output $\mathbf{x}&rsquo; = f_\theta(g_\phi(\mathbf{x}))$. \begin{equation*} L_\text{AE}(\theta, \phi) = || \mathbf{x} - f_\theta(g_\phi(\mathbf{x})) ||_2^2 \tag{1} \end{equation*}</p>
+<p>This approach is used for learning a lower-dimensional feature representation from the training data that captures meaningful factors of variation in it. After training, we get rid of the decoder and use the encoder to obtain features that contain useful information about the input that can be used for downstream tasks.</p>
+<p>Autoencoders are generally used for dimensionality reduction (or data compression) and to initialize a supervised model. Since it is not probabilistic, we cannot sample new data from the learned model, and new images cannot be generated$^*$.</p>
+<h2 id="variantional-autoencoders-vaes">Variantional Autoencoders (VAEs)<a hidden class="anchor" aria-hidden="true" href="#variantional-autoencoders-vaes">#</a></h2>
+<p>VAEs, introduced in <a href="https://arxiv.org/abs/1312.6114">Auto-Encoding Variational Bayes</a> paper are a probabilistic version of autoencoder that lets you sample from the model to generate new data. Instead of mapping the input into a fixed vector, we want to map it into a distribution, denoted as $p_\theta$.</p>
+<ul>
+<li>Prior $p_\theta (\mathbf{z})$: Prob distribution over the latent variables (fixed and often assumed to be a simple Gaussian)</li>
+<li>Posterior $p_\theta (\mathbf{x}|\mathbf{z})$: Prob distribution over images conditioned on the latent variables</li>
+<li>Likelihood $p_\theta (\mathbf{z}|\mathbf{x})$: Prob distribution over latent variables given input data</li>
+</ul>
+<p>Assuming that we know the real parameter $\theta^*$ for this distribution, we can generate new samples for a real data point $\mathbf{x}^{(i)}$ as,</p>
+<ol>
+<li>First, sample a $\mathbf{z}^{(i)}$ from a true prior distribution $p_{\theta^*}(\mathbf{z})$.</li>
+<li>Feed it into the decoder model to obtain the posterior $p_{\theta^*}(\mathbf{x} \vert \mathbf{z} = \mathbf{z}^{(i)})$.</li>
+<li>Then sample a new data point $\mathbf{x&rsquo;}^{(i)}$ from this true posterior.</li>
+</ol>
+<p>As you would be wondering a neural network cannot output a probability distribution so, instead the decoder predicts the mean $\mu_{\mathbf{x} \vert \mathbf{z}}$ and diagonal variance $\Sigma_{\mathbf{x} \vert \mathbf{z}}$ of the posterior, assuming it to be also Gaussian such that $p_\theta (\mathbf{x}|\mathbf{z}) = \mathcal{N}(\mu_{\mathbf{x} \vert \mathbf{z}}, \Sigma_{\mathbf{x} \vert \mathbf{z}})$.</p>
+<p>There is an inherent assumption here that the pixels of the generated image are conditionally independent given the latent variable and this is the reason why VAEs tend to generate blurry images.</p>
+<p>In order to estimate the true parameter $\theta^*$, we learn the model parameters that maximize the probability of generating real data samples (maximum likelihood estimation), \begin{align*} \theta^{*} &amp;= \arg\max_\theta \prod_{i=1}^n p_\theta(\mathbf{x}^{(i)}) \\ &amp;= \arg\max_\theta \sum_{i=1}^n \log p_\theta(\mathbf{x}^{(i)}) \tag{2} \end{align*}</p>
+<p>Before moving further, let&rsquo;s see how we can obtain the distribution of the data $p_\theta(\mathbf{x})$.</p>
+<ol>
+<li>
+<p>Marginalize out the latent variable to simplify as, \begin{align*} p_\theta(\mathbf{x}) &amp;= \int p_\theta(\mathbf{x}, \mathbf{z}) d\mathbf{z} = \int \underbrace{p_\theta(\mathbf{x}\vert\mathbf{z})}_{\text{posterior}} \; \underbrace{p_\theta(\mathbf{z})}_{\text{prior}} d\mathbf{z} \\ \end{align*}</p>
+<p>The terms in the integral - prior (fixed) and posterior (estimated by the decoder) are straightforward to compute. However, it is impossible to integrate over all $\mathbf{z}$ as it is expensive to check all the possible values of $\mathbf{z}$ and sum them up.</p>
+</li>
+<li>
+<p>Another idea is to use Baye&rsquo;s rule, \begin{align*} p_\theta(\mathbf{x}) = \frac{p_\theta(\mathbf{x}\vert\mathbf{z}) \; p_\theta(\mathbf{z})}{p_\theta(\mathbf{z}\vert\mathbf{x})} \approx \frac{p_\theta(\mathbf{x}\vert\mathbf{z}) \; p_\theta(\mathbf{z})}{q_\phi(\mathbf{z}\vert\mathbf{x})} \end{align*}</p>
+<p>The numerator has the same terms as above. The denominator has the likelihood term that can be approximated by another neural network (encoder) as $q_\phi(\mathbf{z}\vert\mathbf{x}) \approx p_\theta (\mathbf{z}|\mathbf{x})$.</p>
+<p>Again, we assume that is follows a Gaussian distribution as $q_\phi (\mathbf{z}\vert\mathbf{x}) = \mathcal{N}(\mu_{\mathbf{z} \vert \mathbf{x}}, \Sigma_{\mathbf{z} \vert \mathbf{x}})$, and the encoder predicts the mean $\mu_{\mathbf{z} \vert \mathbf{x}}$ and diagonal variance $\Sigma_{\mathbf{z} \vert \mathbf{x}}$.</p>
+</li>
+</ol>
+<p>The encoder, therefore, outputs a distribution of latent variables $\mathbf{z}$ given the input data $\mathbf{x}$. The training process looks like,</p>
+<ol>
+<li>Input a real data point $\mathbf{x}^{(i)}$ to the encoder to obtain the likelihood $q_\phi (\mathbf{z}\vert\mathbf{x} = \mathbf{x}^{(i)})$.</li>
+<li>Sample a latent variable from this likelihood $\mathbf{z}^{(i)} \sim \mathcal{N}(\mu_{\mathbf{z} \vert \mathbf{x}}, \Sigma_{\mathbf{z} \vert \mathbf{x}})$</li>
+<li>Feed it into the decoder to obtain the posterior $p_{\theta^*}(\mathbf{x} \vert \mathbf{z} = \mathbf{z}^{(i)})$.</li>
+<li>Then sample a new data point from this posterior $\mathbf{x&rsquo;}^{(i)} \sim \mathcal{N}(\mu_{\mathbf{x} \vert \mathbf{z}}, \Sigma_{\mathbf{x} \vert \mathbf{z}})$</li>
+</ol>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgAJ3cW0VSx9OS-86MV8IMzb5fLB5J-FPVZKMs_f2ce1kKCoxHpsGZ-_nphq_PqzLcCj160UNUe-6HBR558LcI2lKze5dCXLzAdwWr2XEvLAgb0htXyCMeHLphR2JNMvKMlwyG1l0o8OdZd_JGK2737OeAFwijTDtrzNX54baTAUO0_GBdZjvSnqX40SQ/s2366/vae-gaussian.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgAJ3cW0VSx9OS-86MV8IMzb5fLB5J-FPVZKMs_f2ce1kKCoxHpsGZ-_nphq_PqzLcCj160UNUe-6HBR558LcI2lKze5dCXLzAdwWr2XEvLAgb0htXyCMeHLphR2JNMvKMlwyG1l0o8OdZd_JGK2737OeAFwijTDtrzNX54baTAUO0_GBdZjvSnqX40SQ/w640-h297/vae-gaussian.png" alt=""  />
+</a></p>
+<p>Sampling is a stochastic process and therefore we cannot backpropagate the gradient. To make it trainable, the <strong>reparameterization trick</strong> is introduced such that, \begin{align*} \mathbf{z} &amp;\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) = \mathcal{N}(\mathbf{z}; \boldsymbol{\mu}^{(i)}, \boldsymbol{\sigma}^{2(i)}\boldsymbol{I})\\ \mathbf{z} &amp;= \boldsymbol{\mu} + \boldsymbol{\sigma} \odot \boldsymbol{\epsilon} \text{, where } \boldsymbol{\epsilon} \sim \mathcal{N}(0, \boldsymbol{I}) \end{align*} where $\odot$ refers to an element-wise product.</p>
+<h3 id="deriving-elbo-loss"><strong>Deriving ELBO Loss</strong><a hidden class="anchor" aria-hidden="true" href="#deriving-elbo-loss">#</a></h3>
+<p>In order to obtain the loss objective of a VAE, we further simpify Equation 2 by first multipying $1 = \int q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \; dz$ with $\log p_\theta(\mathbf{x}^{(i)})$ and then solving, \begin{align*} \log p_\theta(\mathbf{x}^{(i)}) &amp;= \log p_\theta(\mathbf{x}^{(i)}) \int q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \; dz = \int q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \log p_\theta(\mathbf{x}^{(i)}) \; dz \\ &amp;=\mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} [\log p_\theta(\mathbf{x}^{(i)})] \\ \\ &amp;\text{applying Baye&rsquo;s rule,}\\ &amp;= \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \log \frac{p_\theta(\mathbf{x}^{(i)}\vert\mathbf{z}) \; p_\theta(\mathbf{z})}{p_\theta(\mathbf{z}\vert\mathbf{x}^{(i)})} \right] \\ \\ &amp;\text{multipy &amp; divide by same term}\\ &amp;= \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \log \frac{p_\theta(\mathbf{x}^{(i)}\vert\mathbf{z}) \; p_\theta(\mathbf{z})}{p_\theta(\mathbf{z}\vert\mathbf{x}^{(i)})} \frac{q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})}{q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \right] \\ \\ &amp;\text{rearranging}\\ &amp;= \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \log p_\theta(\mathbf{x}^{(i)}\vert\mathbf{z}) \right] + \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \frac{p_\theta(\mathbf{z})}{q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \right] + \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \frac{q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})}{p_\theta(\mathbf{z}\vert\mathbf{x}^{(i)})} \right] \\ &amp;= \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \log p_\theta(\mathbf{x}^{(i)}\vert\mathbf{z}) \right] - \mathbf{D}_{KL}\left( q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \; || \; p_\theta(\mathbf{z}) \right) + \underbrace{\mathbf{D}_{KL} \left( q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \; || \; p_\theta(\mathbf{z}\vert\mathbf{x}^{(i)}) \right)}_{\text{cannot be computed but KL-Divergence} \ge 0 \text{ always}} \\ &amp;\ge \underbrace{\mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \log p_\theta(\mathbf{x}^{(i)}\vert\mathbf{z}) \right]}_{\text{reconstruction term}} - \underbrace{\mathbf{D}_{KL} \left( q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \; || \; p_\theta(\mathbf{z}) \right)}_{\text{prior matching term}} \end{align*}</p>
+<p>The first term is the data reconstruction term that measures the reconstruction likelihood of the decoder from our variational distribution. It ensures that the learned distribution is modeling effective latents that the original data can be regenerated from.</p>
+<p>The second term measures how similar the learned variational distribution is to a prior belief held over latent variables. Since both the distributions are Gaussians, KL-divergence can be computer in <a href="https://mr-easy.github.io/2020-04-16-kl-divergence-between-2-gaussian-distributions/">closed form</a>.</p>
+<p>This gives us a lower bound on the log-likelihood of the data and we jointly train both the encoder and decoder to maximize it. \begin{align*} \theta^{*} &amp;= \arg\max_\theta \sum_{i=1}^n \log p_\theta(\mathbf{x}^{(i)}) \\ &amp;\ge \arg\max_{\theta, \phi} \sum_{i=1}^n \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)})} \left[ \log p_\theta(\mathbf{x}^{(i)}\vert\mathbf{z}) \right]- \mathbf{D}_{KL}(q_\phi(\mathbf{z}\vert\mathbf{x}^{(i)}) \; || \; p_\theta(\mathbf{z})) \end{align*} It is known as the variational lower bound, or evidence lower bound (ELBO).</p>
+<p>The loss function (that we minimize) is given as, \begin{equation*} L_{\text{VAE}}(\theta, \phi) = - \mathbf{E}_{\mathbf{z}\sim q_\phi(\mathbf{z}\vert\mathbf{x})} \left[ \log p_\theta(\mathbf{x}\vert\mathbf{z}) \right] + \mathbf{D}_{KL}\left( q_\phi(\mathbf{z}\vert\mathbf{x}) \; || \; p_\theta(\mathbf{z}) \right) \tag{3} \end{equation*}</p>
+<p>$*$ - I have tried generating new images using an autoencoder by first obtaining the latent representation of two images and then performing the reconstruction on the linear interpolation between them. Below are the results on the CIFAR10 dataset, with the first two columns showing original images and the last one showing the new image.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjWXLCNcvoDPFcNgYPn1br6j6y7Qq1umC5XREoMcX8m72IcglaPpDUw--zT9hZAeNjcwqxeRwKcRu0f_w8iIgBb0AXkO0gX8X1Nbidy33I6pf9n87j5FjJlB3erIpnCb3MDoD7KcTmu9JqGFqIAGxwSzNyh-rMlXEmm2uAx6PwZjSi6I9TeFo7EntOr6A/s425/res.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjWXLCNcvoDPFcNgYPn1br6j6y7Qq1umC5XREoMcX8m72IcglaPpDUw--zT9hZAeNjcwqxeRwKcRu0f_w8iIgBb0AXkO0gX8X1Nbidy33I6pf9n87j5FjJlB3erIpnCb3MDoD7KcTmu9JqGFqIAGxwSzNyh-rMlXEmm2uAx6PwZjSi6I9TeFo7EntOr6A/w294-h320/res.png" alt=""  />
+</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/gan/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Generative Adversarial Networks: A Two-player game</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/resnet/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>ResNet: The Revolution of Depth</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

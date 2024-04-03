@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Data Manipulation for Deep Learning | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/data-manipulation/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/data-manipulation/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Data Manipulation for Deep Learning" />
+<meta property="og:description" content="Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/data-manipulation/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-21T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Data Manipulation for Deep Learning"/>
+<meta name="twitter:description" content="Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Data Manipulation for Deep Learning",
+      "item": "https://yugajmera.github.io/posts/data-manipulation/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Data Manipulation for Deep Learning",
+  "name": "Data Manipulation for Deep Learning",
+  "description": "Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model. Our algorithm is run exactly once on the test set and that accuracy gives us a proper estimate of our model’s performance on truly unseen data.\nNow that we have created our training set to perform the optimization process, let’s look at how manipulating this data can help us train our model.\nData Preprocessing The loss function is computed on the mini-batch of the training data at every step of the optimization algorithm. Therefore, the loss landscape on which optimization is performed depends directly on the training data. The aim of pre-processing the data is to make it more amenable to efficient training.\nWe usually normalize the data before using it, making the data cloud zero-centered and ensuring that all the features have the same variance. This makes it easier to optimize as it becomes less sensitive to small changes in weight. Note that we would use the same exact mean and standard deviation (that we used on the training set) to normalize the test set.\nSome standard practices of data pre-processing with image data include:\nSubtract the mean image (used in AlexNet) Subtract per-channel mean (mean along each channel, used in VGGNet) Subtract per-channel mean and divide by per-channel std (used in ResNet) Data Augmentation It is a commonly used technique where we perform image transformations on the training set for increasing both the size and the diversity of labeled training data. Not only is data augmentation used to increase the number of training samples, but it also acts as a form of regularization by adding noise to the training data.\nImage augmentations have become a common implicit regularization technique in computer vision tasks to combat overfitting in deep convolutional neural networks. Basic image transformations: flipping, rotating, scaling, blurring, jittering and cropping. It should be noted that only the image transformations that make sense are applied. For example, performing a vertical flip on a car image is never done (as upside-down car images are not found) but the same transformation can be applied to a white blood cell image in a blood smear.\n",
+  "wordCount" : "435",
+  "inLanguage": "en",
+  "datePublished": "2022-08-21T00:00:00Z",
+  "dateModified": "2022-08-21T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/data-manipulation/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Data Manipulation for Deep Learning
+    </h1>
+    <div class="post-meta"><span title='2022-08-21 00:00:00 +0000 UTC'>August 21, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#data-preprocessing" aria-label="Data Preprocessing">Data Preprocessing</a></li>
+                <li>
+                    <a href="#data-augmentation" aria-label="Data Augmentation">Data Augmentation</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model. Our algorithm is run exactly once on the test set and that accuracy gives us a proper estimate of our model&rsquo;s performance on truly unseen data.</p>
+<p>Now that we have created our training set to perform the optimization process, let&rsquo;s look at how manipulating this data can help us train our model.</p>
+<h3 id="data-preprocessing"><strong>Data Preprocessing</strong><a hidden class="anchor" aria-hidden="true" href="#data-preprocessing">#</a></h3>
+<p>The loss function is computed on the mini-batch of the training data at every step of the optimization algorithm. Therefore, the loss landscape on which optimization is performed depends directly on the training data. The aim of pre-processing the data is to make it more amenable to efficient training.</p>
+<p>We usually normalize the data before using it, making the data cloud zero-centered and ensuring that all the features have the same variance. This makes it easier to optimize as it becomes less sensitive to small changes in weight. Note that we would use the same exact mean and standard deviation (that we used on the training set) to normalize the test set.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiPHFdQZC7w7MGaFJIjRgXwPXcJ6660A1TWiON-bHGtDaHOEJB8rN78QRVoDGaOtqe8DwIhzwpanjkdjHepAue_q6n_8Yg6Vxxsl32Wqxvovc9aaq1BtHtpXBigOu2vdj7gIxNi9DJGdlJTlvQzLZ15wxNYysPC0iB4yvYl8hVJ7MM6mAILPCpJcsysEA/s1030/normalize.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiPHFdQZC7w7MGaFJIjRgXwPXcJ6660A1TWiON-bHGtDaHOEJB8rN78QRVoDGaOtqe8DwIhzwpanjkdjHepAue_q6n_8Yg6Vxxsl32Wqxvovc9aaq1BtHtpXBigOu2vdj7gIxNi9DJGdlJTlvQzLZ15wxNYysPC0iB4yvYl8hVJ7MM6mAILPCpJcsysEA/w640-h254/normalize.PNG" alt=""  />
+</a></p>
+<p>Some standard practices of data pre-processing with image data include:</p>
+<ul>
+<li>Subtract the mean image (used in AlexNet)</li>
+<li>Subtract per-channel mean (mean along each channel, used in VGGNet)</li>
+<li>Subtract per-channel mean and divide by per-channel std (used in ResNet)</li>
+</ul>
+<h3 id="data-augmentation"><strong>Data Augmentation</strong><a hidden class="anchor" aria-hidden="true" href="#data-augmentation">#</a></h3>
+<p>It is a commonly used technique where we perform image transformations on the training set for increasing both the size and the diversity of labeled training data. Not only is data augmentation used to increase the number of training samples, but it also acts as a form of regularization by adding noise to the training data.</p>
+<p>Image augmentations have become a common implicit regularization technique in computer vision tasks to combat overfitting in deep convolutional neural networks. Basic image transformations: flipping, rotating, scaling, blurring, jittering and cropping. It should be noted that only the image transformations that make sense are applied. For example, performing a vertical flip on a car image is never done (as upside-down car images are not found) but the same transformation can be applied to a white blood cell image in a blood smear.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUYIuWi8s0w60r1TelY7wu_H1AQtkCSalE4XLXcmc1BGq_DAxmzmIEkk4S96vXLfW93eqrMp2lNspy1N4aQGs68vg4cbqOS1ayYjk2vDao9uu2s-9H3ssZHflLdTb52QyioVBDHVfmVo8HGUTljXNdOtIkZWltpLZF_pXAfKZbXV8QTvOVpdSXlL9cmQ/s3773/augmentation.jpg"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiUYIuWi8s0w60r1TelY7wu_H1AQtkCSalE4XLXcmc1BGq_DAxmzmIEkk4S96vXLfW93eqrMp2lNspy1N4aQGs68vg4cbqOS1ayYjk2vDao9uu2s-9H3ssZHflLdTb52QyioVBDHVfmVo8HGUTljXNdOtIkZWltpLZF_pXAfKZbXV8QTvOVpdSXlL9cmQ/w640-h314/augmentation.jpg" alt=""  />
+</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/batch-norm/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Understanding Batch Normalization</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/regularization/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Regularization: Weight decay, Dropout, Early stopping</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

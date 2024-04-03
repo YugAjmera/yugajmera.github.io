@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Using Learning Rate Schedules for Training | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.
+But it is not always possible to come up with one &ldquo;perfect&rdquo; learning rate by trial and error.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/learning-rates/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/learning-rates/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Using Learning Rate Schedules for Training" />
+<meta property="og:description" content="All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.
+But it is not always possible to come up with one &ldquo;perfect&rdquo; learning rate by trial and error." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/learning-rates/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-06T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-06T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Using Learning Rate Schedules for Training"/>
+<meta name="twitter:description" content="All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.
+But it is not always possible to come up with one &ldquo;perfect&rdquo; learning rate by trial and error."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Using Learning Rate Schedules for Training",
+      "item": "https://yugajmera.github.io/posts/learning-rates/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Using Learning Rate Schedules for Training",
+  "name": "Using Learning Rate Schedules for Training",
+  "description": "All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.\nBut it is not always possible to come up with one \u0026ldquo;perfect\u0026rdquo; learning rate by trial and error.",
+  "keywords": [
+    
+  ],
+  "articleBody": "All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.\nBut it is not always possible to come up with one “perfect” learning rate by trial and error. So what if don’t keep the learning rate fixed, and change it during the training process?\nWe can choose a high learning rate to allow our optimization to make quick progress in the initial iterations of training and then decay it over time. This would speed up our algorithm and result in better performance characteristics. This mechanism of changing the learning rates over the training process is called learning rate schedules. Let’s see some commonly used learning rate schedulers,\nStep schedule - We start with a high learning rate (like the green one). When the curve starts flattening, we reduce the learning rate and continue the same process until convergence. E.g., for ResNets, multiplying LR by 0.1 after epochs 30, 60, and 90 would result in a learning curve as shown beside. But this kind of scheduling introduces a lot of new hyperparameters - at what fixed points should we decay the LR, and to what value? Tuning them usually takes a lot of time.\nDecay functions - Instead of explicitly choosing fixed time points, we use a function that determines the learning rate at each epoch, hence it has no additional hyperparameters. We start with some initial learning rate and then decay it over the training process with a function to zero.\nCosine scheduling uses a cosine function. It is a very popularly used learning rate scheduler in computer vision problems. We can also linearly decay the learning rate over time. Such kind of scheduling is used commonly for language tasks. The Transformers paper (Attention is all you need) used an inverse square root decay function. The learning rate at epoch $t$ in each of these cases is given as, \\begin{align*} \\text{Cosine: } \u0026 \\eta_t = \\frac{\\eta_0}{2} ( 1 + cos \\frac{t \\pi}{T}) \\\\ \\text{Linear: } \u0026 \\eta_t = \\eta_0 (1 - \\frac{t}{T}) \\\\ \\text{Inverse Sqrt: } \u0026 \\eta_t = \\frac{\\eta_0}{ \\sqrt{t} }\\\\ \\end{align*} where $\\eta_0$ is the initial learning rate and $T$ is the total number of epochs.\nLR schedules are an optional technique that can be implemented to boost learning. It is important to note that using LR schedules with SGD + Momentum is fairly important. Still, if we are using one of the more complicated optimization method, such as Adam, then it often works well even with a constant learning rate. In fact, SGD + Momentum can outperform Adam but may require more tuning of LR and schedule.\nRecall the training block code of the previous post. Pytorch’s optim package can be used to implement these LR schedulers. After each epoch in the training loop, we use .step() function to update the learning rate as per our schedule.\nmodel = torch.nn.Sequential(torch.nn.Linear(3072, 100), torch.nn.ReLU(), torch.nn.Linear(100, 10)) optimizer = torch.optim.SGD(model.parameters(), lr=initial_learning_rate) scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, num_steps) mini_batches = torch.utils.data.DataLoader(data, batch_size=batch_size) for t in range(num_steps): for X_batch, y_batch in mini_batches: y_pred = model(X_batch) loss = loss_fn(y_pred, y_batch) loss.backward() optimizer.step() optimizer.zero_grad() scheduler.step() ",
+  "wordCount" : "553",
+  "inLanguage": "en",
+  "datePublished": "2022-08-06T00:00:00Z",
+  "dateModified": "2022-08-06T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/learning-rates/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Using Learning Rate Schedules for Training
+    </h1>
+    <div class="post-meta"><span title='2022-08-06 00:00:00 +0000 UTC'>August 6, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p>All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXNNfTiRA2iliVkXZxJ65jD-u8O2JsMA_XEHv0V_eVC4g2IpIrVO049HrOv7ser_ZkoBtR46H1x0z56ebhkvPqRFQyxQsXnzgm2neeLqG9IpGT7UlimdRxdtT3ursUnf0Q-6V8ckZj2xQPRYJRCe1Ku3J1u7SAYIXYKTWAllb26AyYUcYRPbxszhULuA/s459/lr.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXNNfTiRA2iliVkXZxJ65jD-u8O2JsMA_XEHv0V_eVC4g2IpIrVO049HrOv7ser_ZkoBtR46H1x0z56ebhkvPqRFQyxQsXnzgm2neeLqG9IpGT7UlimdRxdtT3ursUnf0Q-6V8ckZj2xQPRYJRCe1Ku3J1u7SAYIXYKTWAllb26AyYUcYRPbxszhULuA/w320-h289/lr.png" alt=""  />
+</a></p>
+<p>But it is not always possible to come up with one &ldquo;perfect&rdquo; learning rate by trial and error. So what if don&rsquo;t keep the learning rate fixed, and change it during the training process?</p>
+<p>We can choose a high learning rate to allow our optimization to make quick progress in the initial iterations of training and then decay it over time. This would speed up our algorithm and result in better performance characteristics. This mechanism of changing the learning rates over the training process is called learning rate schedules. Let&rsquo;s see some commonly used learning rate schedulers,</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7tehAOY81rvA-JHph9iDivax7cOSEO9aIpXbSEVeE6lk8bHb01GgGSOEXfEVQ-wzkV5dXfcVoByw3d-PqhM33cQYe-3FZpt6UUGvN9CKxqCrdh4tEjkxLcpg-GG0Tl6hgNpcfovbEAYuXKZ3QKcUhSjtfmgEgUjarKgUwovL1Vkplr39uib6NVtPQhw/s546/step.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7tehAOY81rvA-JHph9iDivax7cOSEO9aIpXbSEVeE6lk8bHb01GgGSOEXfEVQ-wzkV5dXfcVoByw3d-PqhM33cQYe-3FZpt6UUGvN9CKxqCrdh4tEjkxLcpg-GG0Tl6hgNpcfovbEAYuXKZ3QKcUhSjtfmgEgUjarKgUwovL1Vkplr39uib6NVtPQhw/s320/step.PNG" alt=""  />
+</a></p>
+<p><strong>Step schedule</strong> - We start with a high learning rate (like the green one). When the curve starts flattening, we reduce the learning rate and continue the same process until convergence. E.g., for ResNets, multiplying LR by 0.1 after epochs 30, 60, and 90 would result in a learning curve as shown beside. But this kind of scheduling introduces a lot of new hyperparameters - at what fixed points should we decay the LR, and to what value? Tuning them usually takes a lot of time.</p>
+<p><strong>Decay functions</strong> - Instead of explicitly choosing fixed time points, we use a function that determines the learning rate at each epoch, hence it has no additional hyperparameters. We start with some initial learning rate and then decay it over the training process with a function to zero.</p>
+<p>Cosine scheduling uses a cosine function. It is a very popularly used learning rate scheduler in computer vision problems. We can also linearly decay the learning rate over time. Such kind of scheduling is used commonly for language tasks. The Transformers paper (Attention is all you need) used an inverse square root decay function. The learning rate at epoch $t$ in each of these cases is given as, \begin{align*} \text{Cosine: } &amp; \eta_t = \frac{\eta_0}{2} ( 1 + cos \frac{t \pi}{T}) \\ \text{Linear: } &amp; \eta_t = \eta_0 (1 - \frac{t}{T}) \\ \text{Inverse Sqrt: } &amp; \eta_t = \frac{\eta_0}{ \sqrt{t} }\\ \end{align*} where $\eta_0$ is the initial learning rate and $T$ is the total number of epochs.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgp87qXRkyMXD0gamrY3g9iE9Y7bZljLWn3TNE-VTMD99amnFGoJilda0Bj8ZUXLYOYSjFddDhgvmjhL4Ve5IGgOLaXJp59GQpXL1-Ij1cFfpQZatXng8X8ka7UDiH3VU9jNtIMiXML8uiLtrZAT6PiNqRbQRKgvwDvbSFOm7oXfdeM0OdLUzYNUEFALA/s1578/cosine.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgp87qXRkyMXD0gamrY3g9iE9Y7bZljLWn3TNE-VTMD99amnFGoJilda0Bj8ZUXLYOYSjFddDhgvmjhL4Ve5IGgOLaXJp59GQpXL1-Ij1cFfpQZatXng8X8ka7UDiH3VU9jNtIMiXML8uiLtrZAT6PiNqRbQRKgvwDvbSFOm7oXfdeM0OdLUzYNUEFALA/w640-h166/cosine.PNG" alt=""  />
+</a></p>
+<p>LR schedules are an optional technique that can be implemented to boost learning. It is important to note that using LR schedules with SGD + Momentum is fairly important. Still, if we are using one of the more complicated optimization method, such as Adam, then it often works well even with a constant learning rate. In fact, SGD + Momentum can outperform Adam but may require more tuning of LR and schedule.</p>
+<p>Recall the training block code of the previous post. Pytorch&rsquo;s <code>optim</code> package can be used to implement these LR schedulers. After each epoch in the training loop, we use <code>.step()</code> function to update the learning rate as per our schedule.</p>
+<pre><code>model = torch.nn.Sequential(torch.nn.Linear(3072, 100),
+  torch.nn.ReLU(),
+        torch.nn.Linear(100, 10))
+optimizer = torch.optim.SGD(model.parameters(), lr=initial_learning_rate)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, num_steps)
+mini_batches = torch.utils.data.DataLoader(data, batch_size=batch_size)
+for t in range(num_steps):
+  for X_batch, y_batch in mini_batches:
+    y_pred = model(X_batch)     
+    loss = loss_fn(y_pred, y_batch)
+      loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+  scheduler.step()</code></pre>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/regularization/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Regularization: Weight decay, Dropout, Early stopping</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/backprop/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Implementing Backpropagation</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Image Classification using CNNs: MNIST dataset | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
+Now that we have all the ingredients required to code up our deep learning architecture, let&rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/img-classification-mnist/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/img-classification-mnist/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Image Classification using CNNs: MNIST dataset" />
+<meta property="og:description" content="Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
+Now that we have all the ingredients required to code up our deep learning architecture, let&rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/img-classification-mnist/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-09-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-19T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Image Classification using CNNs: MNIST dataset"/>
+<meta name="twitter:description" content="Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
+Now that we have all the ingredients required to code up our deep learning architecture, let&rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Image Classification using CNNs: MNIST dataset",
+      "item": "https://yugajmera.github.io/posts/img-classification-mnist/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Image Classification using CNNs: MNIST dataset",
+  "name": "Image Classification using CNNs: MNIST dataset",
+  "description": "Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.\nNow that we have all the ingredients required to code up our deep learning architecture, let\u0026rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.\nNow that we have all the ingredients required to code up our deep learning architecture, let’s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch. The MNIST dataset consists of 70,000 $28 \\times 28$ black-and-white images of handwritten digits. I will be using Pytorch for this implementation. Don’t forget to change the runtime to GPU to get accelerated processing!\nThe first step is to import the relevant libraries that we will be using throughout our code.\nimport torch from torch import nn import torchvision import matplotlib.pyplot as plt Downloading and Pre-processing the Dataset\nThe dataset is downloaded into two subsets, the train set containing 60,000 images and the test set containing 10,000 images. While downloading, we apply some transformations to the images - convert them to tensors for processing them in the convolution layers and normalizing them. Each pixel value is originally [0,255] that gets divided by 255 while getting converted to tensor, resulting in a range [0,1]. We further normalize the image with a mean of 0.5 and a standard deviation of 0.5 to obtain the pixel values in the range [-1,1].\nmy_transform = torchvision.transforms.Compose([ torchvision.transforms.ToTensor(), torchvision.transforms.Normalize((0.5,), (0.5,)) ]) # Download the dataset mnist_trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=my_transform) mnist_testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=my_transform) Loading the Dataset\nAs we discussed in this post, the test set is reserved to be used only once at the very end of our pipeline to evaluate our model. We randomly split the training data into a training set containing 80% of the images and a validation set containing 20% of the images and then build their loaders. I have defined a batch size of 64 for both the loaders but it can be set in any power of 2 (why? check out mini-batch gradient descent).\n# Split the dataset into train set(80%) and validation set(20%) and then load it len_train = int(0.8 * len(mnist_trainset)) len_val = len(mnist_trainset) - len_train train_dataset, val_dataset = torch.utils.data.random_split(mnist_trainset, [len_train, len_val]) # train_loader is the data loader containing the training samples train_loader = torch.utils.data.DataLoader(train_dataset, batch_size = 64, shuffle = True) # val_loader is the data loader containing the validation samples val_loader = torch.utils.data.DataLoader(val_dataset, batch_size = 64, shuffle = True) Defining the Architecture\nWe will be using the Convolution Layer (link) to extract features from the images followed by Batch Norm (link) and Activation function (link). We add then add the Pooling layer (to downsample the images) and repeat this block again. Next, the features are flattened and fed into a fully-connected layer followed by an activation function. We then add a Dropout layer (link) for regularization, followed by another fully connected layer that gives 10 outputs (for 10 digits).\n# CUDA for PyTorch use_cuda = torch.cuda.is_available() device = torch.device(\"cuda:0\" if use_cuda else \"cpu\") # Creating the architecture class DigitClassification(torch.nn.Module): def __init__(self): super(DigitClassification, self).__init__() self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1, padding=1) self.bn1 = nn.BatchNorm2d(32) self.max_pool1 = torch.nn.MaxPool2d(kernel_size=2, stride=2) self.conv2 = torch.nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=1) self.bn2 = nn.BatchNorm2d(64) self.max_pool2 = torch.nn.MaxPool2d(kernel_size=2, stride=2) self.fc1 = torch.nn.Linear(7 * 7 * 64, 128) self.dropout = torch.nn.Dropout(p=0.5) self.fc2 = torch.nn.Linear(128, 10) self.relu = nn.ReLU() pass def forward(self, x): x = self.conv1(x) x = self.relu(self.bn1(x)) x = self.max_pool1(x) x = self.conv2(x) x = self.relu(self.bn2(x)) x = self.max_pool2(x) x = torch.flatten(x, 1) x = self.relu(self.fc1(x)) x = self.dropout(x) x = self.fc2(x) return x # Instantiating the network model = DigitClassification().to(device) Training our Model\nNow that we have defined our model let’s train it! I will be used the Adam optimizer and the Cross-entropy Loss function for learning the weights of our model. The training process is very similar to that defined in the post Implementing Backpropagation. Since we are using Batch Normalization that behaves differently during train and test times, we have to include model.train() and model.eval() to denote two different modes of our model while training and evaluating respectively.\nWe get the training loss for the entire epoch by adding all the losses for each batch iteration and averaging them. After that, we compare the model’s prediction with the actual labels and calculate the accuracy of the model.\nnum_epochs = 10 criterion = nn.CrossEntropyLoss() learning_rate = 0.001 optimizer = torch.optim.Adam(model.parameters(), learning_rate) train_loss, val_loss = [], [] train_acc, val_acc = [], [] for epoch in range(num_epochs): model.train() running_loss = 0. correct, total = 0, 0 for i, (image, label) in enumerate(train_loader): image = image.to(device) label = label.to(device) output = model.forward(image) optimizer.zero_grad() loss = criterion(output, label) loss.backward() optimizer.step() running_loss += loss.item() _, predicted = torch.max(output, dim=1) total += label.size(0) correct += (predicted == label).sum().item() train_loss.append(running_loss/len(train_loader)) train_acc.append(correct/total) model.eval() running_loss = 0. correct, total = 0, 0 for i, (image, label) in enumerate(val_loader): image = image.to(device) label = label.to(device) output = model.forward(image) loss = criterion(output, label) running_loss += loss.item() _, predicted = torch.max(output, dim=1) total += label.size(0) correct += (predicted == label).sum().item() val_loss.append(running_loss/len(train_loader)) val_acc.append(correct/total) print('\\nEpoch: {}/{}, Train Loss: {:.4f}, Val Loss: {:.4f}, Val Accuracy: {:.4f}'.format(epoch + 1, num_epochs, train_loss[-1], val_loss[-1], val_acc[-1])) plt.figure(1) plt.plot(list(range(num_epochs)), train_loss, label='Training Loss') plt.plot(list(range(num_epochs)), val_loss, label='Validation Loss') plt.xlabel(\"Epochs\") plt.ylabel(\"Loss\") plt.title('Epoch vs Loss') plt.legend() plt.figure(2) plt.plot(list(range(num_epochs)), train_acc, label='Training Accuracy') plt.plot(list(range(num_epochs)), val_acc, label='Validation Accuracy') plt.xlabel(\"Epochs\") plt.ylabel(\"Accuracy\") plt.title('Epoch vs Accuracy') plt.legend() plt.show() After setting the model to eval mode, we iterate over each batch from the validation data loader using the enumerate function. We do similar steps as training but we do not backpropagate the loss. The plots generated from training look something like this.\nTesting our Model\nJust like we did for the training data, let’s create a test loader first. I have kept the batch size as 1 because we aren’t doing any kind of optimization here so batches are irrelevant.\ntest_loader = torch.utils.data.DataLoader(mnist_testset, batch_size = 1) model.eval() correct, total = 0, 0 for i, (image, label) in enumerate(test_loader): image = image.to(device) label = label.to(device) output = model.forward(image) _, predicted = torch.max(output, 1) total += label.size(0) correct += (predicted == label).sum().item() print(correct/total) We enumerate through our test data loader and calculate the model’s accuracy on unseen data the same way we did with the validation loop. With this model, I got $99.2%$ accuracy on the test set by training the model for just 10 epochs!\n",
+  "wordCount" : "1068",
+  "inLanguage": "en",
+  "datePublished": "2022-09-19T00:00:00Z",
+  "dateModified": "2022-09-19T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/img-classification-mnist/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Image Classification using CNNs: MNIST dataset
+    </h1>
+    <div class="post-meta"><span title='2022-09-19 00:00:00 +0000 UTC'>September 19, 2022</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p>Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.</p>
+<p>Now that we have all the ingredients required to code up our deep learning architecture, let&rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch. The MNIST dataset consists of 70,000 $28 \times 28$ black-and-white images of handwritten digits. I will be using Pytorch for this implementation. Don&rsquo;t forget to change the runtime to GPU to get accelerated processing!</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjjWYPvzM3a-vRXYI5Vd3QJ0PMywnpCwVFfO3ZKOzubbcCdTN9KcKmGjnGq944Jf12RX9gPqvtT3OVfru1XtoQZOVDWs5rjrHr--4e9xtSqR5VQLmOTLj2oKivFKSK5TeGZ12aBCPjprHAI4CjgeZ3AP9AIlNUkCvGx6fqM3hBKiYLp0Yzhlospt8vv_Q/s1100/1_XdCMCaHPt-pqtEibUfAnNw.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjjWYPvzM3a-vRXYI5Vd3QJ0PMywnpCwVFfO3ZKOzubbcCdTN9KcKmGjnGq944Jf12RX9gPqvtT3OVfru1XtoQZOVDWs5rjrHr--4e9xtSqR5VQLmOTLj2oKivFKSK5TeGZ12aBCPjprHAI4CjgeZ3AP9AIlNUkCvGx6fqM3hBKiYLp0Yzhlospt8vv_Q/w640-h435/1_XdCMCaHPt-pqtEibUfAnNw.png" alt=""  />
+</a></p>
+<p>The first step is to import the relevant libraries that we will be using throughout our code.</p>
+<pre><code>import torch
+from torch import nn
+import torchvision
+import matplotlib.pyplot as plt
+</code></pre>
+<p><strong>Downloading and Pre-processing the Dataset</strong></p>
+<p>The dataset is downloaded into two subsets, the train set containing 60,000 images and the test set containing 10,000 images. While downloading, we apply some transformations to the images - convert them to tensors for processing them in the convolution layers and normalizing them. Each pixel value is originally [0,255] that gets divided by 255 while getting converted to tensor, resulting in a range [0,1]. We further normalize the image with a mean of 0.5 and a standard deviation of 0.5 to obtain the pixel values in the range [-1,1].</p>
+<pre><code>my_transform = torchvision.transforms.Compose([
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize((0.5,), (0.5,))
+])
+
+# Download the dataset
+mnist_trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=my_transform)
+mnist_testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=my_transform)
+</code></pre>
+<p><strong>Loading the Dataset</strong></p>
+<p>As we discussed in <a href="https://yainnoware.blogspot.com/2022/08/deep-learning-data-manipulation.html">this</a> post, the test set is reserved to be used only once at the very end of our pipeline to evaluate our model. We randomly split the training data into a training set containing 80% of the images and a validation set containing 20% of the images and then build their loaders. I have defined a batch size of 64 for both the loaders but it can be set in any power of 2 (why? check out <a href="https://yainnoware.blogspot.com/2022/08/deep-learning-optimization.html">mini-batch gradient descent</a>).</p>
+<pre><code># Split the dataset into train set(80%) and validation set(20%) and then load it
+len_train = int(0.8 * len(mnist_trainset))
+len_val = len(mnist_trainset) - len_train
+train_dataset, val_dataset = torch.utils.data.random_split(mnist_trainset, [len_train, len_val])
+
+# train_loader is the data loader containing the training samples
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size = 64, shuffle = True)
+
+# val_loader is the data loader containing the validation samples
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size = 64, shuffle = True)
+</code></pre>
+<p><strong>Defining the Architecture</strong></p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgezKcawpU03ng-EZgpkAoGgmr17Rz208ZLHUh2S5MisP0y8_1x6IItz5nh7sd2seHhenu8cgRo_N7nMrLen5rAJhFilDMvB8aAXffw_HMuEd4e8VMqwk-jZcBlAjCw-jQIzgv2nG8IHMmwkH7pZ02q5nWhoJ03bt8GqViRKpxRrodIimXC_sgOgfz4aw/s1872/arch2.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgezKcawpU03ng-EZgpkAoGgmr17Rz208ZLHUh2S5MisP0y8_1x6IItz5nh7sd2seHhenu8cgRo_N7nMrLen5rAJhFilDMvB8aAXffw_HMuEd4e8VMqwk-jZcBlAjCw-jQIzgv2nG8IHMmwkH7pZ02q5nWhoJ03bt8GqViRKpxRrodIimXC_sgOgfz4aw/w640-h266/arch2.png" alt=""  />
+</a></p>
+<p>We will be using the Convolution Layer (<a href="https://yainnoware.blogspot.com/2022/09/convolutional-neural-networks-cnns.html">link</a>) to extract features from the images followed by Batch Norm (<a href="https://yainnoware.blogspot.com/2022/09/batch-normalization-and-its-variants.html">link</a>) and Activation function (<a href="https://yainnoware.blogspot.com/2022/08/deep-learning-neural-networks.html">link</a>). We add then add the Pooling layer (to downsample the images) and repeat this block again. Next, the features are flattened and fed into a fully-connected layer followed by an activation function. We then add a Dropout layer (<a href="https://yainnoware.blogspot.com/2022/08/deep-learning-regularization.html">link</a>) for regularization, followed by another fully connected layer that gives 10 outputs (for 10 digits).</p>
+<pre><code># CUDA for PyTorch
+use_cuda = torch.cuda.is_available()
+device = torch.device(&quot;cuda:0&quot; if use_cuda else &quot;cpu&quot;)
+
+# Creating the architecture
+class DigitClassification(torch.nn.Module):
+    def __init__(self):
+        super(DigitClassification, self).__init__()
+
+        self.conv1 = torch.nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1, padding=1)
+        self.bn1 = nn.BatchNorm2d(32)
+        self.max_pool1 = torch.nn.MaxPool2d(kernel_size=2, stride=2)
+
+        self.conv2 = torch.nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=1)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.max_pool2 = torch.nn.MaxPool2d(kernel_size=2, stride=2)
+
+        self.fc1 = torch.nn.Linear(7 * 7 * 64, 128)
+        self.dropout = torch.nn.Dropout(p=0.5)
+        self.fc2 = torch.nn.Linear(128, 10)
+
+        self.relu = nn.ReLU()
+        pass
+        
+        
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.relu(self.bn1(x))
+        x = self.max_pool1(x)
+
+        x = self.conv2(x)
+        x = self.relu(self.bn2(x))
+        x = self.max_pool2(x)
+
+        x = torch.flatten(x, 1)
+
+        x = self.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+
+        return x
+
+# Instantiating the network
+model = DigitClassification().to(device)
+</code></pre>
+<p><strong>Training our Model</strong></p>
+<p>Now that we have defined our model let&rsquo;s train it! I will be used the Adam optimizer and the Cross-entropy Loss function for learning the weights of our model. The training process is very similar to that defined in the post <a href="https://yainnoware.blogspot.com/2022/08/deep-learning-backpropagation.html">Implementing Backpropagation</a>. Since we are using Batch Normalization that behaves differently during train and test times, we have to include <code>model.train()</code> and <code>model.eval()</code> to denote two different modes of our model while training and evaluating respectively.</p>
+<p>We get the training loss for the entire epoch by adding all the losses for each batch iteration and averaging them. After that, we compare the model’s prediction with the actual labels and calculate the accuracy of the model.</p>
+<pre><code>num_epochs = 10
+
+criterion = nn.CrossEntropyLoss()
+learning_rate = 0.001
+optimizer = torch.optim.Adam(model.parameters(), learning_rate)
+
+train_loss, val_loss = [], []
+train_acc, val_acc = [], []
+
+for epoch in range(num_epochs):
+  
+  model.train()
+  running_loss = 0.
+  correct, total = 0, 0 
+  for i, (image, label) in enumerate(train_loader):
+    image = image.to(device)
+    label = label.to(device)
+
+    output = model.forward(image)
+    optimizer.zero_grad()
+    loss = criterion(output, label)
+    loss.backward()
+    optimizer.step()
+
+    running_loss += loss.item()
+    
+    _, predicted = torch.max(output, dim=1)
+    total += label.size(0)
+    correct += (predicted == label).sum().item()
+
+  train_loss.append(running_loss/len(train_loader))
+  train_acc.append(correct/total)
+
+  model.eval()
+  running_loss = 0.
+  correct, total = 0, 0 
+  for i, (image, label) in enumerate(val_loader):
+    image = image.to(device)
+    label = label.to(device)
+
+    output = model.forward(image)
+    loss = criterion(output, label)
+
+    running_loss += loss.item()
+    
+    _, predicted = torch.max(output, dim=1)
+    total += label.size(0)
+    correct += (predicted == label).sum().item()
+
+  val_loss.append(running_loss/len(train_loader))
+  val_acc.append(correct/total)
+
+  print('\nEpoch: {}/{}, Train Loss: {:.4f}, Val Loss: {:.4f}, Val Accuracy: {:.4f}'.format(epoch + 1, num_epochs, train_loss[-1], val_loss[-1], val_acc[-1]))
+
+
+plt.figure(1)
+plt.plot(list(range(num_epochs)), train_loss, label='Training Loss')
+plt.plot(list(range(num_epochs)), val_loss, label='Validation Loss')
+plt.xlabel(&quot;Epochs&quot;)
+plt.ylabel(&quot;Loss&quot;)
+plt.title('Epoch vs Loss')
+plt.legend()
+
+plt.figure(2)
+plt.plot(list(range(num_epochs)), train_acc, label='Training Accuracy')
+plt.plot(list(range(num_epochs)), val_acc, label='Validation Accuracy')
+plt.xlabel(&quot;Epochs&quot;)
+plt.ylabel(&quot;Accuracy&quot;)
+plt.title('Epoch vs Accuracy')
+plt.legend()
+
+plt.show()
+</code></pre>
+<p>After setting the model to eval mode, we iterate over each batch from the validation data loader using the enumerate function. We do similar steps as training but we do not backpropagate the loss. The plots generated from training look something like this.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjos8V2hTSjDB5gqjPkq3I1bVNPm9Z4_B2FEonIWwclDWP58csmZFGAbK3_Gj54cd77z1JdIE7lOgqsc4cltFJ9aviPCxRJqNLGp0Lc_PJreWlm9SdJqMEvFMDYvs79G6kgjojywHy3pxv6uZ3fOCIjw86a_Ky46an2R5dwUB3l8wqEaI7x0SxD6LuQZw/s853/download.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjos8V2hTSjDB5gqjPkq3I1bVNPm9Z4_B2FEonIWwclDWP58csmZFGAbK3_Gj54cd77z1JdIE7lOgqsc4cltFJ9aviPCxRJqNLGp0Lc_PJreWlm9SdJqMEvFMDYvs79G6kgjojywHy3pxv6uZ3fOCIjw86a_Ky46an2R5dwUB3l8wqEaI7x0SxD6LuQZw/w640-h208/download.png" alt=""  />
+</a></p>
+<p><strong>Testing our Model</strong></p>
+<p>Just like we did for the training data, let&rsquo;s create a test loader first. I have kept the batch size as 1 because we aren&rsquo;t doing any kind of optimization here so batches are irrelevant.</p>
+<pre><code>test_loader = torch.utils.data.DataLoader(mnist_testset, batch_size = 1)
+
+model.eval()
+correct, total = 0, 0 
+for i, (image, label) in enumerate(test_loader):
+    image = image.to(device)
+    label = label.to(device)
+
+    output = model.forward(image)
+    
+    _, predicted = torch.max(output, 1)
+    total += label.size(0)
+    correct += (predicted == label).sum().item()
+
+print(correct/total)
+</code></pre>
+<p>We enumerate through our test data loader and calculate the model&rsquo;s accuracy on unseen data the same way we did with the validation loop. With this model, I got $99.2%$ accuracy on the test set by training the model for just 10 epochs!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/alexnet/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>AlexNet: The First CNN to win ImageNet Challenge</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/cnn/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Neural Network for Images: Convolutional Neural Networks (CNNs)</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Understanding Batch Normalization | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.
+The idea is to normalize the outputs of a layer so that they have zero mean and unit variance.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/batch-norm/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/batch-norm/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Understanding Batch Normalization" />
+<meta property="og:description" content="In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.
+The idea is to normalize the outputs of a layer so that they have zero mean and unit variance." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/batch-norm/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-09-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-09-18T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Understanding Batch Normalization"/>
+<meta name="twitter:description" content="In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.
+The idea is to normalize the outputs of a layer so that they have zero mean and unit variance."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Understanding Batch Normalization",
+      "item": "https://yugajmera.github.io/posts/batch-norm/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Understanding Batch Normalization",
+  "name": "Understanding Batch Normalization",
+  "description": "In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.\nThe idea is to normalize the outputs of a layer so that they have zero mean and unit variance.",
+  "keywords": [
+    
+  ],
+  "articleBody": "In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.\nThe idea is to normalize the outputs of a layer so that they have zero mean and unit variance. If you ask why?. The distribution of the inputs to layers deep in the network may change after each mini-batch when the weights are updated. This can cause the learning algorithm to forever chase a moving target. This change in the distribution of inputs to layers in the network is referred to as the technical name “internal covariate shift” and batch normalization helps to reduce this internal covariance shift, improving optimization.\nWe introduce batch normalization as a layer in our network that takes in inputs and normalizes them. \\begin{align*} \u0026 \\hat{x}_{ij} = \\frac{x_{ij} - \\mu_j}{\\sqrt{\\sigma_j^2 + \\epsilon}} \\\\ \u0026 y_{ij} = \\gamma_j \\hat{x}_{ij} + \\beta_j \\end{align*} Fo each feature/channel, $\\mu_j$ and $\\sigma_j$ are the mean and standard deviation across the mini-batch of inputs. Having zero mean and unit variance is a too hard constraint for our network so we have a scale and shift parameters $\\gamma$ and $\\beta$ that can be learned during training.\nA nice side-effect of changing the mean and variance of each channel (i.e. introducing randomness) is that it helps in regularization, enhancing the generalization ability of the networks.\nHowever, since we are computing $\\mu_j$ and $\\sigma_j$ across the mini-batch of inputs, these estimates depend upon the mini-batch itself. So during test time, if I have a mini-batch of say [cat, dog, frog] and another mini-batch of [cat, car, horse], and both of them have the same cat image, the outputs would be different for each one because the model would compute two different means and standard deviation for both batches. The output that our model produces for each input element of a batch depends upon every other element in the batch.\nTherefore in batch normalization, we make sure that our model behaves differently during training and testing times. During test time, the batch norm layer would not compute the mean and standard deviation over the batch, instead, we will use the running average of means and standard deviations generated during training. So during test time, the batch norm becomes a linear operation (as mean and standard deviations are constants) and can easily be fused with the previous linear or convolution layer. Therefore, the batch norm layer is often inserted after fully connected or convolutional layers, and before nonlinearity.\nTo summarize, batch-norm\nMakes deep networks much easier to train! Allows higher learning rates, faster convergence Networks become more robust to initialization Acts as regularization during training Zero overhead at test-time: can be fused with conv One of the irritating features of batch-norm is that it behaves differently during training and test time. One variant of batch-norm is called Layer Normalization which has the same behavior during training and testing. The only difference is that rather than averaging over batch dimensions, we average over the feature dimension. So, the estimates no longer depend on the elements of the batch and we have per-channel mean and standard deviation. Layer normalization is commonly used in RNNs and Transformers.\nAnother variant of this type of layer is called Instance Normalization, where we average over the spatial dimensions of the image. So, during training, we would have a per-image mean and per-image standard deviation, and this type of normalization would also behave the same during training and testing.\nWe also have one more variant to it, called the Group Normalization which is generally used for group convolutions, where we split the channel into some number of groups and then normalize over these subsets of the channel dimension. Such a type of normalization tends to work quite well in some applications such as object detection.\nThe figure below gives an intuition on these four types of normalizations,\n",
+  "wordCount" : "680",
+  "inLanguage": "en",
+  "datePublished": "2022-09-18T00:00:00Z",
+  "dateModified": "2022-09-18T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/batch-norm/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Understanding Batch Normalization
+    </h1>
+    <div class="post-meta"><span title='2022-09-18 00:00:00 +0000 UTC'>September 18, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p>In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is <strong>Batch Normalization</strong>.</p>
+<p>The idea is to normalize the outputs of a layer so that they have zero mean and unit variance. If you ask why?. The distribution of the inputs to layers deep in the network may change after each mini-batch when the weights are updated. This can cause the learning algorithm to forever chase a moving target. This change in the distribution of inputs to layers in the network is referred to as the technical name &ldquo;<em>internal covariate shift</em>&rdquo; and batch normalization helps to reduce this internal covariance shift, improving optimization.</p>
+<p>We introduce batch normalization as a layer in our network that takes in inputs and normalizes them. \begin{align*} &amp; \hat{x}_{ij} = \frac{x_{ij} - \mu_j}{\sqrt{\sigma_j^2 + \epsilon}} \\ &amp; y_{ij} = \gamma_j \hat{x}_{ij} + \beta_j \end{align*} Fo each feature/channel, $\mu_j$ and $\sigma_j$ are the mean and standard deviation across the mini-batch of inputs. Having zero mean and unit variance is a too hard constraint for our network so we have a scale and shift parameters $\gamma$ and $\beta$ that can be learned during training.</p>
+<p>A nice side-effect of changing the mean and variance of each channel (i.e. introducing randomness) is that it helps in regularization, enhancing the generalization ability of the networks.</p>
+<p>However, since we are computing $\mu_j$ and $\sigma_j$ across the mini-batch of inputs, these estimates depend upon the mini-batch itself. So during test time, if I have a mini-batch of say [cat, dog, frog] and another mini-batch of [cat, car, horse], and both of them have the same cat image, the outputs would be different for each one because the model would compute two different means and standard deviation for both batches. The output that our model produces for each input element of a batch depends upon every other element in the batch.</p>
+<p>Therefore in batch normalization, we make sure that our model behaves differently during training and testing times. During test time, the batch norm layer would not compute the mean and standard deviation over the batch, instead, we will use the running average of means and standard deviations generated during training. So during test time, the batch norm becomes a linear operation (as mean and standard deviations are constants) and can easily be fused with the previous linear or convolution layer. Therefore, the batch norm layer is often inserted after fully connected or convolutional layers, and before nonlinearity.</p>
+<p>To summarize, batch-norm</p>
+<ul>
+<li>Makes deep networks much easier to train!</li>
+<li>Allows higher learning rates, faster convergence</li>
+<li>Networks become more robust to initialization</li>
+<li>Acts as regularization during training</li>
+<li>Zero overhead at test-time: can be fused with conv</li>
+</ul>
+<p>One of the irritating features of batch-norm is that it behaves differently during training and test time. One variant of batch-norm is called <strong>Layer Normalization</strong> which has the same behavior during training and testing. The only difference is that rather than averaging over batch dimensions, we average over the feature dimension. So, the estimates no longer depend on the elements of the batch and we have per-channel mean and standard deviation. Layer normalization is commonly used in RNNs and Transformers.</p>
+<p>Another variant of this type of layer is called <strong>Instance Normalization</strong>, where we average over the spatial dimensions of the image. So, during training, we would have a per-image mean and per-image standard deviation, and this type of normalization would also behave the same during training and testing.</p>
+<p>We also have one more variant to it, called the <strong>Group Normalization</strong> which is generally used for group convolutions, where we split the channel into some number of groups and then normalize over these subsets of the channel dimension. Such a type of normalization tends to work quite well in some applications such as object detection.</p>
+<p>The figure below gives an intuition on these four types of normalizations,</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhgL_jPGuYABV9NF463Rs31tuYMiQ2_9IEf0gPDVUZh3t4vUaV482haKxV6Op1xec1Ef2L8-ccnPhjT2iANtYpGD7TL9FhjI37okobTOuNaT_oBshEAOp2X9icGB0RLvEKIlA-X2-3kJdXh5FRDRftvXRKKTqNFEGSeYW3hAhHJb4p1X2Gy-tnCLMOT_w/s1124/bn.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhgL_jPGuYABV9NF463Rs31tuYMiQ2_9IEf0gPDVUZh3t4vUaV482haKxV6Op1xec1Ef2L8-ccnPhjT2iANtYpGD7TL9FhjI37okobTOuNaT_oBshEAOp2X9icGB0RLvEKIlA-X2-3kJdXh5FRDRftvXRKKTqNFEGSeYW3hAhHJb4p1X2Gy-tnCLMOT_w/w640-h204/bn.PNG" alt=""  />
+</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/cnn/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Neural Network for Images: Convolutional Neural Networks (CNNs)</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/data-manipulation/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Data Manipulation for Deep Learning</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

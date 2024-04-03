@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Regularization: Weight decay, Dropout, Early stopping | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/regularization/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/regularization/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Regularization: Weight decay, Dropout, Early stopping" />
+<meta property="og:description" content="Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/regularization/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-08-15T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Regularization: Weight decay, Dropout, Early stopping"/>
+<meta name="twitter:description" content="Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Regularization: Weight decay, Dropout, Early stopping",
+      "item": "https://yugajmera.github.io/posts/regularization/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Regularization: Weight decay, Dropout, Early stopping",
+  "name": "Regularization: Weight decay, Dropout, Early stopping",
+  "description": "Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly. It is important to remember that the training and the test set are assumed to be sampled from a common dataset, and our aim is to ensure that our model fits this dataset. To achieve good accuracy, we must ensure that our model generalizes well to fit the test set as much as possible. We apply this in practice using a technique called regularization.\nLet’s understand this concept with a simple example. The blue points are the training data, and we fit two different models, m1 (polynomial) and m2 (linear). While m1 perfectly fits the training set (overfits!), m2 generalizes the data. Look at the third image, where the yellow points are the test set. Clearly, m2 would perform better than m1. We use regularization to make sure we choose simpler models (generalize more) and prevent the model from overfitting.\nWeight decay In this type of regularization, we prevent overfitting by zeroing out some weights of our model. An additional term is added in computation of loss over the training data as, \\begin{align*} L \u0026= \\frac{1}{N} \\sum_{i = 1}^N L_i(x_i, y_i, W) + \\lambda R(W) \\end{align*} where $\\lambda$ is the hyperparameter that controls the regularization strength. Since we minimize this loss function in our optimization process, the added term decays some weights of our model. $R(W)$ for different types of weight decay can be written as, \\begin{align*} \\text{L2: } \u0026 R(W) = \\sum_k \\sum_l W_{k,l}^2 \\\\ \\text{L1: } \u0026 R(W) = \\sum_k \\sum_l |W_{k,l}| \\\\ \\text{Elastic Net (L1 + L2) : } \u0026 R(W) = \\sum_k \\sum_l \\beta W_{k,l}^2 + |W_{k,l}| \\\\ \\end{align*} L2 regularization shrinks weights proportionally to its size, so bigger weights gets shrunk more (since we are adding the square of them in the loss function). Whereas L1 regularization shrinks all the weights by the same amount, with the smaller weights getting zeroed out.\nL2 regularization (also called weight decay) is the most commonly used and can directly be added in our optimizer instance of Pytorch as $\\lambda$ = 1e-4\noptimizer = torch.optim.SGD(model.parameters(), lr=1e-3, weight_decay=1e-4) Dropout In the forward pass, we randomly set some of the neurons to zero, as shown in the figure below. The probability of dropping is a hyperparameter and is usually set to 0.5.\nSince we are randomly zeroing out neurons in each layer of our network in each forward pass, we would obtain outputs that are also random. We need to average out this randomness at test time to have a deterministic output. So, if we are randomly removing half of the nodes in the forward pass (p=0.5), then for testing, we would use the full network but shrink the outputs by half (multiply by dropout probability). A derivation of the same is shown below for a single neuron.\nBy doing this, we scale the activations so that for each neuron: output at test time = expected output at training time (average out the randomness). Having two different behaviors of our model at training and test time looks cumbersome, so in practice, we use a variant called inverted dropout. In the forward pass, we randomly mask half of the neurons and double the output of the remaining neurons, so we don’t have to change anything at the test time.\nIntroducing randomness in our network helps the model generalize better and prevent overfitting. Furthermore, it helps our optimizer to jump out of local minima by stimulating dead neurons during the training process. Another interpretation of dropouts is training a large ensemble of sub-networks that share weights.\nDropout can directly be implemented in Pytorch when defining our model as,\nmodel = torch.nn.Sequential(torch.nn.Linear(3072, 100), torch.nn.ReLU(), torch.nn.Dropout(p=0.5), torch.nn.Linear(100, 10)) Early Stopping This notion of early stopping helps us to choose the num_steps hyperparameter, i.e., how long should we train our model? When training, we look at three curves: training loss as a function of iterations (should be decaying exponentially) and training and validation accuracy as a function of iterations. These curves give some sense of the health of our network.\nEarly stopping is a fairly simple regularization technique, where we stop the training process when the validation accuracy decreases. Training further would increase training accuracy (as our model starts to overfit), but it would perform very poorly on our test set (as the validation set is a good representation of the test set).\n",
+  "wordCount" : "791",
+  "inLanguage": "en",
+  "datePublished": "2022-08-15T00:00:00Z",
+  "dateModified": "2022-08-15T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/regularization/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Regularization: Weight decay, Dropout, Early stopping
+    </h1>
+    <div class="post-meta"><span title='2022-08-15 00:00:00 +0000 UTC'>August 15, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#weight-decay" aria-label="Weight decay">Weight decay</a></li>
+                <li>
+                    <a href="#dropout" aria-label="Dropout">Dropout</a></li>
+                <li>
+                    <a href="#early-stopping" aria-label="Early Stopping">Early Stopping</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly. It is important to remember that the training and the test set are assumed to be sampled from a common dataset, and our aim is to ensure that our model fits this dataset. To achieve good accuracy, we must ensure that our model generalizes well to fit the test set as much as possible. We apply this in practice using a technique called regularization.</p>
+<p>Let&rsquo;s understand this concept with a simple example. The blue points are the training data, and we fit two different models, m1 (polynomial) and m2 (linear). While m1 perfectly fits the training set (overfits!), m2 generalizes the data. Look at the third image, where the yellow points are the test set. Clearly, m2 would perform better than m1. We use regularization to make sure we choose simpler models (generalize more) and prevent the model from overfitting.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpz8pfeZxq1nPtAQJMxcLmCziDnkls1mEymhujA_qSVgfh8np9PyBt7rSWBXgg-p3RJ8luGHjO4ympcrxrY6kj_eG3ot0HBqptRuWDTWfZJb_nPD6bqbK8PWoN1CVV1bcjFDyHQckctuguo2jHPhj5K2fRX1Q1yZf8zVavL8i3WOUxXNwUeTz8j6lV4A/s1629/train.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpz8pfeZxq1nPtAQJMxcLmCziDnkls1mEymhujA_qSVgfh8np9PyBt7rSWBXgg-p3RJ8luGHjO4ympcrxrY6kj_eG3ot0HBqptRuWDTWfZJb_nPD6bqbK8PWoN1CVV1bcjFDyHQckctuguo2jHPhj5K2fRX1Q1yZf8zVavL8i3WOUxXNwUeTz8j6lV4A/w640-h356/train.PNG" alt=""  />
+</a></p>
+<h2 id="weight-decay"><strong>Weight decay</strong><a hidden class="anchor" aria-hidden="true" href="#weight-decay">#</a></h2>
+<p>In this type of regularization, we prevent overfitting by zeroing out some weights of our model. An additional term is added in computation of loss over the training data as, \begin{align*} L &amp;= \frac{1}{N} \sum_{i = 1}^N L_i(x_i, y_i, W) + \lambda R(W) \end{align*} where $\lambda$ is the hyperparameter that controls the regularization strength. Since we minimize this loss function in our optimization process, the added term decays some weights of our model. $R(W)$ for different types of weight decay can be written as, \begin{align*} \text{L2: } &amp; R(W) = \sum_k \sum_l W_{k,l}^2 \\ \text{L1: } &amp; R(W) = \sum_k \sum_l |W_{k,l}| \\ \text{Elastic Net (L1 + L2) : } &amp; R(W) = \sum_k \sum_l \beta W_{k,l}^2 + |W_{k,l}| \\ \end{align*} L2 regularization shrinks weights proportionally to its size, so bigger weights gets shrunk more (since we are adding the square of them in the loss function). Whereas L1 regularization shrinks all the weights by the same amount, with the smaller weights getting zeroed out.</p>
+<p>L2 regularization (also called weight decay) is the most commonly used and can directly be added in our optimizer instance of Pytorch as $\lambda$ = 1e-4</p>
+<pre><code>optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, weight_decay=1e-4)
+</code></pre>
+<h2 id="dropout"><strong>Dropout</strong><a hidden class="anchor" aria-hidden="true" href="#dropout">#</a></h2>
+<p>In the forward pass, we randomly set some of the neurons to zero, as shown in the figure below. The probability of dropping is a hyperparameter and is usually set to 0.5.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2pTDfRR_C2yJJQOXNoUNkC1Vkc41MAa-BfNA9OmaF_1a9yNezjCfCr47btsCzB0zW78DL3nWzHKwCwRpA2W5dp6p0FhaRs-djfu2NxcoR6N6kgG3RkLYrS9KipV1vH4HafHK06yDYEsxH0bczIpsIgNxMlU11cWXWcpwljReZNJ5P5BA2Wc7zlpHMVw/s735/dropout.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2pTDfRR_C2yJJQOXNoUNkC1Vkc41MAa-BfNA9OmaF_1a9yNezjCfCr47btsCzB0zW78DL3nWzHKwCwRpA2W5dp6p0FhaRs-djfu2NxcoR6N6kgG3RkLYrS9KipV1vH4HafHK06yDYEsxH0bczIpsIgNxMlU11cWXWcpwljReZNJ5P5BA2Wc7zlpHMVw/w400-h201/dropout.PNG" alt=""  />
+</a></p>
+<p>Since we are randomly zeroing out neurons in each layer of our network in each forward pass, we would obtain outputs that are also random. We need to average out this randomness at test time to have a deterministic output. So, if we are randomly removing half of the nodes in the forward pass (p=0.5), then for testing, we would use the full network but shrink the outputs by half (multiply by dropout probability). A derivation of the same is shown below for a single neuron.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEigkmNKVLu9T9ETshzn2fRpVRqSVlyjRc0OsDrm7NREZ5mNqsgztLD8uMMgEh47jei8mjqWFqEHE004eXZRKpyJUuy98fAW9u--o8dvXvk5Bj1fwx44mewBgfiraFSY_GrIAElgzk24fPJfDV8hcu57wmkUFlTyjBK0a-_sNXae2PqU6Jv7UgFRNads1g/s997/derv.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEigkmNKVLu9T9ETshzn2fRpVRqSVlyjRc0OsDrm7NREZ5mNqsgztLD8uMMgEh47jei8mjqWFqEHE004eXZRKpyJUuy98fAW9u--o8dvXvk5Bj1fwx44mewBgfiraFSY_GrIAElgzk24fPJfDV8hcu57wmkUFlTyjBK0a-_sNXae2PqU6Jv7UgFRNads1g/w640-h210/derv.PNG" alt=""  />
+</a></p>
+<p>By doing this, we scale the activations so that for each neuron: output at test time = expected output at training time (average out the randomness). Having two different behaviors of our model at training and test time looks cumbersome, so in practice, we use a variant called inverted dropout. In the forward pass, we randomly mask half of the neurons and double the output of the remaining neurons, so we don&rsquo;t have to change anything at the test time.</p>
+<p>Introducing randomness in our network helps the model generalize better and prevent overfitting. Furthermore, it helps our optimizer to jump out of local minima by stimulating dead neurons during the training process. Another interpretation of dropouts is training a large ensemble of sub-networks that share weights.</p>
+<p>Dropout can directly be implemented in Pytorch when defining our model as,</p>
+<pre><code>model = torch.nn.Sequential(torch.nn.Linear(3072, 100),
+  torch.nn.ReLU(),
+  torch.nn.Dropout(p=0.5),
+      torch.nn.Linear(100, 10))
+</code></pre>
+<h2 id="early-stopping"><strong>Early Stopping</strong><a hidden class="anchor" aria-hidden="true" href="#early-stopping">#</a></h2>
+<p>This notion of early stopping helps us to choose the <code>num_steps</code> hyperparameter, i.e., how long should we train our model? When training, we look at three curves: training loss as a function of iterations (should be decaying exponentially) and training and validation accuracy as a function of iterations. These curves give some sense of the health of our network.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjq3j821vvdp9i1FgER-oYiALYUbOY6SSSoyRGpoaDk9jTmUfgvaMS_RzKlYsewF2udEoX_FgxAnTpLGGNia-C0rSc9sW4CsuAnozA3mD1kvzr59xf282loyUuIbstnl3raLWwEpfwcwyLhVzycGQ1Mh_eMCSqEw9k6szICQIJN5HTgUfxWD_nieHG8vw/s1068/curves.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjq3j821vvdp9i1FgER-oYiALYUbOY6SSSoyRGpoaDk9jTmUfgvaMS_RzKlYsewF2udEoX_FgxAnTpLGGNia-C0rSc9sW4CsuAnozA3mD1kvzr59xf282loyUuIbstnl3raLWwEpfwcwyLhVzycGQ1Mh_eMCSqEw9k6szICQIJN5HTgUfxWD_nieHG8vw/w640-h210/curves.PNG" alt=""  />
+</a></p>
+<p>Early stopping is a fairly simple regularization technique, where we stop the training process when the validation accuracy decreases. Training further would increase training accuracy (as our model starts to overfit), but it would perform very poorly on our test set (as the validation set is a good representation of the test set).</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/data-manipulation/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Data Manipulation for Deep Learning</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/learning-rates/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Using Learning Rate Schedules for Training</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Generative Adversarial Networks: A Two-player game | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.
+With GANs, we don&rsquo;t explicitly learn the distribution of the data $p_{\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.
+A latent variable is sampled from a prior $\mathbf{z} \sim p(\mathbf{z})$ and passed through the Generator to obtain a fake sample $\mathbf{x} = G(\mathbf{z})$.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/gan/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/gan/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="Generative Adversarial Networks: A Two-player game" />
+<meta property="og:description" content="Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.
+With GANs, we don&rsquo;t explicitly learn the distribution of the data $p_{\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.
+A latent variable is sampled from a prior $\mathbf{z} \sim p(\mathbf{z})$ and passed through the Generator to obtain a fake sample $\mathbf{x} = G(\mathbf{z})$." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/gan/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-19T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Generative Adversarial Networks: A Two-player game"/>
+<meta name="twitter:description" content="Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.
+With GANs, we don&rsquo;t explicitly learn the distribution of the data $p_{\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.
+A latent variable is sampled from a prior $\mathbf{z} \sim p(\mathbf{z})$ and passed through the Generator to obtain a fake sample $\mathbf{x} = G(\mathbf{z})$."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Generative Adversarial Networks: A Two-player game",
+      "item": "https://yugajmera.github.io/posts/gan/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Generative Adversarial Networks: A Two-player game",
+  "name": "Generative Adversarial Networks: A Two-player game",
+  "description": "Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.\nWith GANs, we don\u0026rsquo;t explicitly learn the distribution of the data $p_{\\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.\nA latent variable is sampled from a prior $\\mathbf{z} \\sim p(\\mathbf{z})$ and passed through the Generator to obtain a fake sample $\\mathbf{x} = G(\\mathbf{z})$.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.\nWith GANs, we don’t explicitly learn the distribution of the data $p_{\\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.\nA latent variable is sampled from a prior $\\mathbf{z} \\sim p(\\mathbf{z})$ and passed through the Generator to obtain a fake sample $\\mathbf{x} = G(\\mathbf{z})$. Then the discriminator performs an image classification task that takes in all samples and classifies it as real ($1$) or fake ($0$). These are trained together such that while competing with each other, they make each other stronger at the same time.\nTo summarize,\nA discriminator $D$ estimates the probability of a given sample coming from the real dataset. It works as a critic and is optimized to tell the fake samples from the real ones.\nA generator $G$ outputs synthetic samples given a noise variable input $\\mathbf{z}$. It is trained to capture the real data distribution (want $p_G \\approx p_{\\text{data}}$) so that its generative samples can be as real as possible, or in other words, can trick the discriminator to output higher probabilities.\nTraining Objective We want to make sure that the Discriminator’s decision over the real data is accurate, i.e. $D(\\mathbf{x}) = 1$. This can be achieved by maximizing the log-likelihood over the data. \\begin{equation*} \\max_{\\color{blue}{D}} \\; \\mathbb{E}_{\\mathbf{x} \\sim p_{\\text{data}}} \\left[ \\log {\\color{blue}{D}}(\\mathbf{x}) \\right] \\tag{1} \\end{equation*}\nThe Discriminator should also assign low probabilities to the fake samples generated by the Generator, i.e. $D(G(\\mathbf{z})) = 0$. In other words, minimize the log-likelihood of the fake data. \\begin{align*} \\min_{\\color{blue}{D}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log({\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)] \\tag{2.1} \\end{align*} which can be re-written as, \\begin{align*} \u0026 \\max_{\\color{blue}{D}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log(1 -{\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)] \\tag{2.2} \\end{align*}\nOn the other hand, the Generator wants to fool the Discriminator such that it classifies fake samples as real, i.e. $D(G(\\mathbf{z})) = 1$. This can be obtained by maximizing the log-likelihood over the fake data. \\begin{align*} \\max_{\\color{orange}{G}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log({\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)] \\tag{3.1} \\end{align*} which can be re-written as, \\begin{align*} \\min_{\\color{orange}{G}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log(1 -{\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)] \\tag{3.2} \\end{align*}\nThe full objective is given by,\n\\begin{align*} \\large{\\min_{\\color{orange}{G}} \\, \\max_{\\color{blue}{D}} \\; \\mathbb{E}_{\\mathbf{x} \\sim p_{\\text{data}}} \\left[ \\log {\\color{blue}{D}}(\\mathbf{x}) \\right] \\; + \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log(1 - {\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)]} \\tag{4} \\end{align*}\nThe objective of training GANs is therefore a minimax game: the generator $G$ is trying hard to trick the discriminator, while the critic model $D$ is trying hard not to be cheated. In this process, both networks force each other to improve their functionalities. And both are trained together with alternating gradient updates (gradient ascent on discriminator and gradient descent on generator).\nHowever, at the start of training, the generator is really bad due to which $D(G(\\mathbf{z}))$ is close to zero, creating a vanishing gradients problem for the Generator (as loss = 0). Therefore, instead of $\\min_{\\color{orange}{G}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log(1 -{\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)]$, we use $\\min_{\\color{orange}{G}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} - [\\log({\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)]$ or just $\\max_{\\color{orange}{G}} \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log({\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)]$ (Equation 3.2) as an objective for the Generator.\nTraining Algorithm\nOptimality Let’s write Equation 4 with a change of variables (ignoring the improvement of Generator for now), \\begin{align*} \u0026 \\min_{\\color{orange}{G}} \\, \\max_{\\color{blue}{D}} \\; \\mathbb{E}_{\\mathbf{x} \\sim p_{\\text{data}}} \\left[ \\log {\\color{blue}{D}}(\\mathbf{x}) \\right] \\; + \\; \\mathbb{E}_{{\\color{green}{\\mathbf{z}}} \\sim p({\\color{green}{z}})} [\\log(1 - {\\color{blue}{D}} \\left( {\\color{orange}{G}}({\\color{green}{z}})) \\right)] \\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\max_{\\color{blue}{D}} \\; \\mathbb{E}_{\\mathbf{x} \\sim p_{\\text{data}}} \\left[ \\log {\\color{blue}{D}}(\\mathbf{x}) \\right] \\; + \\; \\mathbb{E}_{\\mathbf{x} \\sim p_{\\color{orange}{G}} } [\\log(1 - {\\color{blue}{D}} (\\mathbf{x}) )] \\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\int_{\\mathbf{x}} \\max_{\\color{blue}{D}} \\left( p_{\\text{data}}(\\mathbf{x}) \\, \\log {\\color{blue}{D}}(\\mathbf{x}) \\; + \\; p_{\\color{orange}{G}}(\\mathbf{x}) \\, \\log(1 - {\\color{blue}{D}} (\\mathbf{x}) ) \\right)\\\\ \\\\ \u0026\\text{For the max function, we take the derivative wrt ${\\color{blue}{D}}$ and assign it to zero.}\\\\ \u0026\\frac{p_{\\text{data}}(\\mathbf{x})}{{\\color{blue}{D}}(\\mathbf{x})} - \\frac{p_{\\color{orange}{G}}(\\mathbf{x})}{(1 - {\\color{blue}{D}} (\\mathbf{x}))} = 0 \\; \\Rightarrow {{\\color{blue}{D}}_{\\max}(\\mathbf{x})} = \\frac{p_{\\text{data}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\text{ [Optimal Discriminator]} \\\\ \\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\int_{\\mathbf{x}} \\left( p_{\\text{data}}(\\mathbf{x}) \\, \\log \\frac{p_{\\text{data}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\; + \\; p_{\\color{orange}{G}}(\\mathbf{x}) \\, \\log \\frac{p_{\\color{orange}{G}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\right)\\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\left( \\mathbf{E}_{\\mathbf{x} \\sim p_{\\text{data}}} \\, \\left[ \\log \\frac{p_{\\text{data}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\right] \\; + \\; \\mathbf{E}_{\\mathbf{x} \\sim p_{\\color{orange}{G}}} \\, \\left[ \\log \\frac{p_{\\color{orange}{G}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\right] \\right)\\\\ \\\\ \u0026\\text{Multiply and divide by 2} \\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\left( \\mathbf{E}_{\\mathbf{x} \\sim p_{\\text{data}}} \\, \\left[ \\log \\frac{2 \\, p_{\\text{data}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\right] \\; + \\; \\mathbf{E}_{\\mathbf{x} \\sim p_{\\color{orange}{G}}} \\, \\left[ \\log \\frac{2 \\, p_{\\color{orange}{G}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_{\\color{orange}{G}}(\\mathbf{x})} \\right] - \\log 4 \\right) \\\\ \\\\ \u0026\\text{From the definition of KL-Divergence: } \\mathbf{D}_{KL}(p || q) = \\mathbf{E}_{x \\sim p} \\left[ \\log \\frac{p(x)}{q(x)} \\right]\\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\left( \\mathbf{D}_{KL} \\left[ p_{\\text{data}} \\; || \\; \\frac{p_{\\text{data}} + p_{\\color{orange}{G}}}{2} \\right] \\, + \\, \\mathbf{D}_{KL} \\left[ p_{\\color{orange}{G}} \\; || \\; \\frac{p_{\\text{data}} + p_{\\color{orange}{G}}}{2} \\right] - \\log 4 \\right) \\\\ \\\\ \u0026\\text{From Jensen-Shannon divergence: } \\mathbf{D}_{JS}(p || q) = \\frac{1}{2} \\mathbf{D}_{KL}(p || \\frac{p + q}{2}) + \\frac{1}{2} \\mathbf{D}_{KL}(q || \\frac{p + q}{2}) \\\\ \u0026= \\min_{\\color{orange}{G}} \\, \\left( 2 \\, \\mathbf{D}_{JS} (p_{\\text{data}} \\, || \\, p_{\\color{orange}{G}}) - \\log 4 \\right)\\\\ \\end{align*}\nJS divergence is always non-negative and is zero only when the two distributions are equal. Hence, training a GAN with this objective, minimizes the JS divergence to zero, obtaining a global minimum when $p_{\\text{data}} = p_{G}$.\nThe global minimum of the minimax game happens when, \\begin{align*} \\text{Optimal Generator: } \u0026 p_{\\text{data}} = p_{G} \\\\ \\text{Optimal Discriminator: } \u0026 D_{G}^*(\\mathbf{x}) = \\frac{p_{\\text{data}}(\\mathbf{x})}{p_{\\text{data}}(\\mathbf{x}) + p_G(\\mathbf{x})} = \\frac{1}{2} \\end{align*}\nSome prominent papers,\nUnsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks (DCGAN): Architectures of Generator and Discriminator created with CNNs.\nWasserstein GAN (WGAN): Improvement over traditional GAN training.\nUnpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks (CycleGAN): For image-to-image translation\n",
+  "wordCount" : "970",
+  "inLanguage": "en",
+  "datePublished": "2022-11-19T00:00:00Z",
+  "dateModified": "2022-11-19T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/gan/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Generative Adversarial Networks: A Two-player game
+    </h1>
+    <div class="post-meta"><span title='2022-11-19 00:00:00 +0000 UTC'>November 19, 2022</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#training-objective" aria-label="Training Objective">Training Objective</a></li>
+                <li>
+                    <a href="#optimality" aria-label="Optimality">Optimality</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>Introduced in 2014 by <a href="https://arxiv.org/abs/1406.2661">Goodfellow. et al</a>, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.</p>
+<p>With GANs, we don&rsquo;t explicitly learn the distribution of the data $p_{\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.</p>
+<p>A latent variable is sampled from a prior $\mathbf{z} \sim p(\mathbf{z})$ and passed through the Generator to obtain a fake sample $\mathbf{x} = G(\mathbf{z})$. Then the discriminator performs an image classification task that takes in all samples and classifies it as real ($1$) or fake ($0$). These are trained together such that while competing with each other, they make each other stronger at the same time.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgZfpXiPO9fYlFHcOx8rmEenXuIy17cIeyv8KUMWPtWo8oHi-oM2QEdXIFEIEj4a8MwOVymbgz4I8OHZdOIVl1DtwBf37mtZDycnr5kDskWE0UWJ23k820vk2t1PG0reAE_5PYmIiZgSx4iJ5OsiUDCYCvCLt-pM7df0hWmOSyBEnFOOnd5SkjrrB-iPw/s1408/GAN.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgZfpXiPO9fYlFHcOx8rmEenXuIy17cIeyv8KUMWPtWo8oHi-oM2QEdXIFEIEj4a8MwOVymbgz4I8OHZdOIVl1DtwBf37mtZDycnr5kDskWE0UWJ23k820vk2t1PG0reAE_5PYmIiZgSx4iJ5OsiUDCYCvCLt-pM7df0hWmOSyBEnFOOnd5SkjrrB-iPw/s600/GAN.png" alt=""  />
+</a></p>
+<p>To summarize,</p>
+<ul>
+<li>
+<p>A discriminator $D$ estimates the probability of a given sample coming from the real dataset. It works as a critic and is optimized to tell the fake samples from the real ones.</p>
+</li>
+<li>
+<p>A generator $G$ outputs synthetic samples given a noise variable input $\mathbf{z}$. It is trained to capture the real data distribution (want $p_G \approx p_{\text{data}}$) so that its generative samples can be as real as possible, or in other words, can trick the discriminator to output higher probabilities.</p>
+</li>
+</ul>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4O0TJ5ZXS5XQeVR8gbZLfAfmBko7GNTaYa_XC8OUpVlohr_NF4S-ALvkekfcoNOiqKwT9NhmhATXb-ycreVSqFtHbjbrw8we4NoSmSRIVRIg2k1q_V0tWZmNbk0qByAPT8_evdsO_cahV7wdXHkVYKhVixGmm7dpgkOwJm_bCR73AcQ-r3vQdalRMfg/s1074/summary.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4O0TJ5ZXS5XQeVR8gbZLfAfmBko7GNTaYa_XC8OUpVlohr_NF4S-ALvkekfcoNOiqKwT9NhmhATXb-ycreVSqFtHbjbrw8we4NoSmSRIVRIg2k1q_V0tWZmNbk0qByAPT8_evdsO_cahV7wdXHkVYKhVixGmm7dpgkOwJm_bCR73AcQ-r3vQdalRMfg/w640-h182/summary.PNG" alt=""  />
+</a></p>
+<h3 id="training-objective">Training Objective<a hidden class="anchor" aria-hidden="true" href="#training-objective">#</a></h3>
+<p>We want to make sure that the Discriminator&rsquo;s decision over the real data is accurate, i.e. $D(\mathbf{x}) = 1$. This can be achieved by maximizing the log-likelihood over the data. \begin{equation*} \max_{\color{blue}{D}} \; \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}} \left[ \log {\color{blue}{D}}(\mathbf{x}) \right] \tag{1} \end{equation*}</p>
+<p>The Discriminator should also assign low probabilities to the fake samples generated by the Generator, i.e. $D(G(\mathbf{z})) = 0$. In other words, minimize the log-likelihood of the fake data. \begin{align*} \min_{\color{blue}{D}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log({\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)] \tag{2.1} \end{align*} which can be re-written as, \begin{align*} &amp; \max_{\color{blue}{D}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log(1 -{\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)] \tag{2.2} \end{align*}</p>
+<p>On the other hand, the Generator wants to fool the Discriminator such that it classifies fake samples as real, i.e. $D(G(\mathbf{z})) = 1$. This can be obtained by maximizing the log-likelihood over the fake data. \begin{align*} \max_{\color{orange}{G}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log({\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)] \tag{3.1} \end{align*} which can be re-written as, \begin{align*} \min_{\color{orange}{G}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log(1 -{\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)] \tag{3.2} \end{align*}</p>
+<p>The full objective is given by,</p>
+<p>\begin{align*} \large{\min_{\color{orange}{G}} \, \max_{\color{blue}{D}} \; \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}} \left[ \log {\color{blue}{D}}(\mathbf{x}) \right] \; + \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log(1 - {\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)]} \tag{4} \end{align*}</p>
+<p>The objective of training GANs is therefore a minimax game: the generator $G$ is trying hard to trick the discriminator, while the critic model $D$ is trying hard not to be cheated. In this process, both networks force each other to improve their functionalities. And both are trained together with alternating gradient updates (gradient ascent on discriminator and gradient descent on generator).</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4srgSBcXE40CEmZ3i2LMv37n0OHn5rAPlmDC3Squ4oqUeEbrWEhpyTFq_cDFh9O5MWa3ghP9dQfYZebyeIdVMpG1y-5fN9BTEl7__T1VqqCUS1ogvwzMBXY-L89b9I4QQUAjuFfI2_G9EXxBR-XPhxxwIJtM7mZ9ujEfJCbHzIeMlwl0xsn2lkC22aw/s639/branch.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg4srgSBcXE40CEmZ3i2LMv37n0OHn5rAPlmDC3Squ4oqUeEbrWEhpyTFq_cDFh9O5MWa3ghP9dQfYZebyeIdVMpG1y-5fN9BTEl7__T1VqqCUS1ogvwzMBXY-L89b9I4QQUAjuFfI2_G9EXxBR-XPhxxwIJtM7mZ9ujEfJCbHzIeMlwl0xsn2lkC22aw/w320-h261/branch.PNG" alt=""  />
+</a></p>
+<p>However, at the start of training, the generator is really bad due to which $D(G(\mathbf{z}))$ is close to zero, creating a vanishing gradients problem for the Generator (as loss = 0). Therefore, instead of $\min_{\color{orange}{G}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log(1 -{\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)]$, we use $\min_{\color{orange}{G}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} - [\log({\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)]$ or just $\max_{\color{orange}{G}} \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log({\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)]$ (Equation 3.2) as an objective for the Generator.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjtru0uyENjF9u8MnPCzWJcx5Bv2_BLFP1l51UH75xHAWohB9CfbYSgSJpS8Tcrn7v1PGsN7PJp-nMspB2LOJSbCR6qqQ6igotl3MSTyFMNF7KOt1aXn8SVKakD10ripfUrIH1E2Bq3E4uQt3w-JIuNtDp-T0WQVEMDvotPRkZBIdfUoN3iAUnnhGxe-w/s854/train.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjtru0uyENjF9u8MnPCzWJcx5Bv2_BLFP1l51UH75xHAWohB9CfbYSgSJpS8Tcrn7v1PGsN7PJp-nMspB2LOJSbCR6qqQ6igotl3MSTyFMNF7KOt1aXn8SVKakD10ripfUrIH1E2Bq3E4uQt3w-JIuNtDp-T0WQVEMDvotPRkZBIdfUoN3iAUnnhGxe-w/w640-h331/train.PNG" alt=""  />
+</a></p>
+<p>Training Algorithm</p>
+<h3 id="optimality">Optimality<a hidden class="anchor" aria-hidden="true" href="#optimality">#</a></h3>
+<p>Let&rsquo;s write Equation 4 with a change of variables (ignoring the improvement of Generator for now), \begin{align*} &amp; \min_{\color{orange}{G}} \, \max_{\color{blue}{D}} \; \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}} \left[ \log {\color{blue}{D}}(\mathbf{x}) \right] \; + \; \mathbb{E}_{{\color{green}{\mathbf{z}}} \sim p({\color{green}{z}})} [\log(1 - {\color{blue}{D}} \left( {\color{orange}{G}}({\color{green}{z}})) \right)] \\ &amp;= \min_{\color{orange}{G}} \, \max_{\color{blue}{D}} \; \mathbb{E}_{\mathbf{x} \sim p_{\text{data}}} \left[ \log {\color{blue}{D}}(\mathbf{x}) \right] \; + \; \mathbb{E}_{\mathbf{x} \sim p_{\color{orange}{G}} } [\log(1 - {\color{blue}{D}} (\mathbf{x}) )] \\ &amp;= \min_{\color{orange}{G}} \, \int_{\mathbf{x}} \max_{\color{blue}{D}} \left( p_{\text{data}}(\mathbf{x}) \, \log {\color{blue}{D}}(\mathbf{x}) \; + \; p_{\color{orange}{G}}(\mathbf{x}) \, \log(1 - {\color{blue}{D}} (\mathbf{x}) ) \right)\\ \\ &amp;\text{For the max function, we take the derivative wrt ${\color{blue}{D}}$ and assign it to zero.}\\ &amp;\frac{p_{\text{data}}(\mathbf{x})}{{\color{blue}{D}}(\mathbf{x})} - \frac{p_{\color{orange}{G}}(\mathbf{x})}{(1 - {\color{blue}{D}} (\mathbf{x}))} = 0 \; \Rightarrow {{\color{blue}{D}}_{\max}(\mathbf{x})} = \frac{p_{\text{data}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \text{ [Optimal Discriminator]} \\ \\ &amp;= \min_{\color{orange}{G}} \, \int_{\mathbf{x}} \left( p_{\text{data}}(\mathbf{x}) \, \log \frac{p_{\text{data}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \; + \; p_{\color{orange}{G}}(\mathbf{x}) \, \log \frac{p_{\color{orange}{G}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \right)\\ &amp;= \min_{\color{orange}{G}} \, \left( \mathbf{E}_{\mathbf{x} \sim p_{\text{data}}} \, \left[ \log \frac{p_{\text{data}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \right] \; + \; \mathbf{E}_{\mathbf{x} \sim p_{\color{orange}{G}}} \, \left[ \log \frac{p_{\color{orange}{G}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \right] \right)\\ \\ &amp;\text{Multiply and divide by 2} \\ &amp;= \min_{\color{orange}{G}} \, \left( \mathbf{E}_{\mathbf{x} \sim p_{\text{data}}} \, \left[ \log \frac{2 \, p_{\text{data}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \right] \; + \; \mathbf{E}_{\mathbf{x} \sim p_{\color{orange}{G}}} \, \left[ \log \frac{2 \, p_{\color{orange}{G}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_{\color{orange}{G}}(\mathbf{x})} \right] - \log 4 \right) \\ \\ &amp;\text{From the definition of KL-Divergence: } \mathbf{D}_{KL}(p || q) = \mathbf{E}_{x \sim p} \left[ \log \frac{p(x)}{q(x)} \right]\\ &amp;= \min_{\color{orange}{G}} \, \left( \mathbf{D}_{KL} \left[ p_{\text{data}} \; || \; \frac{p_{\text{data}} + p_{\color{orange}{G}}}{2} \right] \, + \, \mathbf{D}_{KL} \left[ p_{\color{orange}{G}} \; || \; \frac{p_{\text{data}} + p_{\color{orange}{G}}}{2} \right] - \log 4 \right) \\ \\ &amp;\text{From Jensen-Shannon divergence: } \mathbf{D}_{JS}(p || q) = \frac{1}{2} \mathbf{D}_{KL}(p || \frac{p + q}{2}) + \frac{1}{2} \mathbf{D}_{KL}(q || \frac{p + q}{2}) \\ &amp;= \min_{\color{orange}{G}} \, \left( 2 \, \mathbf{D}_{JS} (p_{\text{data}} \, || \, p_{\color{orange}{G}}) - \log 4 \right)\\ \end{align*}</p>
+<p>JS divergence is always non-negative and is zero only when the two distributions are equal. Hence, training a GAN with this objective, minimizes the JS divergence to zero, obtaining a global minimum when $p_{\text{data}} = p_{G}$.</p>
+<p>The global minimum of the minimax game happens when, \begin{align*} \text{Optimal Generator: } &amp; p_{\text{data}} = p_{G} \\ \text{Optimal Discriminator: } &amp; D_{G}^*(\mathbf{x}) = \frac{p_{\text{data}}(\mathbf{x})}{p_{\text{data}}(\mathbf{x}) + p_G(\mathbf{x})} = \frac{1}{2} \end{align*}</p>
+<p>Some prominent papers,</p>
+<ol>
+<li>
+<p><a href="https://arxiv.org/abs/1511.06434">Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks</a> (DCGAN): Architectures of Generator and Discriminator created with CNNs.</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/1701.07875">Wasserstein GAN</a> (WGAN): Improvement over traditional GAN training.</p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/1703.10593">Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks</a> (CycleGAN): For image-to-image translation</p>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/diffusion-models/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Decoding Diffusion Models</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/variational-autoencoder/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Generative Modeling with Variational Autoencoders</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>InceptionNet: Google&#39;s comeback for ImageNet Challenge | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).
+But with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/inceptionnet/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/inceptionnet/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="InceptionNet: Google&#39;s comeback for ImageNet Challenge" />
+<meta property="og:description" content="The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).
+But with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/inceptionnet/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-12T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="InceptionNet: Google&#39;s comeback for ImageNet Challenge"/>
+<meta name="twitter:description" content="The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).
+But with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "InceptionNet: Google's comeback for ImageNet Challenge",
+      "item": "https://yugajmera.github.io/posts/inceptionnet/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "InceptionNet: Google's comeback for ImageNet Challenge",
+  "name": "InceptionNet: Google\u0027s comeback for ImageNet Challenge",
+  "description": "The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).\nBut with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources.",
+  "keywords": [
+    
+  ],
+  "articleBody": " The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).\nBut with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources. In order to cater to these problems, the design choices of GoogLeNet were focused on efficiency.\nArchitecture: In order to very aggressively downsample the spatial dimensions of the input image at the beginning, GoogLeNet uses a Stem Network. This looks very similar to AlexNet or ZFNet (and local response normalization is used in this network).\nIt then includes an Inception module, a local structure with parallel branches that was repeated many times throughout the entire network (just like stages in VGGNet). In order to eliminate the kernel size as a hyperparameter, the input is passed through all the kernel sizes: $1 \\times 1$, $3 \\times 3$, $5 \\times 5$ and max-pooling $3 \\times 3$ with a stride of 1 and the outputs are concatenated together. ReLU is used as an activation function here.\nThis enables the network to learn various spatial patterns at different scales as a result of the varying conv filter sizes. The design follows the practical intuition that visual information should be processed at various scales and then aggregated so that the next stage can abstract features from the different scales simultaneously.\nNaive Inception Module\nOne big problem with such modules is that performing convolutions can be prohibitively expensive when the input has many channels. From the above image, let’s take the example of 32 $5 \\times 5$ conv filters which are applied over the $28 \\times 28 \\times 192$ input.\nThe number of multiplications: \\begin{equation*} 5 \\times 5 \\times 32 * 28 \\times 28 \\times 192 = 120422400 \\approx 120 \\text{M} \\end{equation*}\nThis problem becomes even more pronounced once pooling units are added to the mix: the number of output filters equals the number of filters in the previous stage (as pooling layers do not reduce the number of channels). The merging of the output of the pooling layer with outputs of the conv layers would lead to an inevitable increase in the number of outputs from stage to stage, leading to a computational blow-up within a few stages.\nTo solve this problem, a $1 \\times 1$ bottleneck layer is introduced to reduce channel dimensions before performing expensive spatial convolutions. Not only is it used to compute reductions, but it also introduces extra non-linearity (as they are followed by ReLU).\nInception module with dimensionality reduction\nThe bottleneck layer is implemented before the convolutions so that the computation takes place on a reduced number of channels, giving rise to reduced computation. It also included after the maxpool layer to control the number of output channels.\nThe number of multiplications: \\begin{align*} \u0026 (1 \\times 1 \\times 16 * 28 \\times 28 \\times 192) + (5 \\times 5 \\times 32 * 28 \\times 28 \\times 16) \\\\ \u0026= 2408448 + 10035200 \\\\ \u0026= 12443648 \\approx 12M. \\end{align*}\nThe computation cost of a component within the Inception Module(12M) is ten times smaller than a Naive Inception Module(120M). Such a technique allows for increasing the number of layers significantly without an uncontrolled blow-up in computational complexity at later stages.\nThe previous models used to flatten the output from the last conv layer, and pass it through the fully-connected layers to collapse the spatial dimensions. However, FC layers have a lot of parameters that increase memory usage. GoogLeNet instead uses global average pooling with a kernel size of $7 \\times 7$, followed by one single linear layer (with softmax) to generate class scores.\nRemoving FC layers means we cannot add dropout layers anymore. Given the relatively large depth of the network, the ability to propagate gradients back through all the layers became a problem. The authors had to add auxiliary classifiers at two intermediate stages to combat the vanishing gradient problem while providing regularization.\nAuxillary Classifier\nDuring training, their loss gets added to the total loss of the network with a discount weight (the losses of the auxiliary classifiers were weighted by 0.3). At inference time, these auxiliary networks are discarded.\nThe full 22-layer GoogLeNet architecture is shown below.\nTraining: The model was trained on the Cross-entropy loss function using stochastic gradient descent with a momentum of 0.9. A fixed learning rate schedule was used, where it was decreased by 4% every 8 epochs. (No other information about training is given in the paper)\nLink to the paper: Going Deeper with Convolutions\nTrivia: The name Inception probably sounds familiar, especially if you are a fan of the actor Leonardo DiCaprio or movie director, Christopher Nolan. Inception is a movie released in 2010, and the concepts of the embedded dream state (dreams within dreams) were the central premise of the film. This idea turned into a popular internet meme, which the authors cite as an inspiration for the name chosen for the architecture (as it is a network within a network).\nThe team also chose the name “GoogLeNet” as their team name in the ILSVRC14 competition, paying homage to Yann LeCuns pioneering LeNet 5 network (the earliest network that introduced convolutions)\n",
+  "wordCount" : "888",
+  "inLanguage": "en",
+  "datePublished": "2022-11-12T00:00:00Z",
+  "dateModified": "2022-11-12T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/inceptionnet/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      InceptionNet: Google&#39;s comeback for ImageNet Challenge
+    </h1>
+    <div class="post-meta"><span title='2022-11-12 00:00:00 +0000 UTC'>November 12, 2022</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFuMac_n9TnDT6FLBfgIKaP5U6xCd2maopDgVYNB1GbeR1MGZUz8M3kcUQ1Jh7_XtVKAKomg8AbDu6FOZaYhgIBtqhEVKY4QE0dLE3oCpRwT9tEyLknMtM2xhBTRzCckVUVUn5wp3bzJgiUnz0c6cjwOdpY8gRTzxLXe6WekXL8-TZAsOxb8m8hGhBLw/s982/graph3.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjFuMac_n9TnDT6FLBfgIKaP5U6xCd2maopDgVYNB1GbeR1MGZUz8M3kcUQ1Jh7_XtVKAKomg8AbDu6FOZaYhgIBtqhEVKY4QE0dLE3oCpRwT9tEyLknMtM2xhBTRzCckVUVUn5wp3bzJgiUnz0c6cjwOdpY8gRTzxLXe6WekXL8-TZAsOxb8m8hGhBLw/w400-h284/graph3.PNG" alt=""  />
+</a></p>
+<p>The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).</p>
+<p>But with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources. In order to cater to these problems, the design choices of GoogLeNet were focused on efficiency.</p>
+<p><strong>Architecture:</strong> In order to very aggressively downsample the spatial dimensions of the input image at the beginning, GoogLeNet uses a Stem Network. This looks very similar to AlexNet or ZFNet (and local response normalization is used in this network).</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEij0u_duOGY0YZEX4AMdQJJSRHig2y3NLQC73dN9NFTqwLSELKDhEI1NA_xASWKc5uCrScDQoCk6gHNpD1N7weXuzMK4oN8oyld1vtc5PHmRpyBA2X4WfsS12O2ZTa94qOUJFp_H3-rquGAYNiPmuIVOfgsKOJEJyfDuzUdBF6rvUvDKdwY1ftyM_7MlQ/s906/googlenet.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEij0u_duOGY0YZEX4AMdQJJSRHig2y3NLQC73dN9NFTqwLSELKDhEI1NA_xASWKc5uCrScDQoCk6gHNpD1N7weXuzMK4oN8oyld1vtc5PHmRpyBA2X4WfsS12O2ZTa94qOUJFp_H3-rquGAYNiPmuIVOfgsKOJEJyfDuzUdBF6rvUvDKdwY1ftyM_7MlQ/w640-h274/googlenet.PNG" alt=""  />
+</a></p>
+<p>It then includes an Inception module, a local structure with parallel branches that was repeated many times throughout the entire network (just like stages in VGGNet). In order to eliminate the kernel size as a hyperparameter, the input is passed through all the kernel sizes: $1 \times 1$, $3 \times 3$, $5 \times 5$ and max-pooling $3 \times 3$ with a stride of 1 and the outputs are concatenated together. ReLU is used as an activation function here.</p>
+<p>This enables the network to learn various spatial patterns at different scales as a result of the varying conv filter sizes. The design follows the practical intuition that visual information should be processed at various scales and then aggregated so that the next stage can abstract features from the different scales simultaneously.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjF3iDAYGwpBqQG8tgAZdlGo0yPgDLP6cAwE2JUiJiiPStCYIDeUBavLvu7bcW2K4RIVoomsB7lbV8pBS7NakUgpQvPjzR3eEEvOPAgNBjnXXd-R5ECNHJPK3m77AKAdTIBUSlyFkEAIeZciVnXb7yvZAd0XN0IMxgx0pv3hEyOhqVJ0K-aURf2zOdT4Q/s673/naive.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjF3iDAYGwpBqQG8tgAZdlGo0yPgDLP6cAwE2JUiJiiPStCYIDeUBavLvu7bcW2K4RIVoomsB7lbV8pBS7NakUgpQvPjzR3eEEvOPAgNBjnXXd-R5ECNHJPK3m77AKAdTIBUSlyFkEAIeZciVnXb7yvZAd0XN0IMxgx0pv3hEyOhqVJ0K-aURf2zOdT4Q/w640-h320/naive.png" alt=""  />
+</a></p>
+<p>Naive Inception Module</p>
+<p>One big problem with such modules is that performing convolutions can be prohibitively expensive when the input has many channels. From the above image, let&rsquo;s take the example of 32 $5 \times 5$ conv filters which are applied over the $28 \times 28 \times 192$ input.</p>
+<p>The number of multiplications: \begin{equation*} 5 \times 5 \times 32 * 28 \times 28 \times 192 = 120422400 \approx 120 \text{M} \end{equation*}</p>
+<p>This problem becomes even more pronounced once pooling units are added to the mix: the number of output filters equals the number of filters in the previous stage (as pooling layers do not reduce the number of channels). The merging of the output of the pooling layer with outputs of the conv layers would lead to an inevitable increase in the number of outputs from stage to stage, leading to a computational blow-up within a few stages.</p>
+<p>To solve this problem, a $1 \times 1$ bottleneck layer is introduced to reduce channel dimensions before performing expensive spatial convolutions. Not only is it used to compute reductions, but it also introduces extra non-linearity (as they are followed by ReLU).</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi24vAw2EO3zUzDfV8__PS1JgeU14xU1fYQFHTw18LVxVCINnxhIVCUcWMFT8A7ddoDq_Qg6xu72c28593HhgYERNRdFve0vMI3kXzzRhAtWHk9xdcKBIN47HSDK0I24F47LWMmPzjG-70N3Suz1ozJD-RH91NWIN445DeXxa8p8VJzXjs-77ceFxKtLQ/s839/inception-module1.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi24vAw2EO3zUzDfV8__PS1JgeU14xU1fYQFHTw18LVxVCINnxhIVCUcWMFT8A7ddoDq_Qg6xu72c28593HhgYERNRdFve0vMI3kXzzRhAtWHk9xdcKBIN47HSDK0I24F47LWMmPzjG-70N3Suz1ozJD-RH91NWIN445DeXxa8p8VJzXjs-77ceFxKtLQ/w640-h262/inception-module1.png" alt=""  />
+</a></p>
+<p>Inception module with dimensionality reduction</p>
+<p>The bottleneck layer is implemented before the convolutions so that the computation takes place on a reduced number of channels, giving rise to reduced computation. It also included after the maxpool layer to control the number of output channels.</p>
+<p>The number of multiplications: \begin{align*} &amp; (1 \times 1 \times 16 * 28 \times 28 \times 192) + (5 \times 5 \times 32 * 28 \times 28 \times 16) \\ &amp;= 2408448 + 10035200 \\ &amp;= 12443648 \approx 12M. \end{align*}</p>
+<p>The computation cost of a component within the Inception Module(12M) is ten times smaller than a Naive Inception Module(120M). Such a technique allows for increasing the number of layers significantly without an uncontrolled blow-up in computational complexity at later stages.</p>
+<p>The previous models used to flatten the output from the last conv layer, and pass it through the fully-connected layers to collapse the spatial dimensions. However, FC layers have a lot of parameters that increase memory usage. GoogLeNet instead uses global average pooling with a kernel size of $7 \times 7$, followed by one single linear layer (with softmax) to generate class scores.</p>
+<p>Removing FC layers means we cannot add dropout layers anymore. Given the relatively large depth of the network, the ability to propagate gradients back through all the layers became a problem. The authors had to add auxiliary classifiers at two intermediate stages to combat the vanishing gradient problem while providing regularization.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrO5qQY7amCIrJ80H5uIQ0q-eswzUPPUmAIfHOW-EzgmRcbKlw3JdAA4rcSxIhvFkWkPOQbaaqyKKHQXfcZ_Lae5eR2js8vUn_S5LiGZ6JWL7nQTJgMysta4agQEiHjNAHqqYtUhCCCYLaLIcDh-qR4zfBzIFNmL-Rrxop_cG8eAuzXhYZslKhqCj1VQ/s1001/auxillar.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrO5qQY7amCIrJ80H5uIQ0q-eswzUPPUmAIfHOW-EzgmRcbKlw3JdAA4rcSxIhvFkWkPOQbaaqyKKHQXfcZ_Lae5eR2js8vUn_S5LiGZ6JWL7nQTJgMysta4agQEiHjNAHqqYtUhCCCYLaLIcDh-qR4zfBzIFNmL-Rrxop_cG8eAuzXhYZslKhqCj1VQ/w400-h344/auxillar.PNG" alt=""  />
+</a></p>
+<p>Auxillary Classifier</p>
+<p>During training, their loss gets added to the total loss of the network with a discount weight (the losses of the auxiliary classifiers were weighted by 0.3). At inference time, these auxiliary networks are discarded.</p>
+<p>The full 22-layer GoogLeNet architecture is shown below.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNlJLP92khWpBVnQWgY-J3y-ahlY0incrsOVWpSxbB3gPbLLeWEn-tUYOiFQ56idMGwDZaBiJrwgLAgvcmZUlTnPW_7_rZkbyGS6n1-C32rdKnhmUwKrYJ1d-EiOxqJ0hwwt5sW0pU9p3H9Rg2tzmM65C4f6GALj5hUT2vpOhHJSFYReXM8MfxQc6tdg/s1924/Xqv0n.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiNlJLP92khWpBVnQWgY-J3y-ahlY0incrsOVWpSxbB3gPbLLeWEn-tUYOiFQ56idMGwDZaBiJrwgLAgvcmZUlTnPW_7_rZkbyGS6n1-C32rdKnhmUwKrYJ1d-EiOxqJ0hwwt5sW0pU9p3H9Rg2tzmM65C4f6GALj5hUT2vpOhHJSFYReXM8MfxQc6tdg/s16000/Xqv0n.png" alt=""  />
+</a></p>
+<p><strong>Training:</strong> The model was trained on the Cross-entropy loss function using stochastic gradient descent with a momentum of 0.9. A fixed learning rate schedule was used, where it was decreased by 4% every 8 epochs. (No other information about training is given in the paper)</p>
+<p>Link to the paper: <a href="https://arxiv.org/abs/1409.4842">Going Deeper with Convolutions</a></p>
+<p><em>Trivia</em>: The name Inception probably sounds familiar, especially if you are a fan of the actor Leonardo DiCaprio or movie director, Christopher Nolan. Inception is a movie released in 2010, and the concepts of the embedded dream state (dreams within dreams) were the central premise of the film. This idea turned into a popular internet meme, which the authors cite as an inspiration for the name chosen for the architecture (as it is a network within a network).</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsqFm7VXAPtXwhrjcNFsvvCUYWQXEGVpHbRbNFlvSfPdv4m4aZeBiqNpTY3DxBUTqaSKYlkMg8X_FvQrV2dV8fO4UggEMXNhc4gqjEllbCPB_grJGa6zKst-ekzBfQ4SPQGXRsC_KrOFc9p7Hv2Kq_FXrAyGXNIdYAmuiz9zktUd28lPvcUuemySnQXA/s400/a88.jpg"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhsqFm7VXAPtXwhrjcNFsvvCUYWQXEGVpHbRbNFlvSfPdv4m4aZeBiqNpTY3DxBUTqaSKYlkMg8X_FvQrV2dV8fO4UggEMXNhc4gqjEllbCPB_grJGa6zKst-ekzBfQ4SPQGXRsC_KrOFc9p7Hv2Kq_FXrAyGXNIdYAmuiz9zktUd28lPvcUuemySnQXA/s320/a88.jpg" alt=""  />
+</a></p>
+<p>The team also chose the name &ldquo;GoogLeNet&rdquo; as their team name in the ILSVRC14 competition, paying homage to Yann LeCuns pioneering LeNet 5 network (the earliest network that introduced convolutions)</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/resnet/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>ResNet: The Revolution of Depth</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/vggnet/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>VGGNet: Very Deep Convolutional Networks</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

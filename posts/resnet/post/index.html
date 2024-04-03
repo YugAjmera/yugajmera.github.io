@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>ResNet: The Revolution of Depth | YA Logs</title>
+<meta name="keywords" content="">
+<meta name="description" content="In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.
+Another major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models.">
+<meta name="author" content="Yug Ajmera">
+<link rel="canonical" href="https://yugajmera.github.io/posts/resnet/post/">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.b609c58d5c11bb90b1a54e04005d74ad1ddf22165eb79f5533967e57df9c3b50.css" integrity="sha256-tgnFjVwRu5CxpU4EAF10rR3fIhZet59VM5Z&#43;V9&#43;cO1A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/resnet/post/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$','$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+    }
+  };
+
+  window.addEventListener('load', (event) => {
+      document.querySelectorAll("mjx-container").forEach(function(x){
+        x.parentElement.classList += 'has-jax'})
+    });
+
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<meta property="og:title" content="ResNet: The Revolution of Depth" />
+<meta property="og:description" content="In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.
+Another major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://yugajmera.github.io/posts/resnet/post/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-13T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-13T00:00:00+00:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ResNet: The Revolution of Depth"/>
+<meta name="twitter:description" content="In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.
+Another major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://yugajmera.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "ResNet: The Revolution of Depth",
+      "item": "https://yugajmera.github.io/posts/resnet/post/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ResNet: The Revolution of Depth",
+  "name": "ResNet: The Revolution of Depth",
+  "description": "In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.\nAnother major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models.",
+  "keywords": [
+    
+  ],
+  "articleBody": "In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.\nAnother major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models.\nIt was noted that when deeper networks are able to start converging, a degradation problem occurs: as we increase the depth, the accuracy gets saturated (which might be unsurprising) and then degrades rapidly. Unexpectedly, such degradation is not caused by overfitting (which was the initial guess), because adding more layers to a suitably deep model lead to higher training error. It turns out, deeper networks are underfitting!\nBy intuition, it is expected that deeper models should do at least as good as shallow models, as they can emulate the shallower model by copying layers from it and setting the other extra layers to identity. Since the deeper models are underfitting, it shows that there is a problem in optimization and somehow these deeper networks are not able to learn the identity functions.\nA solution to this is to change the design of the network so that it is easy for it to learn the identity functions on unused layers. This forms the idea of a residual block shown below.\nIn order to learn the identity function, the weights of the two convolutions are set to zero. It is easier to push the residual to zero during learning than to fit an identity mapping.\nThese connections are often called skip connections and they neither add extra parameters nor computational complexity. Residual blocks can still be trained end-to-end by SGD with backpropagation (there is no need for any kind of modification). A residual network (or ResNet) is formed by stacking many such residual blocks.\nArchitecture: Similar to VGG, ResNet is divided into 4 stages with a different number of residual blocks. The design principles are fixed as,\nEach residual block has two $3 \\times 3$ convolution layers. After each stage, the number of channels is doubled (starting with 64 and going to 512) After each stage, the spatial dimension is reduced by half using a stride of 2 in the first conv of the next stage. Whenever the channel dimension is increased, the spatial dimension is decreased proportionally (was done with a max-pool layer in VGG), so as to preserve the time complexity per layer.\nWhen the stage changes, the dimension of the input to skip connection becomes different from the output. In such a case, a $1 \\times 1$ conv (with a stride of 2) is added to the input to match the dimensions. The output then becomes: \\begin{equation*} \\text{H(x) = F(x) + W x} \\end{equation*} where $W$ is a learnable parameter called projection shortcut. These are used only for changing dimensions, other shortcuts are identity.\nEach convolution is followed by a BatchNorm layer and a ReLU non-activation.\nLike GoogleNet, ResNet uses an aggressive stem network to downsample the image input 4x before applying the residual blocks. It also does not have fully-connected layers, instead uses global average pooling followed by a single linear layer (with softmax) to generate class scores.\nThe authors presented two variants, ResNet-18 and ResNet-34.\nAs the 34-layer network performed better than the 18-layer one, it was clear that adding even more layers would mean better performance. However, adding more layers would also bring more computation costs.\nTaking inspiration from GoogleNet, the authors added bottleneck layers in each residual block. The bottleneck block accepts 4 times the channel dimension as a basic block and works with lower computation costs even with an extra added layer per block.\nReplacing all the basic blocks in ResNet-34 with bottleneck blocks would give the ResNet-50 architecture. ResNet-50 is an excellent baseline architecture for many tasks today! Similarly using a different number of bottleneck blocks in different stages, the authors present ResNet-101 and ResNet-152 variants.\nTraining: The model was trained on the Cross-entropy loss function using stochastic gradient descent with a batch size of 256 examples, a momentum of 0.9, and a weight decay of 0.0001. The learning rate starts from 0.1 and is divided by 10 when the error plateaus.\nThe weights were initialized using Kaiming initialization. No dropout was used.\nResNet was the first architecture to have crossed the human error rate and won 1st place on ImageNet detection, ImageNet localization, COCO detection, and COCO segmentation in 2015.\nImportant design choices of the paper are,\n4 Stages, Bottleneck residual blocks (conv layers with skip connections) Number of channels stage-wise: 64, 128, 256, 512 Batch Normalization used Activation Function: ReLU Data pre-processing: subtract per-pixel mean Weight Initialization: Kaiming Regularization: L2 Weight decay ($\\lambda$ = 1e-4) Learning rate: 0.1 and reduced (divided by 10) when error plateaus Optimization Method: SGD + Momentum (m=0.9) with batch size of 256 Loss function: Cross-Entropy loss Link to the paper: Deep Residual Learning for Image Recognition\n",
+  "wordCount" : "852",
+  "inLanguage": "en",
+  "datePublished": "2022-11-13T00:00:00Z",
+  "dateModified": "2022-11-13T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Yug Ajmera"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://yugajmera.github.io/posts/resnet/post/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "YA Logs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yugajmera.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://yugajmera.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      ResNet: The Revolution of Depth
+    </h1>
+    <div class="post-meta"><span title='2022-11-13 00:00:00 +0000 UTC'>November 13, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera
+
+</div>
+  </header> 
+
+  <div class="post-content"><p>In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.</p>
+<p>Another major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models.</p>
+<p>It was noted that when deeper networks are able to start converging, a degradation problem occurs: as we increase the depth, the accuracy gets saturated (which might be unsurprising) and then degrades rapidly. Unexpectedly, such degradation is not caused by overfitting (which was the initial guess), because adding more layers to a suitably deep model lead to higher training error. It turns out, <em>deeper networks are underfitting</em>!</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgc6Rfief2sFmrOBAgiL58wHPhJfdun1F5lt_HVY7Cy-oy567vxso3RH9mMka-upNaijUtWe7gpe8nmrgsVttdkcMnLXvlKWeao47sEjYpNr-QHTzAOmJboivWMfZkav6JT0uaXEsGGWOyewgEZaOfXLZk5w5wVpKsaI0O-SufzKZEOhl53Obuh2tCWng/s646/0_fRYbrOU_YhS6oMf-.png"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgc6Rfief2sFmrOBAgiL58wHPhJfdun1F5lt_HVY7Cy-oy567vxso3RH9mMka-upNaijUtWe7gpe8nmrgsVttdkcMnLXvlKWeao47sEjYpNr-QHTzAOmJboivWMfZkav6JT0uaXEsGGWOyewgEZaOfXLZk5w5wVpKsaI0O-SufzKZEOhl53Obuh2tCWng/s600/0_fRYbrOU_YhS6oMf-.png" alt=""  />
+</a></p>
+<p>By intuition, it is expected that deeper models should do at least as good as shallow models, as they can emulate the shallower model by copying layers from it and setting the other extra layers to identity. Since the deeper models are underfitting, it shows that there is a problem in optimization and somehow these deeper networks are not able to learn the identity functions.</p>
+<p>A solution to this is to change the design of the network so that it is easy for it to learn the identity functions on unused layers. This forms the idea of a residual block shown below.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgcUkRK0A5KASQ8WoGwJbzkI2qkt_CJBpag2EUjg_9psVyO9BIh3XovLXI3u9y4u97b7ac62SEC5wD13uYRhs6sHC8WDtvri8L0NoQAioOKWLqvx3A0vnV9JQJcYD3w8LIjBt2XYiGdHDgOottokcqSAEsb6zNDb_2RdCSPjltOvDdZbZWQEAoztE9T6g/s830/residula.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgcUkRK0A5KASQ8WoGwJbzkI2qkt_CJBpag2EUjg_9psVyO9BIh3XovLXI3u9y4u97b7ac62SEC5wD13uYRhs6sHC8WDtvri8L0NoQAioOKWLqvx3A0vnV9JQJcYD3w8LIjBt2XYiGdHDgOottokcqSAEsb6zNDb_2RdCSPjltOvDdZbZWQEAoztE9T6g/w400-h271/residula.PNG" alt=""  />
+</a></p>
+<p>In order to learn the identity function, the weights of the two convolutions are set to zero. It is easier to push the residual to zero during learning than to fit an identity mapping.</p>
+<p>These connections are often called skip connections and they neither add extra parameters nor computational complexity. Residual blocks can still be trained end-to-end by SGD with backpropagation (there is no need for any kind of modification). A residual network (or ResNet) is formed by stacking many such residual blocks.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1u0kfaQwpW1DTXlWp-VV-8GOHDk_7TUzqophvrkzTZrMwSP2i8WtLcFjn9nT1uUAFZxbZ2300Mke3jxudknzxva9J0ql5jpFcL-QZckRcLXeC97NoyCLzfhs4SgBHS0nEW4XTpmWUnMKTB3GVzo1KPZGAOD_osRqobnqQmt6z5aMbyi4aAINAj4g0jg/s747/resnet.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1u0kfaQwpW1DTXlWp-VV-8GOHDk_7TUzqophvrkzTZrMwSP2i8WtLcFjn9nT1uUAFZxbZ2300Mke3jxudknzxva9J0ql5jpFcL-QZckRcLXeC97NoyCLzfhs4SgBHS0nEW4XTpmWUnMKTB3GVzo1KPZGAOD_osRqobnqQmt6z5aMbyi4aAINAj4g0jg/w210-h640/resnet.PNG" alt=""  />
+</a></p>
+<p><strong>Architecture:</strong> Similar to VGG, ResNet is divided into 4 stages with a different number of residual blocks. The design principles are fixed as,</p>
+<ul>
+<li>Each residual block has two $3 \times 3$ convolution layers.</li>
+<li>After each stage, the number of channels is doubled (starting with 64 and going to 512)</li>
+<li>After each stage, the spatial dimension is reduced by half using a stride of 2 in the first conv of the next stage.</li>
+</ul>
+<p>Whenever the channel dimension is increased, the spatial dimension is decreased proportionally (was done with a max-pool layer in VGG), so as to preserve the time complexity per layer.</p>
+<p>When the stage changes, the dimension of the input to skip connection becomes different from the output. In such a case, a $1 \times 1$ conv (with a stride of 2) is added to the input to match the dimensions. The output then becomes: \begin{equation*} \text{H(x) = F(x) + W x} \end{equation*} where $W$ is a learnable parameter called projection shortcut. These are used only for changing dimensions, other shortcuts are identity.</p>
+<p>Each convolution is followed by a BatchNorm layer and a ReLU non-activation.</p>
+<p>Like GoogleNet, ResNet uses an aggressive stem network to downsample the image input 4x before applying the residual blocks. It also does not have fully-connected layers, instead uses global average pooling followed by a single linear layer (with softmax) to generate class scores.</p>
+<p>The authors presented two variants, ResNet-18 and ResNet-34.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTs4ZHC_-9AO-rcpHrDpY-Tg2HuiCfKWbND59QWXZv_l07CHsNSrfBSG19-FBKPfIXORVRARj1l3TRu9Vxb1NRqo48-GmYl3THQn38cGNpyWA24t7rLCei0tDbpYz3ThFZ6MzN9hSyJJABJCAETniTguftA3rCv5lx6RqXqQ4WpoLAHuch4brU3OLrCA/s1319/resnets.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTs4ZHC_-9AO-rcpHrDpY-Tg2HuiCfKWbND59QWXZv_l07CHsNSrfBSG19-FBKPfIXORVRARj1l3TRu9Vxb1NRqo48-GmYl3THQn38cGNpyWA24t7rLCei0tDbpYz3ThFZ6MzN9hSyJJABJCAETniTguftA3rCv5lx6RqXqQ4WpoLAHuch4brU3OLrCA/w640-h182/resnets.PNG" alt=""  />
+</a></p>
+<p>As the 34-layer network performed better than the 18-layer one, it was clear that adding even more layers would mean better performance. However, adding more layers would also bring more computation costs.</p>
+<p>Taking inspiration from GoogleNet, the authors added bottleneck layers in each residual block. The bottleneck block accepts 4 times the channel dimension as a basic block and works with lower computation costs even with an extra added layer per block.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGxOXvIYlH-bjKC791jM03_2FP7ph-hWa8kbnp8P6Y1KFLOlbM-SyqkM4uH3pgc37SaAKo0lbi9XhdDXcM8hVtHb8l2iqk6Bogu__QPxRj7lHwPB6J84ySiDEoheCINAhnyurlb3hz-P0CTnn9Png4kU7-kL4B_3GpJ7tH-sB00dA6suTXdxxOG_hGcg/s992/bottleneck.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGxOXvIYlH-bjKC791jM03_2FP7ph-hWa8kbnp8P6Y1KFLOlbM-SyqkM4uH3pgc37SaAKo0lbi9XhdDXcM8hVtHb8l2iqk6Bogu__QPxRj7lHwPB6J84ySiDEoheCINAhnyurlb3hz-P0CTnn9Png4kU7-kL4B_3GpJ7tH-sB00dA6suTXdxxOG_hGcg/w640-h410/bottleneck.PNG" alt=""  />
+</a></p>
+<p>Replacing all the basic blocks in ResNet-34 with bottleneck blocks would give the ResNet-50 architecture. ResNet-50 is an excellent baseline architecture for many tasks today! Similarly using a different number of bottleneck blocks in different stages, the authors present ResNet-101 and ResNet-152 variants.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiGA-GYy8UIvxS3zg9eVZYsqagUt7NzaqOBZWC8eRXQMr5xCtMUiptNmSmqHOfQyXwzfE2TrOJM02Wc4W4ZpZsvLsIwemjQZ2dTCZkGbCUSN_GVAtkZnhqcPutaK5quB4wIfnbtRkOlOIYmnuiE8KsiUqLq8VnSU6kYeMxnXWFAdEDUh1fKE2sXJX_new/s1214/renets.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiGA-GYy8UIvxS3zg9eVZYsqagUt7NzaqOBZWC8eRXQMr5xCtMUiptNmSmqHOfQyXwzfE2TrOJM02Wc4W4ZpZsvLsIwemjQZ2dTCZkGbCUSN_GVAtkZnhqcPutaK5quB4wIfnbtRkOlOIYmnuiE8KsiUqLq8VnSU6kYeMxnXWFAdEDUh1fKE2sXJX_new/s16000/renets.PNG" alt=""  />
+</a></p>
+<p><strong>Training:</strong> The model was trained on the Cross-entropy loss function using stochastic gradient descent with a batch size of 256 examples, a momentum of 0.9, and a weight decay of 0.0001. The learning rate starts from 0.1 and is divided by 10 when the error plateaus.</p>
+<p>The weights were initialized using Kaiming initialization. No dropout was used.</p>
+<p>ResNet was the first architecture to have crossed the human error rate and won 1st place on ImageNet detection, ImageNet localization, COCO detection, and COCO segmentation in 2015.</p>
+<p><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1lqP6uxLD-E0u9FSFID9tyNRLTlvqe_ir7d-uMC3WbRsHuhbk3X230abCc6oYqdmT94BVHmGFCogHDk1_NPvRp4jL3EVv8aO-ZilF-HHdNS9_2w3F31dt4e3jPwntt4RYhTMH1B3bSBW_L3bScdcbbjeY57TYal5MuMSb5hdTVldW0v8V9dnmotrL7A/s930/Capture.PNG"><img loading="lazy" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi1lqP6uxLD-E0u9FSFID9tyNRLTlvqe_ir7d-uMC3WbRsHuhbk3X230abCc6oYqdmT94BVHmGFCogHDk1_NPvRp4jL3EVv8aO-ZilF-HHdNS9_2w3F31dt4e3jPwntt4RYhTMH1B3bSBW_L3bScdcbbjeY57TYal5MuMSb5hdTVldW0v8V9dnmotrL7A/w640-h400/Capture.PNG" alt=""  />
+</a></p>
+<p>Important design choices of the paper are,</p>
+<ul>
+<li>4 Stages, Bottleneck residual blocks (conv layers with skip connections)</li>
+<li>Number of channels stage-wise: 64, 128, 256, 512</li>
+<li>Batch Normalization used</li>
+<li>Activation Function: ReLU</li>
+<li>Data pre-processing: subtract per-pixel mean</li>
+<li>Weight Initialization: Kaiming</li>
+<li>Regularization: L2 Weight decay ($\lambda$ = 1e-4)</li>
+<li>Learning rate: 0.1 and reduced (divided by 10) when error plateaus</li>
+<li>Optimization Method: SGD + Momentum (m=0.9) with batch size of 256</li>
+<li>Loss function: Cross-Entropy loss</li>
+</ul>
+<p>Link to the paper: <a href="https://arxiv.org/abs/1512.03385">Deep Residual Learning for Image Recognition</a></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://yugajmera.github.io/posts/variational-autoencoder/post/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Generative Modeling with Variational Autoencoders</span>
+  </a>
+  <a class="next" href="https://yugajmera.github.io/posts/inceptionnet/post/">
+    <span class="title">Next »</span>
+    <br>
+    <span>InceptionNet: Google&#39;s comeback for ImageNet Challenge</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
