@@ -157,7 +157,7 @@
     <p>In the previous post, we talked about Convolution and Pooling layers. Stacking a large number of these layers (CNNs with activation functions and pooling) results in a Deep CNN architecture, which is often hard to train. It becomes very difficult to converge once they become very deep. The most common solution to this problem is Batch Normalization.
 The idea is to normalize the outputs of a layer so that they have zero mean and unit variance....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-09-18 00:00:00 +0000 UTC'>September 18, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-09-18 00:00:00 +0000 UTC'>September 18, 2022</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to Understanding Batch Normalization" href="https://yugajmera.github.io/posts/batch-norm/post/"></a>
 </article>
 
@@ -169,7 +169,7 @@ The idea is to normalize the outputs of a layer so that they have zero mean and 
   <div class="entry-content">
     <p>Datasets drive our choices for all the deep learning hyperparameters and peculiarities involved in making accurate predictions. We split the dataset into a training set, test set, and validation set. Our model is trained on the training set, and we choose the hyperparameters (usually by trial and error) on the validation set. We select the hyperparameters that have the highest accuracy on the validation set and then fix our model. The test set is reserved to be used only once at the very end of our pipeline to evaluate our model....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-08-21 00:00:00 +0000 UTC'>August 21, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-08-21 00:00:00 +0000 UTC'>August 21, 2022</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to Data Manipulation for Deep Learning" href="https://yugajmera.github.io/posts/data-manipulation/post/"></a>
 </article>
 
@@ -181,7 +181,7 @@ The idea is to normalize the outputs of a layer so that they have zero mean and 
   <div class="entry-content">
     <p>Our motivation behind using optimization was to obtain that specific set of weights that incurs the least loss on our training data to achieve the maximum possible accuracy on the test set. But this never works in practice! (yes, you read that right). If we are trying to incur the least loss on the training data, i.e., fit the training data perfectly (called overfitting), our model might not always fit the test data perfectly....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-08-15 00:00:00 +0000 UTC'>August 15, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-08-15 00:00:00 +0000 UTC'>August 15, 2022</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to Regularization: Weight decay, Dropout, Early stopping" href="https://yugajmera.github.io/posts/regularization/post/"></a>
 </article>
 
@@ -194,7 +194,7 @@ The idea is to normalize the outputs of a layer so that they have zero mean and 
     <p>All the variants of gradient descent, such as Momentum, Adagrad, RMSProp, and Adam, use a learning rate as a hyperparameter for global minimum search. Different learning rates produce different learning behaviors (refer to the Figure below), so it is essential to set a good learning rate, and we prefer to choose the red one.
 But it is not always possible to come up with one “perfect” learning rate by trial and error....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-08-06 00:00:00 +0000 UTC'>August 6, 2022</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-08-06 00:00:00 +0000 UTC'>August 6, 2022</span>&nbsp;·&nbsp;3 min</footer>
   <a class="entry-link" aria-label="post link to Using Learning Rate Schedules for Training" href="https://yugajmera.github.io/posts/learning-rates/post/"></a>
 </article>
 
@@ -206,7 +206,7 @@ But it is not always possible to come up with one “perfect” learning rate by
   <div class="entry-content">
     <p>While we have talked about how optimization algorithms use the negative gradient of the loss function with respect to the weights to update the parameters of our model, we will now focus on how to actually compute these gradients on an arbitrary loss function. We use a backpropagation technique that creates a computation graph to perform a forward and backward pass on the model. In the forward pass, we compute outputs of each layer of our neural network sequentially....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-08-05 00:00:00 +0000 UTC'>August 5, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-08-05 00:00:00 +0000 UTC'>August 5, 2022</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to Implementing Backpropagation" href="https://yugajmera.github.io/posts/backprop/post/"></a>
 </article>
 
@@ -218,7 +218,7 @@ But it is not always possible to come up with one “perfect” learning rate by
   <div class="entry-content">
     <p>In this post, we will make choices for components of our deep neural network architecture, including activation functions and how the weights of each layer get initialized to ease the optimization process. A neural network is composed of interconnected layers, with every neuron in one layer connecting to every neuron in the next layer. Such a fully connected neural network is often called Multi-layer Perceptron (MLP). Let’s dive right into defining our deep neural network architecture....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-08-05 00:00:00 +0000 UTC'>August 5, 2022</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-08-05 00:00:00 +0000 UTC'>August 5, 2022</span>&nbsp;·&nbsp;6 min</footer>
   <a class="entry-link" aria-label="post link to Neural Networks: Activation functions and Weight Initialization" href="https://yugajmera.github.io/posts/neural-networks/post/"></a>
 </article>
 
@@ -230,7 +230,7 @@ But it is not always possible to come up with one “perfect” learning rate by
   <div class="entry-content">
     <p>The loss function tells us how good our current classifier (with our current weights) is. Since we are a greedy bunch of people, we want to find those specific sets of weights that incurs a minimal loss on our training dataset to fit the data as well as we can to achieve the maximum possible accuracy on the test set. We generally initialize our model with some weights and then optimize them to obtain the best model....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-08-01 00:00:00 +0000 UTC'>August 1, 2022</span>&nbsp;·&nbsp;9 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-08-01 00:00:00 +0000 UTC'>August 1, 2022</span>&nbsp;·&nbsp;9 min</footer>
   <a class="entry-link" aria-label="post link to Optimization Methods: SGD, Momentum, AdaGrad, RMSProp, Adam" href="https://yugajmera.github.io/posts/optimization/post/"></a>
 </article>
 
@@ -242,7 +242,7 @@ But it is not always possible to come up with one “perfect” learning rate by
   <div class="entry-content">
     <p>While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!...</p>
   </div>
-  <footer class="entry-footer"><span title='2022-07-30 00:00:00 +0000 UTC'>July 30, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Yug Ajmera</footer>
+  <footer class="entry-footer"><span title='2022-07-30 00:00:00 +0000 UTC'>July 30, 2022</span>&nbsp;·&nbsp;4 min</footer>
   <a class="entry-link" aria-label="post link to Loss functions in Deep Learning" href="https://yugajmera.github.io/posts/loss-function/post/"></a>
 </article>
 
