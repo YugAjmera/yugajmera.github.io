@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>First on YA Logs</title>
-    <link>http://localhost:1313/tags/first/</link>
+    <link>https://yugajmera.github.io/tags/first/</link>
     <description>Recent content in First on YA Logs</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 15 Sep 2020 11:30:03 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/first/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://yugajmera.github.io/tags/first/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My 1st post</title>
-      <link>http://localhost:1313/posts/sample_post/</link>
+      <link>https://yugajmera.github.io/posts/sample_post/</link>
       <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/sample_post/</guid>
+      <guid>https://yugajmera.github.io/posts/sample_post/</guid>
       <description>Desc Text.</description>
     </item>
   </channel>
