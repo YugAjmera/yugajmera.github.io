@@ -2,25 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/first/</loc>
+    <loc>https://yugajmera.github.io/posts/</loc>
+    <lastmod>2023-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://yugajmera.github.io/posts/nerf_intro/</loc>
+    <lastmod>2023-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://yugajmera.github.io/</loc>
+    <lastmod>2023-03-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://yugajmera.github.io/tags/first/</loc>
     <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/sample_post/</loc>
+    <loc>https://yugajmera.github.io/posts/sample_post/</loc>
     <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://yugajmera.github.io/tags/</loc>
     <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+    <loc>https://yugajmera.github.io/archives/</loc>
   </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+    <loc>https://yugajmera.github.io/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/archives/</loc>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-  </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>https://yugajmera.github.io/search/</loc>
   </url>
 </urlset>
