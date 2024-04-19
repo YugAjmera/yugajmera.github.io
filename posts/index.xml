@@ -4,7 +4,7 @@
     <title>Posts on YA Logs</title>
     <link>https://yugajmera.github.io/posts/</link>
     <description>Recent content in Posts on YA Logs</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo -- 0.125.0</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Mar 2023 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
@@ -133,18 +133,20 @@ But it is not always possible to come up with one &amp;ldquo;perfect&amp;rdquo; 
       <description>In this post, we will make choices for components of our deep neural network architecture, including activation functions and how the weights of each layer get initialized to ease the optimization process. A neural network is composed of interconnected layers, with every neuron in one layer connecting to every neuron in the next layer. Such a fully connected neural network is often called Multi-layer Perceptron (MLP). Let&amp;rsquo;s dive right into defining our deep neural network architecture.</description>
     </item>
     <item>
-      <title>Optimization Methods: SGD, Momentum, AdaGrad, RMSProp, Adam</title>
+      <title>Optimization Methods</title>
       <link>https://yugajmera.github.io/posts/optimization/post/</link>
       <pubDate>Mon, 01 Aug 2022 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/optimization/post/</guid>
-      <description>The loss function tells us how good our current classifier (with our current weights) is. Since we are a greedy bunch of people, we want to find those specific sets of weights that incurs a minimal loss on our training dataset to fit the data as well as we can to achieve the maximum possible accuracy on the test set. We generally initialize our model with some weights and then optimize them to obtain the best model.</description>
+      <description>The loss function tells us how good our current classifier, with its current weights, is performing on the training data. Because we&amp;rsquo;re a bunch of greedy people, we want to find those golden set of weights that incurs the minimum loss on our training set, squeezing out every ounce of accuracy we can to ace the test set.
+We generally initialize our model with some weights and then use the training set to search over all the possible values, aiming to arrive at the one that optimally fits our data.</description>
     </item>
     <item>
-      <title>Loss functions in Deep Learning</title>
+      <title>Loss functions</title>
       <link>https://yugajmera.github.io/posts/loss-function/post/</link>
       <pubDate>Sat, 30 Jul 2022 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/loss-function/post/</guid>
-      <description>While there are a shit ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where one can find all the fundamental concepts needed to set up their own Deep Neural Network (DNN) architecture? This series can be viewed as a reference guide that you can come back to and look at to brush up on everything. In this first part, I will discuss one of the most essential elements of deep learning - the loss function!</description>
+      <description>While there are a ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where you can find all the fundamental concepts required to write your own neural network. But, if you prefer watching a video over reading a blog and have the time, I highly recommend Justin Johnson&amp;rsquo;s course.
+In this first part, I will discuss one of the most essential elements of deep learning - the loss function!</description>
     </item>
     <item>
       <title>My 1st post</title>
