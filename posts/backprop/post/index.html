@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Implementing Backpropagation | YA Logs</title>
+<title>Implementing Backpropagation | YA&#39;s Almanac</title>
 <meta name="keywords" content="">
 <meta name="description" content="While we have talked about how optimization algorithms use the negative gradient of the loss function with respect to the weights to update the parameters of our model, we will now focus on how to actually compute these gradients on an arbitrary loss function. We use a backpropagation technique that creates a computation graph to perform a forward and backward pass on the model. In the forward pass, we compute outputs of each layer of our neural network sequentially.">
 <meta name="author" content="">
@@ -78,9 +78,32 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script type="text/javascript" id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+<style>
+   mjx-container[display="true"] {
+       margin: 1.5em 0 ! important
+   }
+</style>
 
 
 
+  
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
+      <script>
+        var doNotTrack = false;
+        if ( false ) {
+          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
+          var doNotTrack = (dnt == "1" || dnt == "yes");
+        }
+        if (!doNotTrack) {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-S759YBMKJE');
+        }
+      </script>
+    
   
 
 <meta property="og:title" content="Implementing Backpropagation" />
@@ -136,7 +159,7 @@
   },
   "publisher": {
     "@type": "Organization",
-    "name": "YA Logs",
+    "name": "YA's Almanac",
     "logo": {
       "@type": "ImageObject",
       "url": "https://yugajmera.github.io/favicon.ico"
@@ -161,7 +184,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://yugajmera.github.io/" accesskey="h" title="YA Logs (Alt + H)">YA Logs</a>
+            <a href="https://yugajmera.github.io/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -304,7 +327,7 @@ for t in range(num_steps):
     </main>
     
 <footer class="footer">
-        <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA Logs</a></span> · 
+        <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA&#39;s Almanac</a></span> · 
 
     <span>
         Powered by
