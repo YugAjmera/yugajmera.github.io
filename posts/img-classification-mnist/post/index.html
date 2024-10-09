@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -10,16 +10,16 @@
 <meta name="description" content="Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
 Now that we have all the ingredients required to code up our deep learning architecture, let&rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch.">
 <meta name="author" content="">
-<link rel="canonical" href="https://yugajmera.github.io/posts/img-classification-mnist/post/">
-<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/img-classification-mnist/post/">
+<link crossorigin="anonymous" href="http://localhost:1313/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/img-classification-mnist/post/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/img-classification-mnist/post/">
 <noscript>
     <style>
         #theme-toggle,
@@ -88,30 +88,21 @@ Now that we have all the ingredients required to code up our deep learning archi
 
 
 
-  
-    
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
-      <script>
-        var doNotTrack = false;
-        if ( false ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-S759YBMKJE');
-        }
-      </script>
-    
-  
-
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-S759YBMKJE', { 'anonymize_ip': false });
+}
+</script>
 <meta property="og:title" content="Image Classification using CNNs: MNIST dataset" />
 <meta property="og:description" content="Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
 Now that we have all the ingredients required to code up our deep learning architecture, let&rsquo;s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://yugajmera.github.io/posts/img-classification-mnist/post/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="http://localhost:1313/posts/img-classification-mnist/post/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-09-19T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-09-19T00:00:00+00:00" />
 
@@ -130,13 +121,13 @@ Now that we have all the ingredients required to code up our deep learning archi
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://yugajmera.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Image Classification using CNNs: MNIST dataset",
-      "item": "https://yugajmera.github.io/posts/img-classification-mnist/post/"
+      "item": "http://localhost:1313/posts/img-classification-mnist/post/"
     }
   ]
 }
@@ -158,14 +149,14 @@ Now that we have all the ingredients required to code up our deep learning archi
   "dateModified": "2022-09-19T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://yugajmera.github.io/posts/img-classification-mnist/post/"
+    "@id": "http://localhost:1313/posts/img-classification-mnist/post/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "YA's Almanac",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://yugajmera.github.io/favicon.ico"
+      "url": "http://localhost:1313/favicon.ico"
     }
   }
 }
@@ -187,7 +178,7 @@ Now that we have all the ingredients required to code up our deep learning archi
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://yugajmera.github.io/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
+            <a href="http://localhost:1313/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -213,17 +204,17 @@ Now that we have all the ingredients required to code up our deep learning archi
         </div>
         <ul id="menu">
             <li>
-                <a href="https://yugajmera.github.io/" title="Home">
+                <a href="http://localhost:1313/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                <a href="http://localhost:1313/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -432,12 +423,12 @@ print(correct/total)
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="https://yugajmera.github.io/posts/alexnet/post/">
+  <a class="prev" href="http://localhost:1313/posts/alexnet/post/">
     <span class="title">« Prev</span>
     <br>
     <span>AlexNet: The First CNN to win ImageNet Challenge</span>
   </a>
-  <a class="next" href="https://yugajmera.github.io/posts/cnn/post/">
+  <a class="next" href="http://localhost:1313/posts/cnn/post/">
     <span class="title">Next »</span>
     <br>
     <span>Neural Network for Images: Convolutional Neural Networks (CNNs)</span>
@@ -449,7 +440,7 @@ print(correct/total)
     </main>
     
 <footer class="footer">
-        <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA&#39;s Almanac</a></span> · 
+        <span>&copy; 2024 <a href="http://localhost:1313/">YA&#39;s Almanac</a></span> · 
 
     <span>
         Powered by

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -10,16 +10,16 @@
 <meta name="description" content="Imagine being able to generate photorealistic 3D models of objects and scenes that can be viewed from any angle, with details so realistic that they are indistinguishable from reality. That&rsquo;s what the Neural Radiance Fields (NeRF) is capable of doing and much more. With more than 50 papers related to NeRFs in the CVPR 2022, it is one of the most influential papers of all time.
 Neural fields A neural field is a neural network that parametrizes a signal.">
 <meta name="author" content="">
-<link rel="canonical" href="https://yugajmera.github.io/posts/nerf/post/">
-<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/nerf/post/">
+<link crossorigin="anonymous" href="http://localhost:1313/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/nerf/post/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/nerf/post/">
 <noscript>
     <style>
         #theme-toggle,
@@ -88,30 +88,21 @@ Neural fields A neural field is a neural network that parametrizes a signal.">
 
 
 
-  
-    
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
-      <script>
-        var doNotTrack = false;
-        if ( false ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-S759YBMKJE');
-        }
-      </script>
-    
-  
-
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-S759YBMKJE', { 'anonymize_ip': false });
+}
+</script>
 <meta property="og:title" content="Understanding Neural Radiance Fields (NeRFs)" />
 <meta property="og:description" content="Imagine being able to generate photorealistic 3D models of objects and scenes that can be viewed from any angle, with details so realistic that they are indistinguishable from reality. That&rsquo;s what the Neural Radiance Fields (NeRF) is capable of doing and much more. With more than 50 papers related to NeRFs in the CVPR 2022, it is one of the most influential papers of all time.
 Neural fields A neural field is a neural network that parametrizes a signal." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://yugajmera.github.io/posts/nerf/post/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="http://localhost:1313/posts/nerf/post/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-03-05T00:00:00+00:00" />
 <meta property="article:modified_time" content="2023-03-05T00:00:00+00:00" />
 
@@ -130,13 +121,13 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://yugajmera.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Understanding Neural Radiance Fields (NeRFs)",
-      "item": "https://yugajmera.github.io/posts/nerf/post/"
+      "item": "http://localhost:1313/posts/nerf/post/"
     }
   ]
 }
@@ -158,14 +149,14 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
   "dateModified": "2023-03-05T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://yugajmera.github.io/posts/nerf/post/"
+    "@id": "http://localhost:1313/posts/nerf/post/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "YA's Almanac",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://yugajmera.github.io/favicon.ico"
+      "url": "http://localhost:1313/favicon.ico"
     }
   }
 }
@@ -187,7 +178,7 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://yugajmera.github.io/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
+            <a href="http://localhost:1313/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -213,17 +204,17 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
         </div>
         <ul id="menu">
             <li>
-                <a href="https://yugajmera.github.io/" title="Home">
+                <a href="http://localhost:1313/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                <a href="http://localhost:1313/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -281,13 +272,13 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
 <p> </p>
 <h2 id="neural-radiance-fields-nerfs">Neural Radiance Fields (NeRFs)<a hidden class="anchor" aria-hidden="true" href="#neural-radiance-fields-nerfs">#</a></h2>
 <p>NeRFs as proposed by <a href="https://arxiv.org/abs/2003.08934">Mildenhall et al</a> accept a single continuous 5D coordinate as input, which consists of a spatial location $(x, y, z)$ and viewing direction $(\theta, \phi)$. This particular point of the object/scene is fed into an MLP, which outputs the corresponding color intensities $c = (r, g, b)$ and volume density $\sigma$.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/nerfs.png" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/nerfs.png" alt=""  />
 </p>
 <p>The network’s weights are optimized to encode the representation of the scene so that the model can easily render novel views seen from any point in space.</p>
 <p> </p>
 <h3 id="ray-marching">Ray Marching<a hidden class="anchor" aria-hidden="true" href="#ray-marching">#</a></h3>
 <p>To gain a better grasp of the different stages in NeRF training, let&rsquo;s use this 3D scene as an instance.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/figure1.png" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/figure1.png" alt=""  />
 </p>
 <p>The training dataset includes images ($H \times W$) captured from $n$ different viewpoints of the same scene. Each image&rsquo;s camera viewpoint is stored as $x_c, y_c, z_c$ in the world space. Since the camera is always &ldquo;aimed&rdquo; at the object, we only need two more rotation parameters to fully describe the pose: the inclination and azimuth angles ($\theta$, $\phi$).</p>
 <p>Now, for each camera pose, we &ldquo;shoot&rdquo; a ray from the camera (or viewer&rsquo;s eye), through every pixel of the image, resulting in $H \times W$ rays per pose. Each ray is described by two vectors,</p>
@@ -296,7 +287,7 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
 <li>$\mathbf{d}$ : a normalized vector denoting the direction of the ray.</li>
 </ul>
 <p>An arbitrary point on the ray can then be defined as $r(t) = \mathbf{o} + t * \mathbf{d}$.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/figure2.png" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/figure2.png" alt=""  />
 </p>
 <p>This process of ray tracing is known as backward tracing, as it involves tracing the path of light rays from the camera to the object, as opposed to tracing from the light source to the object.</p>
 <p><strong>Input</strong>: A set of camera poses $(x_c, , y_c, , z_c,, , \theta, , \phi)_n$</p>
@@ -305,7 +296,7 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
 <h3 id="sampling-query-points">Sampling Query points<a hidden class="anchor" aria-hidden="true" href="#sampling-query-points">#</a></h3>
 <p>You may wonder, what is done with the rays? We trace them from the camera through the scene by adjusting the parameter $t$ until they intersect with some interesting location (object) in the scene. To find these locations, we incrementally step along the ray and sample points at regular intervals.</p>
 <p>By querying a trained neural network at these 3D points along the viewing ray, we can determine if they belong to the object volume and obtain their visual properties to render an image. However, sampling points along a ray is challenging, as too many non-object points won&rsquo;t provide useful information, and focusing only on high-density regions may miss interesting areas.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/figure3.png" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/figure3.png" alt=""  />
 </p>
 <p>In our toy example, we uniformly sample along the ray by taking $m$ samples. However, to improve performance, the authors use &ldquo;hierarchical volume sampling&rdquo; to allocate samples proportionally to their expected impact on the final rendering.</p>
 <p><strong>Input</strong>: A bundle of rays for every pose $(r_{\mathbf{o}, \mathbf{d}})_{H \times W \times n}$</p>
@@ -325,12 +316,12 @@ Neural fields A neural field is a neural network that parametrizes a signal."/>
 <p> </p>
 <h3 id="neural-network-inference">Neural Network inference<a hidden class="anchor" aria-hidden="true" href="#neural-network-inference">#</a></h3>
 <p>To achieve multiview consistency in a neural network, we restrict the network to predict the volume density $\sigma$ as a function of only the location in 3D space, while allowing the RGB color $c$ to be predicted as a function of both location and viewing direction.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/model.jpg" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/model.jpg" alt=""  />
 </p>
 <p>The MLP architecture consists of 8 fully-connected layers, each with 256 channels and ReLU activations. A skip connection is included in the network that concatenates the input to the fifth layer&rsquo;s activation. It takes the encoded query points $\gamma(\mathbf{x})$ as input and produces two outputs: the volume density $\sigma$ and a 256-dimensional feature vector.</p>
 <p>This feature vector is then concatenated with the embedded viewing direction $\gamma(\mathbf{d})$ and passed through another fully-connected layer with 128 channels and a ReLU activation to produce the view-dependent RGB color $c$ (tuple in the range from 0 to 1). The authors claim that a model trained without view dependence has difficulty representing specularities.</p>
 <p>Both of these pieces of information combined allow us to compute the volume density profile for every ray as shown in the figure below.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/profile.png" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/profile.png" alt=""  />
 </p>
 <p><strong>Input</strong>: Embedings of query points $\gamma(\mathbf{x})_{m \times H \times W \times n}$ and viewing direction $\gamma(\mathbf{d})_n$</p>
 <p><strong>Output</strong>: RGB color and volume density for every query point $(c, , \sigma)_{m \times H \times W \times n}$</p>
@@ -348,7 +339,7 @@ any other particle.</p>
 T(t) = \text{exp} \left( - \int_{t_n}^{t} \sigma(r(s)) ; ds  \right)
 \end{equation*}</p>
 <p>These complex-looking integrals can be approximated via numerical quadrature. We use a stratified sampling approach where we select a random set of quadrature points ${t_i}_{i = 1}^N$ by uniformly drawing samples from $N$ evenly-spaced ray bins between $t_n$ and $t_f$.</p>
-<p><img loading="lazy" src="https://yugajmera.github.io/posts/nerf/rendering.png" alt=""  />
+<p><img loading="lazy" src="http://localhost:1313/posts/nerf/rendering.png" alt=""  />
 </p>
 <p>The use of stratified sampling allows for a continuous representation of the scene, despite using a discrete set of samples to estimate the integral. This is because the MLP is evaluated at continuous positions during optimization.</p>
 <p>The approximated color of each ray is computed as,</p>
@@ -377,7 +368,7 @@ T_i =  \prod_{j=1}^{i-1} (1 - \alpha_j)
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="next" href="https://yugajmera.github.io/posts/diffusion-models/post/">
+  <a class="next" href="http://localhost:1313/posts/diffusion-models/post/">
     <span class="title">Next »</span>
     <br>
     <span>Decoding Diffusion Models</span>
@@ -389,7 +380,7 @@ T_i =  \prod_{j=1}^{i-1} (1 - \alpha_j)
     </main>
     
 <footer class="footer">
-        <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA&#39;s Almanac</a></span> · 
+        <span>&copy; 2024 <a href="http://localhost:1313/">YA&#39;s Almanac</a></span> · 
 
     <span>
         Powered by

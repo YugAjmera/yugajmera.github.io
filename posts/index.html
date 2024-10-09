@@ -10,11 +10,11 @@
 <meta name="description" content="Posts - YA&#39;s Almanac">
 <meta name="author" content="">
 <link rel="canonical" href="https://yugajmera.github.io/posts/">
-<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
+<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.334cb677465a1d1e9767dd05b097c98de3a5b4085e0d43c708104df17bc49585.css" integrity="sha256-M0y2d0ZaHR6XZ90FsJfJjeOltAheDUPHCBBN8XvElYU=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://yugajmera.github.io/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/assets/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/assets/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://yugajmera.github.io/assets/apple-touch-icon.png">
 <link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
@@ -58,25 +58,16 @@
     </style>
 </noscript>
 
-  
-    
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
-      <script>
-        var doNotTrack = false;
-        if ( false ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-S759YBMKJE');
-        }
-      </script>
-    
-  
-
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-S759YBMKJE', { 'anonymize_ip': false });
+}
+</script>
 <meta property="og:title" content="Posts" />
 <meta property="og:description" content="" />
 <meta property="og:type" content="website" />
@@ -170,139 +161,43 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Understanding Neural Radiance Fields (NeRFs)
+    <h2 class="entry-hint-parent">Deep Learning Basics Part 3: The Cherry on Top
     </h2>
   </header>
   <div class="entry-content">
-    <p>Imagine being able to generate photorealistic 3D models of objects and scenes that can be viewed from any angle, with details so realistic that they are indistinguishable from reality. That’s what the Neural Radiance Fields (NeRF) is capable of doing and much more. With more than 50 papers related to NeRFs in the CVPR 2022, it is one of the most influential papers of all time.
-Neural fields A neural field is a neural network that parametrizes a signal....</p>
+    <p>We’ve already coded our first neural network architecture from scratch and learned how to train it. Our deep learning cake is almost ready—but we still need the toppings to make it more appealing. In this part, we’re going to discuss the available toppings—concepts that enhance optimization and help us reach a better final solution for the model’s weights. The most important topping among them is Regularization.
+Regularization When optimizing, our goal is to find the specific set of weights that minimize loss our training data, aiming for the highest possible accuracy on the test set....</p>
   </div>
-  <footer class="entry-footer"><span title='2023-03-05 00:00:00 +0000 UTC'>March 5, 2023</span>&nbsp;·&nbsp;8 min</footer>
-  <a class="entry-link" aria-label="post link to Understanding Neural Radiance Fields (NeRFs)" href="https://yugajmera.github.io/posts/nerf/post/"></a>
+  <footer class="entry-footer"><span title='2022-08-21 00:00:00 +0000 UTC'>August 21, 2022</span>&nbsp;·&nbsp;14 min</footer>
+  <a class="entry-link" aria-label="post link to Deep Learning Basics Part 3: The Cherry on Top" href="https://yugajmera.github.io/posts/03-dl3/post/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Decoding Diffusion Models
+    <h2 class="entry-hint-parent">Deep Learning Basics Part 2: The Icing
     </h2>
   </header>
   <div class="entry-content">
-    <p>Diffusion models are a new class of state-of-the-art generative models that generate diverse high-resolution images. There are already a bunch of different diffusion models that include Open AI’s DALL-E 2 and GLIDE, Google’s Imagen, and Stability AI’s Stable Diffusion. In this blog post, we will dig our way up from the basic principles described in the most prominent one, which is the Denoising Diffusion Probabilistic Models (DDPM) as initialized by Sohl-Dickstein et al in 2015 and then improved by Ho....</p>
+    <p>In the last post, we introduced Linear Classifiers as the simplest model in deep learning for image classification problems. We discussed how Loss Functions express preferences over different choices of weights, and how Optimization minimizes these loss functions to train the model.
+However, linear classifiers have limitations: their decision boundaries are linear, which makes them inadequate for classifying complex data. One option is to manually extract features from the input image and transform them into a feature space, hoping that it makes the data linearly separable....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-11-20 00:00:00 +0000 UTC'>November 20, 2022</span>&nbsp;·&nbsp;13 min</footer>
-  <a class="entry-link" aria-label="post link to Decoding Diffusion Models" href="https://yugajmera.github.io/posts/diffusion-models/post/"></a>
+  <footer class="entry-footer"><span title='2022-08-05 00:00:00 +0000 UTC'>August 5, 2022</span>&nbsp;·&nbsp;11 min</footer>
+  <a class="entry-link" aria-label="post link to Deep Learning Basics Part 2: The Icing" href="https://yugajmera.github.io/posts/02-dl2/post/"></a>
 </article>
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">Generative Adversarial Networks: A Two-player game
+    <h2 class="entry-hint-parent">Deep Learning Part 1: The Base  of the Cake
     </h2>
   </header>
   <div class="entry-content">
-    <p>Introduced in 2014 by Goodfellow. et al, Generative Adversarial Networks (GANs) revolutionized the field of Generative modeling. They proposed a new framework that generated very realistic synthetic data trained through a minimax two-player game.
-With GANs, we don’t explicitly learn the distribution of the data $p_{\text{data}}$, but we can still sample from it. Like VAEs, GANs also have two networks: a Generator and a Discriminator that are trained simultaneously.
-A latent variable is sampled from a prior $\mathbf{z} \sim p(\mathbf{z})$ and passed through the Generator to obtain a fake sample $\mathbf{x} = G(\mathbf{z})$....</p>
+    <p>While there is a wealth of deep learning content scattered across the internet, I wanted to create a one-stop solution where you can find all the fundamental concepts needed to write your own neural network from scratch.
+This series is inspired by Justin Johnson’s course, and Stanford’s CS231n.
+Image Classification Before diving into the details, let’s start with the basics: image classification. This is a core task in computer vision where a model takes an image as input and assigns it a category label from a fixed set of predefined categories....</p>
   </div>
-  <footer class="entry-footer"><span title='2022-11-19 00:00:00 +0000 UTC'>November 19, 2022</span>&nbsp;·&nbsp;5 min</footer>
-  <a class="entry-link" aria-label="post link to Generative Adversarial Networks: A Two-player game" href="https://yugajmera.github.io/posts/gan/post/"></a>
+  <footer class="entry-footer"><span title='2022-08-01 00:00:00 +0000 UTC'>August 1, 2022</span>&nbsp;·&nbsp;17 min</footer>
+  <a class="entry-link" aria-label="post link to Deep Learning Part 1: The Base  of the Cake" href="https://yugajmera.github.io/posts/01-dl1/post/"></a>
 </article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Generative Modeling with Variational Autoencoders
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Till now, I have talked about supervised learning where our model is trained to learn a mapping function of data $\mathbf{x}$ to predict labels $\mathbf{y}$, for example, the tasks of classification, object detection, segmentation, image captioning, etc. However, supervised learning requires large datasets that are created with human annotations to train the models.
-The other side of machine learning is called unsupervised learning where we just have data $\mathbf{x}$, and the goal is to learn some hidden underlying structure of the data using a model....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-11-18 00:00:00 +0000 UTC'>November 18, 2022</span>&nbsp;·&nbsp;6 min</footer>
-  <a class="entry-link" aria-label="post link to Generative Modeling with Variational Autoencoders" href="https://yugajmera.github.io/posts/variational-autoencoder/post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">ResNet: The Revolution of Depth
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>In 2015, Batch Normalization was discovered, which heralded the progress of architectures as it was now possible to train deep networks without using any tricks - allowing us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, eliminating the need for Dropout.
-Another major problem with deep networks was of vanishing/exploding gradients, but it was now being handled by Kaiming Initialization. With the stage set in place, experiments began on training deeper models....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-11-13 00:00:00 +0000 UTC'>November 13, 2022</span>&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to ResNet: The Revolution of Depth" href="https://yugajmera.github.io/posts/resnet/post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">InceptionNet: Google&#39;s comeback for ImageNet Challenge
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>The 2014 winner of the ImageNet challenge was the InceptionNet or GoogLeNet architecture from Google. The most straightforward way of improving the performance of deep neural networks is by increasing their size: depth (the number of layers) and width (the number of units at each layer).
-But with such a big network comes a large number of parameters (which makes it prone to overfitting) and increased use of computation resources....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-11-12 00:00:00 +0000 UTC'>November 12, 2022</span>&nbsp;·&nbsp;5 min</footer>
-  <a class="entry-link" aria-label="post link to InceptionNet: Google&#39;s comeback for ImageNet Challenge" href="https://yugajmera.github.io/posts/inceptionnet/post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">VGGNet: Very Deep Convolutional Networks
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>With the advent of AlexNet, all the submissions to the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) switched over to using convolutional neural networks. In 2013, the winner of this challenge was ZFNet, a modified version of AlexNet which gave better accuracy. It was also an 8-layer network that tweaked some of the layer configurations of AlexNet by trial and error.
-ZFNet used 7 $\times$ 7 sized filters in the first layer with a stride of 2 instead of 11 $\times$ 11 filters with a stride of 4....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-10-18 00:00:00 +0000 UTC'>October 18, 2022</span>&nbsp;·&nbsp;5 min</footer>
-  <a class="entry-link" aria-label="post link to VGGNet: Very Deep Convolutional Networks" href="https://yugajmera.github.io/posts/vggnet/post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">AlexNet: The First CNN to win ImageNet Challenge
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Do you wonder about how to come up with different design choices (architecture, optimization method, data manipulation, loss function, etc.) for the deep learning model so that it gives the best performance? Let’s look at the different CNN architectures that have performed well in the past on image classification tasks.
-The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was the huge benchmark for image classification because it held a yearly challenge from 2010 to 2017 where teams around the world would compete with their best-performing classification models....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-10-09 00:00:00 +0000 UTC'>October 9, 2022</span>&nbsp;·&nbsp;6 min</footer>
-  <a class="entry-link" aria-label="post link to AlexNet: The First CNN to win ImageNet Challenge" href="https://yugajmera.github.io/posts/alexnet/post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Image Classification using CNNs: MNIST dataset
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Image classification is a fundamental task in computer vision that attempts to comprehend an entire image as a whole. The goal is to classify the image by assigning it to a specific class label. Typically, image classification refers to images in which only one object appears and is analyzed.
-Now that we have all the ingredients required to code up our deep learning architecture, let’s dive right into creating a model that can classify handwritten digits (MNIST Dataset) using Convolutional Neural Networks from scratch....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-09-19 00:00:00 +0000 UTC'>September 19, 2022</span>&nbsp;·&nbsp;6 min</footer>
-  <a class="entry-link" aria-label="post link to Image Classification using CNNs: MNIST dataset" href="https://yugajmera.github.io/posts/img-classification-mnist/post/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Neural Network for Images: Convolutional Neural Networks (CNNs)
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Linear Neural Networks that we have talked about till this point do not work when dealing with image data, as they don’t respect the spatial structure of images. When a neural network is applied to a 2D image, it flattens it out in 1D and then uses it as input. This creates a need for a new computational node that operates on images - Convolutional Neural Networks (CNNs).
-A convolution layer has a 3D image tensor (3 X H X W) as an input and a 3D filter (also called a kernel) that convolves over the image, i....</p>
-  </div>
-  <footer class="entry-footer"><span title='2022-09-18 00:00:00 +0000 UTC'>September 18, 2022</span>&nbsp;·&nbsp;4 min</footer>
-  <a class="entry-link" aria-label="post link to Neural Network for Images: Convolutional Neural Networks (CNNs)" href="https://yugajmera.github.io/posts/cnn/post/"></a>
-</article>
-<footer class="page-footer">
-  <nav class="pagination">
-    <a class="next" href="https://yugajmera.github.io/posts/page/2/">Next&nbsp;&nbsp;»
-    </a>
-  </nav>
-</footer>
     </main>
     
 <footer class="footer">

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -10,16 +10,16 @@
 <meta name="description" content="While there are a ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where you can find all the fundamental concepts required to write your own neural network. But, if you prefer watching a video over reading a blog and have the time, I highly recommend Justin Johnson&rsquo;s course.
 In this first part, I will discuss one of the most essential elements of deep learning - the loss function!">
 <meta name="author" content="">
-<link rel="canonical" href="https://yugajmera.github.io/posts/loss-function/post/">
-<link crossorigin="anonymous" href="https://yugajmera.github.io/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://yugajmera.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://yugajmera.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://yugajmera.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://yugajmera.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://yugajmera.github.io/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/loss-function/post/">
+<link crossorigin="anonymous" href="http://localhost:1313/assets/css/stylesheet.ab4ae6179ea15f8d40abe2eaf7686672c2efdd6c8ab9f32ba68b327655b638ab.css" integrity="sha256-q0rmF56hX41Aq&#43;Lq92hmcsLv3WyKufMrposydlW2OKs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://yugajmera.github.io/posts/loss-function/post/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/loss-function/post/">
 <noscript>
     <style>
         #theme-toggle,
@@ -88,30 +88,21 @@ In this first part, I will discuss one of the most essential elements of deep le
 
 
 
-  
-    
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
-      <script>
-        var doNotTrack = false;
-        if ( false ) {
-          var dnt = (navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack);
-          var doNotTrack = (dnt == "1" || dnt == "yes");
-        }
-        if (!doNotTrack) {
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'G-S759YBMKJE');
-        }
-      </script>
-    
-  
-
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S759YBMKJE"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-S759YBMKJE', { 'anonymize_ip': false });
+}
+</script>
 <meta property="og:title" content="Loss functions" />
 <meta property="og:description" content="While there are a ton of concepts related to Deep learning scrambled all around the internet, I thought why not have just one place where you can find all the fundamental concepts required to write your own neural network. But, if you prefer watching a video over reading a blog and have the time, I highly recommend Justin Johnson&rsquo;s course.
 In this first part, I will discuss one of the most essential elements of deep learning - the loss function!" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://yugajmera.github.io/posts/loss-function/post/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="http://localhost:1313/posts/loss-function/post/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-07-30T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-07-30T00:00:00+00:00" />
 
@@ -130,13 +121,13 @@ In this first part, I will discuss one of the most essential elements of deep le
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "https://yugajmera.github.io/posts/"
+      "item": "http://localhost:1313/posts/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Loss functions",
-      "item": "https://yugajmera.github.io/posts/loss-function/post/"
+      "item": "http://localhost:1313/posts/loss-function/post/"
     }
   ]
 }
@@ -158,14 +149,14 @@ In this first part, I will discuss one of the most essential elements of deep le
   "dateModified": "2022-07-30T00:00:00Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://yugajmera.github.io/posts/loss-function/post/"
+    "@id": "http://localhost:1313/posts/loss-function/post/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "YA's Almanac",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://yugajmera.github.io/favicon.ico"
+      "url": "http://localhost:1313/favicon.ico"
     }
   }
 }
@@ -187,7 +178,7 @@ In this first part, I will discuss one of the most essential elements of deep le
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://yugajmera.github.io/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
+            <a href="http://localhost:1313/" accesskey="h" title="YA&#39;s Almanac (Alt + H)">YA&#39;s Almanac</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -213,17 +204,17 @@ In this first part, I will discuss one of the most essential elements of deep le
         </div>
         <ul id="menu">
             <li>
-                <a href="https://yugajmera.github.io/" title="Home">
+                <a href="http://localhost:1313/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="https://yugajmera.github.io/archives/" title="Archives">
+                <a href="http://localhost:1313/archives/" title="Archives">
                     <span>Archives</span>
                 </a>
             </li>
             <li>
-                <a href="https://yugajmera.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -263,13 +254,13 @@ In this first part, I will discuss one of the most essential elements of deep le
 <p>Before we jump into the nitty-gritty, let&rsquo;s lay down the basics: image classification. It&rsquo;s a core task of computer vision, where our model takes an image as input and spits out a label from a predetermined set of categories. Easy peasy, right?</p>
 <p>Now let&rsquo;s formulate this: Suppose we have an image $x_i$ and its true label $y_i$ from the training dataset. We feed $x_i$ into our model to obtain scores for each class. In the example below, we give an image of a cat, car, and frog as inputs to our model to generate these scores.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/loss-function/scores.png#center" width="500"/> 
+    <img loading="lazy" src="http://localhost:1313/posts/loss-function/scores.png#center" width="500"/> 
 </figure>
 
 <p>Think of these scores as the model&rsquo;s confidence levels—it&rsquo;s basically saying how sure it is that the image belongs to each specific category. The class with the maximum score becomes our predicted label $\hat{y}_i$. The scores of the true class are highlighted in bold.</p>
 <p>Clearly, the predictions of our classifier is not always correct. A loss function helps us quantify the performance of our model on our data. So, naturally, the lower the loss, the better our model is. It is also called an objective function or a cost function. We compute a loss for each input image and simply take an average across the training set to compute the final loss value.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/loss-function/loss.png#center"/> 
+    <img loading="lazy" src="http://localhost:1313/posts/loss-function/loss.png#center"/> 
 </figure>
 
 <p> </p>
@@ -280,12 +271,12 @@ In this first part, I will discuss one of the most essential elements of deep le
 L_i = \sum_{j \neq y_i} \text{max}(0, \underbrace{s_j}_{\text{score of jth class}} - \underbrace{s_{y_i}}_{\text{score of true class}} + \underbrace{1}_{\text{margin}})
 \end{align}</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/loss-function/hinge.png#center"/> 
+    <img loading="lazy" src="http://localhost:1313/posts/loss-function/hinge.png#center"/> 
 </figure>
 
 <p>The SVM loss is also called Hinge Loss because its shape looks just like a door hinge. When the score of the correct class is higher than all the other scores plus a certain margin, the loss is zero. Otherwise, it increases linearly. It is important to note that the loss for the true class is always zero.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/loss-function/svm_loss.png#center" width="450"/> 
+    <img loading="lazy" src="http://localhost:1313/posts/loss-function/svm_loss.png#center" width="450"/> 
 </figure>
 
 <p>Let&rsquo;s derive the SVM loss for our example. For the cat image, the true score $s_{y_i} = 3.2$. The loss is computed on the car and frog classes as,
@@ -301,7 +292,7 @@ The final loss of our classifier is the average of all the losses: $L_{\text{svm
 <h3 id="cross-entropy-loss">Cross-Entropy Loss<a hidden class="anchor" aria-hidden="true" href="#cross-entropy-loss">#</a></h3>
 <p>Cross-Entropy loss or Logistic Loss is one of the most commonly used loss functions, where raw classifier scores are interpreted as probabilities. We run the raw scores through an exponential function to ensure the outputs are positive. We then normalize them to obtain a probabilistic distribution over all the categories. This transformation is called the softmax function.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/loss-function/ce_loss.png#center"/> 
+    <img loading="lazy" src="http://localhost:1313/posts/loss-function/ce_loss.png#center"/> 
 </figure>
 
 <p>The term &ldquo;softmax&rdquo; comes from the fact that it is a differential approximation to the max function. If we were to directly apply the max function to the raw score vector of the cat image in our example, it would yield $[0, 1, 0]$. However, this function is non-differentiable, making it unsuitable for training neural networks. Softmax is therefore a go-to tool in deep learning when you need to compute the max of something while ensuring differentiability. The image above shows the softmax function applied to cat image scores.</p>
@@ -321,12 +312,12 @@ While these are the two most commonly used loss functions, a complete list of op
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="https://yugajmera.github.io/posts/optimization/post/">
+  <a class="prev" href="http://localhost:1313/posts/optimization/post/">
     <span class="title">« Prev</span>
     <br>
     <span>Optimization Methods</span>
   </a>
-  <a class="next" href="https://yugajmera.github.io/posts/sample_post/">
+  <a class="next" href="http://localhost:1313/posts/sample_post/">
     <span class="title">Next »</span>
     <br>
     <span>My 1st post</span>
@@ -338,7 +329,7 @@ While these are the two most commonly used loss functions, a complete list of op
     </main>
     
 <footer class="footer">
-        <span>&copy; 2024 <a href="https://yugajmera.github.io/">YA&#39;s Almanac</a></span> · 
+        <span>&copy; 2024 <a href="http://localhost:1313/">YA&#39;s Almanac</a></span> · 
 
     <span>
         Powered by
