@@ -292,12 +292,12 @@ Regularization When optimizing, our goal is to find the specific set of weights 
 <p>When optimizing, our goal is to find the specific set of weights that minimize loss our training data, aiming for the highest possible accuracy on the test set. But in practice, this doesn’t always work as expected! When we focus solely on minimizing loss on the training data—essentially trying to fit it perfectly—we run the risk of not generalizing well to the test data, a phenomenon known as overfitting.</p>
 <p>To illustrate this, let’s consider an example. The blue dots in the figure below represent the training data. We fit two models: $m_1$ (a polynomial model) and $m_2$ (a linear model). Model $m_2$ has more layers, leading to a more complex decision boundary that fits the training data almost perfectly.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/overfit1.png#center"/> 
+    <img loading="lazy" src="../overfit1.png#center"/> 
 </figure>
 
 <p>It&rsquo;s important to remember that both the training and test sets are assumed to be sampled from a common dataset, represented as $p_{\text{data}}$. Our goal should be to fit this probability distribution and not just the training data alone, as this ensures good performance on unseen test data. Now, let’s examine the test set, represented by the yellow points in the next figure.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/overfit2.png#center"/> 
+    <img loading="lazy" src="../overfit2.png#center"/> 
 </figure>
 
 <p>While $m_2$ fits the training data perfectly, it struggles with the test data because it overfits the training set.  Model $m_1$, despite being simpler, performs better on the test set as it generalizes better to the underlying distribution $p_{\text{data}}$.</p>
@@ -365,7 +365,7 @@ s_t &amp;= \text{optimizer} (g_t) \\
 <h3 id="dropout">Dropout<a hidden class="anchor" aria-hidden="true" href="#dropout">#</a></h3>
 <p>Another powerful regularization technique is Dropout [<a href="#references">2</a>], where we randomly set a fraction of neurons in a layer to zero during each forward pass. The dropout rate (probability of dropping a neuron) is a hyperparameter, typically set to 0.5.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/dropout.png#center" width="500"/> 
+    <img loading="lazy" src="../dropout.png#center" width="500"/> 
 </figure>
 
 <p>By zeroing out neurons, the network is forced to avoid relying too heavily on any individual neuron or set of neurons, encouraging the model to distribute learning across different parts of the network. This approach effectively simulates training a large number of different sub-networks, each with a unique structure but sharing weights.</p>
@@ -382,7 +382,7 @@ s_t &amp;= \text{optimizer} (g_t) \\
 <li>Validation accuracy vs Number of iterations</li>
 </ul>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/early-stopping.png#center"/> 
+    <img loading="lazy" src="../early-stopping.png#center"/> 
 </figure>
 
 <p>These curves provide insight into the &ldquo;health&rdquo; of the model. Ideally, training loss should decay exponentially with each iteration, while both training and validation accuracy should increase. A large gap between the training and validation accuracy suggests overfitting, whereas little to no gap indicates underfitting.</p>
@@ -393,7 +393,7 @@ s_t &amp;= \text{optimizer} (g_t) \\
 <h3 id="preprocessing">Preprocessing<a hidden class="anchor" aria-hidden="true" href="#preprocessing">#</a></h3>
 <p>At every step of the optimization algorithm, the loss function is computed on a mini-batch of the training data. Therefore, the shape of the loss landscape, which the optimization algorithm navigates, depends directly on how the training data is structured. To make this landscape more favorable for optimization, we often preprocess the data before feeding it into the neural network.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/preprocessing.png#center"/> 
+    <img loading="lazy" src="../preprocessing.png#center"/> 
 </figure>
 
 <p>A common preprocessing step is normalizing the data, which zero-centers the data and ensures all features have the same variance. This step helps smooth out the optimization process by making the model less sensitive to small weight changes. The same mean and standard deviation used to normalize the training data is also applied to the test set to maintain consistency.</p>
@@ -406,7 +406,7 @@ s_t &amp;= \text{optimizer} (g_t) \\
 <h3 id="augmentation">Augmentation<a hidden class="anchor" aria-hidden="true" href="#augmentation">#</a></h3>
 <p>Data augmentation is a widely-used technique that increases both the size and diversity of the training data by applying transformations to the input images. Not only does this artificially expand the dataset, but it also adds regularization by introducing noise in the training data, which helps prevent overfitting.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/augmentation.jpg#center"/> 
+    <img loading="lazy" src="../augmentation.jpg#center"/> 
 </figure>
 
 <p>In computer vision, augmentations like flipping, rotating, scaling, blurring, jittering, and cropping are widely used as an implicit form of regularization. Augmentations also encode invariances into the model—this means we teach the model to learn that certain transformations shouldn&rsquo;t change the output.</p>
@@ -415,7 +415,7 @@ s_t &amp;= \text{optimizer} (g_t) \\
 <p>All the optimizers we’ve discussed so far—SGD, SGD with Momentum, Adagrad, RMSProp, and Adam—use a fixed learning rate as a hyperparameter to guide the search for the global minimum. As you may have learned by now, this learning rate is a crucial variable in our learning process.</p>
 <p>Different learning rates produce different learning behaviors, as shown in the figure below. Therefore, it&rsquo;s essential to choose an appropriate learning rate, ideally the red one. However, finding that one &ldquo;perfect&rdquo; learning rate through trial and error is not always feasible.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/lr.png#center" width="400"/> 
+    <img loading="lazy" src="../lr.png#center" width="400"/> 
 </figure>
 
 <p>What if we don’t keep the learning rate fixed and instead change it during the training process? We can start with a high learning rate to allow our optimization to make quick progress in the initial iterations and then gradually decay it over time, ensuring that the model converges to a lower loss at the end. This would lead to faster convergence and better performance characteristics.</p>
@@ -424,7 +424,7 @@ s_t &amp;= \text{optimizer} (g_t) \\
 <p>In a step schedule, we start with a high learning rate (similar to the green curve in the figure), and when the loss curve starts to plateau, we decrease the learning rate. This process continues until convergence.</p>
 <p>For example, we might reduce the learning rate by a factor of 0.1 after epochs 30, 60, and 90. The learning curve would then look something like this.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/lr2.png#center" width="400"/> 
+    <img loading="lazy" src="../lr2.png#center" width="400"/> 
 </figure>
 
 <p>Since we’re decaying the learning rate at arbitrary points during training, this schedule introduces additional hyperparameters, like the number of steps and when to decay. A common approach is to monitor the loss and decay the learning rate whenever the loss plateaus.</p>
@@ -450,7 +450,7 @@ $$</p>
 \eta_t = \frac{\eta_0}{ \sqrt{t} }
 $$</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/schedules.png#center"/> 
+    <img loading="lazy" src="../schedules.png#center"/> 
 </figure>
 
 <h4 id="cyclic-schedule">Cyclic Schedule<a hidden class="anchor" aria-hidden="true" href="#cyclic-schedule">#</a></h4>
@@ -458,7 +458,7 @@ $$</p>
 <p>In this approach, the learning rate decreases smoothly within each cycle, following a cosine decay curve. Once the cycle completes, the learning rate &ldquo;warms up&rdquo; by resetting to a higher value. This method, also known as Warm Restarts [<a href="#references">3</a>], allows the optimizer to periodically explore different regions of the loss landscape.</p>
 <p>Cyclic schedules are particularly useful for training models on large datasets, as the periodic warm restarts enhance exploration, reducing the chances of premature convergence to suboptimal solutions.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/03-DL3/warm-restarts.png#center" width="350"/> 
+    <img loading="lazy" src="../warm-restarts.png#center" width="350"/> 
 </figure>
 
 <p>Using learning rate schedules with optimizers like SGD or SGD with Momentum is highly recommended for improving training efficiency and model performance. However, for adaptive methods like Adam, a constant learning rate often works well, as these methods automatically adjust learning rates on a per-parameter basis.</p>

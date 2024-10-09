@@ -278,13 +278,13 @@ However, linear classifiers have limitations: their decision boundaries are line
   <div class="post-content"><p>In the last post, we introduced Linear Classifiers as the simplest model in deep learning for image classification problems. We discussed how Loss Functions express preferences over different choices of weights, and how Optimization minimizes these loss functions to train the model.</p>
 <p>However, linear classifiers have limitations: their decision boundaries are linear, which makes them inadequate for classifying complex data. One option is to manually extract features from the input image and transform them into a feature space, hoping that it makes the data linearly separable. We could then apply a linear classifier on top of these features to classify each image. This would result in a non-linear decision boundary when projected back to the input space.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/02-DL2/transform.png#center"/> 
+    <img loading="lazy" src="../transform.png#center"/> 
 </figure>
 
 <p>While possible, this approach is cumbersome since it requires manually defining feature extraction methods for each specific task. Instead, we want our model to jointly learn both the feature representation and the linear classifier. This is where neural networks come in. Neural networks are built using chunks of linear classifiers, which is why they are also called Multi-Layer Perceptrons (MLPs).</p>
 <h2 id="neural-networks">Neural Networks<a hidden class="anchor" aria-hidden="true" href="#neural-networks">#</a></h2>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/02-DL2/neural-network.png#center"/> 
+    <img loading="lazy" src="../neural-network.png#center"/> 
 </figure>
 
 <p>A neural network is composed of interconnected layers, where every neuron in one layer connects to every neuron in the next layer. A typical deep learning model has multiple layers, where the &ldquo;depth&rdquo; refers to the number of layers or the number of learnable weight matrices.</p>
@@ -298,7 +298,7 @@ However, linear classifiers have limitations: their decision boundaries are line
 <h3 id="activation-functions">Activation functions<a hidden class="anchor" aria-hidden="true" href="#activation-functions">#</a></h3>
 <p>There are several popular activation functions to choose from, each with its pros and cons. Let&rsquo;s briefly explore them:</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/02-DL2/activations.png#center"/> 
+    <img loading="lazy" src="../activations.png#center"/> 
 </figure>
 
 <h4 id="sigmoid">Sigmoid<a hidden class="anchor" aria-hidden="true" href="#sigmoid">#</a></h4>
@@ -362,7 +362,7 @@ $$</p>
 q = x + y \ \ \text{and} \ \ f = z * q
 \end{align}</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/02-DL2/backprop.png#center"/> 
+    <img loading="lazy" src="../backprop.png#center"/> 
 </figure>
 
 <p>First, we perform a forward pass through the graph (denoted in green), where we compute the outputs of each node sequentially, given the inputs: $x = -2, y = 5, z = -4$.
@@ -387,7 +387,7 @@ f &amp; = z * q = -4 * 3 = -12
 </ul>
 <p>For our example, we will build a simple neural network for image classification. The input is an image of size (32 x 32 x 3 = 3072), and our model will have two layers with ReLU activation,  outputting scores for 10 classes: [Input -&gt; Linear -&gt; ReLU -&gt; Linear -&gt; Output]</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/02-DL2/model.png#center"/> 
+    <img loading="lazy" src="../model.png#center"/> 
 </figure>
 
 <p>We&rsquo;ll follow this pipeline for training:</p>
