@@ -294,10 +294,8 @@ Image Classification Before diving into the details, let’s start with the basi
 <h3 id="dataset">Dataset<a hidden class="anchor" aria-hidden="true" href="#dataset">#</a></h3>
 <p>The dataset is usually divided into 3 parts: training set, validation set and test set. We use the training set to train our model.</p>
 <p>Hyperparameters are variables that must be set before training begins, and their values cannot be derived from the training data. Since these parameters are highly problem-dependent, they are usually selected through trial and error. After training, we evaluate our trained model on the validation set and use it to fine-tune the hyperparameters, selecting the values that yield the best performance on this set.</p>
-<figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/dataset.png#center"/> 
-</figure>
-
+<p><img loading="lazy" src="../dataset.png" alt=""  />
+</p>
 <p>Once everything is finalized, we evaluate the model on the test set only once, at the very end. This gives us an unbiased estimate of how the model will perform on truly unseen data, helping us predict its real-world performance.</p>
 <h3 id="linear-classifier">Linear Classifier<a hidden class="anchor" aria-hidden="true" href="#linear-classifier">#</a></h3>
 <p>Now, let’s define our first and most basic model: a linear classifier (also known as a perceptron). Suppose we have a dataset, $\{x_i, y_i\}_{i=1}^N$, where $x_i$ is an RGB image of size $(32, 32, 3)$ and $y_i$ is its corresponding label (integer) across three categories: cat (label=0), car (label=1), and frog (label=2).</p>
