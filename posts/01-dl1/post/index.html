@@ -294,13 +294,15 @@ Image Classification Before diving into the details, let’s start with the basi
 <h3 id="dataset">Dataset<a hidden class="anchor" aria-hidden="true" href="#dataset">#</a></h3>
 <p>The dataset is usually divided into 3 parts: training set, validation set and test set. We use the training set to train our model.</p>
 <p>Hyperparameters are variables that must be set before training begins, and their values cannot be derived from the training data. Since these parameters are highly problem-dependent, they are usually selected through trial and error. After training, we evaluate our trained model on the validation set and use it to fine-tune the hyperparameters, selecting the values that yield the best performance on this set.</p>
-<p><img loading="lazy" src="../dataset.png" alt=""  />
-</p>
+<figure class="align-center ">
+    <img loading="lazy" src="../dataset.png#center"/> 
+</figure>
+
 <p>Once everything is finalized, we evaluate the model on the test set only once, at the very end. This gives us an unbiased estimate of how the model will perform on truly unseen data, helping us predict its real-world performance.</p>
 <h3 id="linear-classifier">Linear Classifier<a hidden class="anchor" aria-hidden="true" href="#linear-classifier">#</a></h3>
 <p>Now, let’s define our first and most basic model: a linear classifier (also known as a perceptron). Suppose we have a dataset, $\{x_i, y_i\}_{i=1}^N$, where $x_i$ is an RGB image of size $(32, 32, 3)$ and $y_i$ is its corresponding label (integer) across three categories: cat (label=0), car (label=1), and frog (label=2).</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/linear_classifier.png#center"/> 
+    <img loading="lazy" src="../linear_classifier.png#center"/> 
 </figure>
 
 <p>We feed the image to our model as a flattened vector of shape $(3072, 1)$. The linear classifier consists of a weight matrix $W$ and a bias $b$ (offset). In practice, we concatenate the input with 1s at the bottom row to combine the weights and bias into a single matrix, $\mathbf{W}$, using a technique called the bias trick.</p>
@@ -311,7 +313,7 @@ f(\mathbf{x}, \mathbf{W})
 $$</p>
 <p>The model outputs a score vector of size $(3, 1)$, which defines the class scores for each of the 3 predefined categories.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/scores.png#center" width="400"/> 
+    <img loading="lazy" src="../scores.png#center" width="400"/> 
 </figure>
 
 <p>Think of these scores as the model&rsquo;s confidence levels—it&rsquo;s basically saying how sure it is that the image belongs to each specific category. The class with the highest score becomes our predicted label $\hat{y}_i$. The scores of the true class are highlighted in bold.</p>
@@ -319,7 +321,7 @@ $$</p>
 <h2 id="loss-function">Loss function<a hidden class="anchor" aria-hidden="true" href="#loss-function">#</a></h2>
 <p>A loss function helps us <em>quantify</em> the performance of our model on the data. Naturally, lower the loss, the better our classifier is. It is also called an objective function or a cost function.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/loss.png#center"/> 
+    <img loading="lazy" src="../loss.png#center"/> 
 </figure>
 
 <p>We compute the loss for each input image and simply take an average across the training set to compute the final loss value.</p>
@@ -334,12 +336,12 @@ L_i = \sum_{j \neq y_i} \text{max}(0,
 \underbrace{s_j}_{\text{score of jth class}} - \underbrace{s_{y_i}}_{\text{score of true class}} + \underbrace{1}_{\text{margin}})
 $$</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/hinge.png#center"/> 
+    <img loading="lazy" src="../hinge.png#center" width="400"/> 
 </figure>
 
 <p>It’s also called Hinge Loss because its shape looks just like a door hinge. When the score for the correct class is higher than all the other scores by a certain margin, the loss becomes zero. Otherwise, it increases linearly. A key point to note is that the loss is always computed for the incorrect categories, and for the correct class, it&rsquo;s always zero.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/svm_scores.png#center" width="400"/> 
+    <img loading="lazy" src="../svm_scores.png#center" width="400"/> 
 </figure>
 
 <p>Let&rsquo;s derive the SVM loss for our toy example. For the cat image, the score of the true class $s_{y_i} = 3.2$. The loss for the car and frog classes are calculated as,
@@ -356,7 +358,7 @@ L_3 &amp;= \text{max}(0, 2.2 + 3.1 + 1) + \text{max}(0, 2.5 + 3.1 + 1) = 6.3 + 6
 <p>Cross-Entropy Loss, also known as Logistic Loss, is one of the most commonly used loss functions in deep learning. It helps interpret raw classifier scores as probabilities, which makes sense because we want our model’s output to reflect how likely it thinks a certain class is correct.</p>
 <p>To do this, we run the raw scores through an exponential function to ensure all the outputs are positive (since probabilities are always non-negative). After that, we normalize them so they sum to 1, giving us a valid probability distribution over all the categories. This entire transformation is known as the softmax function. The image below shows how the softmax function works on our cat image scores.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/ce_loss.png#center"/> 
+    <img loading="lazy" src="../ce_scores.png#center"/> 
 </figure>
 
 <p>The term &ldquo;softmax&rdquo; comes from the fact that it’s a smooth, differentiable approximation to the max function. If we were to apply the max function directly to the raw scores—like in our cat image example—it would output something like $[0, 1, 0]$, which is a valid probability distribution. But the problem is, the max function isn’t differentiable, which means we can’t use it to train neural networks (you’ll see why shortly). This makes softmax a go-to tool in deep learning when you need to highlight the maximum value while ensuring the function remains differentiable.</p>
@@ -483,7 +485,7 @@ L(\mathbf{W}) &amp;= \frac{1}{N} \sum_{i = 1}^N L_i(x_i, y_i, \mathbf{W}) \\
 <p>Adam has become a go-to optimizer for much of the deep learning community today. Learning rates of 1e-3, 5e-4, and 1e-4 serve as great starting points for most models.</p>
 <p>The visualization below demonstrates how different optimizers behave on a loss landscape featuring both local and global minima, all starting from a common point.</p>
 <figure class="align-center ">
-    <img loading="lazy" src="https://yugajmera.github.io/posts/01-DL1/viz.gif#center"
+    <img loading="lazy" src="../viz.gif#center"
          alt="Gradient Descent (cyan) vs. Momentum (magenta) with m = 0.99 vs. AdaGrad (white) vs RMSProp (green) with decay rate = 0.9 vs Adam (blue) with beta1 = 0.9 and beta2 = 0.999, on a surface with a global minimum (the left well) and local minimum (the right well). Source: visualization tool"/> <figcaption>
             <p>Gradient Descent (cyan) vs. Momentum (magenta) with m = 0.99 vs. AdaGrad (white) vs RMSProp (green) with decay rate = 0.9 vs Adam (blue) with beta1 = 0.9 and beta2 = 0.999, on a surface with a global minimum (the left well) and local minimum (the right well). Source: <a href="https://github.com/lilipads/gradient_descent_viz">visualization tool</a></p>
         </figcaption>
