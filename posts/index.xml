@@ -25,7 +25,7 @@ Regularization When optimizing, our goal is to find the specific set of weights 
 However, linear classifiers have limitations: their decision boundaries are linear, which makes them inadequate for classifying complex data. One option is to manually extract features from the input image and transform them into a feature space, hoping that it makes the data linearly separable.</description>
     </item>
     <item>
-      <title>Deep Learning Part 1: The Base  of the Cake</title>
+      <title>Deep Learning Bascis Part 1: The Base  of the Cake</title>
       <link>https://yugajmera.github.io/posts/01-dl1/post/</link>
       <pubDate>Mon, 01 Aug 2022 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/01-dl1/post/</guid>
