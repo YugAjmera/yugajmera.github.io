@@ -6,8 +6,24 @@
     <description>Recent content on YA&#39;s Almanac</description>
     <generator>Hugo -- 0.124.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Aug 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 14 Nov 2022 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Olympics of DL: The ImageNet Challenge</title>
+      <link>https://yugajmera.github.io/posts/05-imagenet/post/</link>
+      <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/05-imagenet/post/</guid>
+      <description>The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was an annual competition that took place from 2010 to 2017, attracting teams from around the world to showcase their best-performing image classification models. This challenge became a crucial benchmark in the field, with its winners significantly influencing the landscape of image recognition and deep learning research.
+The competition used a subset of the ImageNet dataset, containing 1.3M training examples across 1000 different classes, with 50k validation and 100k test examples.</description>
+    </item>
+    <item>
+      <title>Convolutional Neural Networks (CNNs): DL for Images</title>
+      <link>https://yugajmera.github.io/posts/04-cnn/post/</link>
+      <pubDate>Sun, 18 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/04-cnn/post/</guid>
+      <description>Linear classifiers or MLPs that we have discussed so far don&amp;rsquo;t respect the 2D spatial structure of input images. These images are flattened into a 1D vector before passing them through the network which destroys the spatial structure of the image.
+This creates a need for a new computational model that can operate on images while preserving spatial relationships — Convolutional Neural Networks (CNNs). Let&amp;rsquo;s understand the components of this CNN model.</description>
+    </item>
     <item>
       <title>Deep Learning Basics Part 3: The Cherry on Top</title>
       <link>https://yugajmera.github.io/posts/03-dl3/post/</link>
