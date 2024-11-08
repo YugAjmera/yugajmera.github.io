@@ -6,10 +6,18 @@
     <description>Recent content on YA&#39;s Almanac</description>
     <generator>Hugo -- 0.124.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 14 Nov 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 08 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Olympics of DL: The ImageNet Challenge</title>
+      <title>Sequence Modeling with Recurrent Neural Networks and Attention</title>
+      <link>https://yugajmera.github.io/posts/06-attention/post/</link>
+      <pubDate>Fri, 08 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/06-attention/post/</guid>
+      <description>In previous discussions, we focused on feedforward neural networks, which take a single image as input, process it through multiple layers of convolution, normalization, or fully connected layers, and output a single label for image classification tasks. This is a one-to-one relationship: a single image maps to a single output label.
+However, there are other types of problems we want to solve using deep learning that involve variable-length sequences as both inputs and outputs.</description>
+    </item>
+    <item>
+      <title>ImageNet Challenge: The Olympics of Deep Learning</title>
       <link>https://yugajmera.github.io/posts/05-imagenet/post/</link>
       <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/05-imagenet/post/</guid>
@@ -17,7 +25,7 @@
 The competition used a subset of the ImageNet dataset, containing 1.3M training examples across 1000 different classes, with 50k validation and 100k test examples.</description>
     </item>
     <item>
-      <title>Convolutional Neural Networks (CNNs): DL for Images</title>
+      <title>Convolutional Neural Networks: Deep Learning for Image Recognition</title>
       <link>https://yugajmera.github.io/posts/04-cnn/post/</link>
       <pubDate>Sun, 18 Sep 2022 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/04-cnn/post/</guid>
