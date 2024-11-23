@@ -6,8 +6,16 @@
     <description>Recent content on YA&#39;s Almanac</description>
     <generator>Hugo -- 0.124.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 18 Nov 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Generalizing Attention with Transformers</title>
+      <link>https://yugajmera.github.io/posts/07-transformer/post/</link>
+      <pubDate>Mon, 18 Nov 2024 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/07-transformer/post/</guid>
+      <description>In the previous post, we explored sequence modeling using an encoder-decoder architecture connected through an attention mechanism. This mechanism the decoder to &amp;ldquo;attend&amp;rdquo; to different parts of the input at each time step while generating the output sequence.
+Attention can also be applied to a variety of tasks, such as image captioning. In this case, the decoder RNN focuses on different regions of the input image as it generates each word of the output caption.</description>
+    </item>
     <item>
       <title>Sequence Modeling with Recurrent Neural Networks and Attention</title>
       <link>https://yugajmera.github.io/posts/06-attention/post/</link>
