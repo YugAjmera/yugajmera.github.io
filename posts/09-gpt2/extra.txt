@@ -1,0 +1,89 @@
+---
+title: "Looking into GPT-2 architecture Part 1"
+date: 2025-01-29
+math: mathjax
+showToc: true # show contents
+TocOpen: false # open contents automantically
+---
+
+In this post, we will modify the GPT-1 architecture from before to reproduce the GPT-2 small model, specifically the smallest version with 124 million parameters. Note that while the paper mentions this as 117 million parameters, this was later corrected
+
+Unlike other GPT models, OpenAI has released the weights of the pre-trained GPT-2 model, which we will load into our implementation. This allows us to have a sanity check of our architecture and allows us to skip the expensive pretraining stage and jump to fine-tuning it. 
+
+The original code for it was written in tensorflow, which can be found here: [https://github.com/openai/gpt-2/tree/master](https://github.com/openai/gpt-2/tree/master). Thanks to huggingface, we have the weights avaiable in pytorch!
+
+The GPT-2 paper does not contain enough information about the training, however, the GPT-3 paper descrbies them properly and we are going to reference it instead. GPT-3 is fundamentally the same in terms of model architecture, except that it is scaled up version (1.5 billion params in GPT-2 to 175 billion params in GPT-3), and it trained on more data. 
+
+As of this writing, the weights for GPT-3 are not publicily available. GPT-2 is also a better choice for learning how to implement LLMs, as it can be run on a single laptop computer, whereas GPT-3 required a GPU cluster for training and inference.
+
+GPT-3 was introduced in 2020, which, by standards of deep learning and LLM developement, is considered a long time ago. However, more recent architectures like Meta's llama models, are still based on the same underlying concepts, introducing minor modifications. Hence, understanding GPT remains as relevant as ever. 
+
+
+
+
+## Tokenization
+Recalling tokenization from the last post, it the process of breaking the input text into individual tokens, which are either words or special characters. All the unique tokens form a vocabulary which are then mapped to unique token IDs. An embedding table is then used to convert these token IDs to embedding vectors, that are eventually fed into our model. 
+
+
+### Adding special context tokens
+What if the user enters a word that does not exist in the training data? That word would not have an associated token ID, and you will get a keyerror. This highlights the need to consider a large and diverse training sets to extend vocubulary when working with LLMs. 
+
+Even then, there can be a case where the word is outside the vocabulary. Then, we modify the tokenizer to handle unknown words and add a new token for it `<unk>`. 
+
+It is also common to use `<endoftext>` token that helps seperate two unrelated texts. When training GPT-like LLMs on multiple independent documents  or books, it is common to insert this to help it understand that although these texts are concatenated for training, they are, in fact, unrelated. 
+
+The tokenizer used for GPT models is called Byte pair encoding (BPE) [1], which breaks down words into subword units and individual characters. Hence it does not require the special unknown word token and only uses the end of text token. Let's see the BPE algorithm in detail. 
+
+
+
+### Byte pair encoding (BPE)
+
+We used a character-level tokenizer for our GPT-1 model that breaks down the input text into individual characters. Although this might seem trivial to do, a huge training data will be represented with vast number of tokens that will take forever to process. 
+
+The Byte pair encoding algorithm builds vocabulary by iteratively merging frequent characters into subwords and frequent subwords into words. Merging repeatedly reduces the number of tokens with which an input sequence is represented with, reducing the computation. We would also attend to larger amounts of text.  
+
+BPE starts with adding all individual single characters to its vocabulary ("a", "b", ...). In the next stage, it merges a character combination that occurs most frequently in the dataset togethor into subwords. 
+
+For example "d" and "e" may be merged into subword "de", which is common in many English words like "define", "depend", "made, "hidden". Next, we merge this most common token pair (corresponding to the subword "de"), representing them with a new token ID. 
+
+We reiterate this process multiple number of times. This compresses the training data representing it with much lesser number of tokens, but also increase the vocabulary size. 
+
+Vocabulary size is an important hyperparameter to consider as it determines the size of token embedding table and the last lm head layer. If we keep increasing this vocab size, 
+1. The number of parameters (size of the model) would increase, increasing computation.
+2. We might run into the problem of underfitting as there will a lot more unique tokens that will comeup rarely in the training data. 
+
+We must find a sweet spot between the sequence length and vocab size. The number of times we merge is an hyperparameter, which was set to 40,000 for the GPT-1 model. 
+
+
+### Coding GPT Tokenizer
+In the case of tiktoken, we first take our codepoints in the string and encode them with utf-8 to bytes and then we are merging bytes in BPE. 
+
+Sentence peice tokenizer is used for Llama models and mistral series that unlike tiktoken has a training loop.
+It is also important to note that a tokenizer has its own training set, that is different from LLM training. talk about solidgoldmagickarp.
+
+
+1. Convert character to a byte (utf-8 encoding)
+In this step we convert each unique letter and represent it as a 8-bit (=1 byte) code. For example, the character `A` will be represented as `0011100`. 
+
+2. Map each byte representation to integer ID
+As we would not prefer such long sequences, we map each unique 8-bit code to an integer ID. Each character is denoted by 8 bits with either 0/1, gives us $2^8 = 256$ possibilities. Hence we obtain an integer from 0-255 for each character, representing it as a sequence of bytes. 
+
+3. Bigram shrinking
+We want to continue shrinking the sequence representation in return for more tokens on the vocabulary. We find consecutive bytes that are commonly occuring and replace them with a new ID. We iterate this alogrithm.
+
+Good number of vocab size is 100k in practice. 
+
+
+
+### Tokenizing Conversations
+We add special tokens: `<|im_start|>` stands for imaginary monologue start, then we specify `user/assistant`, add a seperator `<|im_sep|>`, add text and end with `<|im_end|>`.
+
+We create these new tokens at the fine-tuning stage. 
+Add tiktoken screenshots
+
+
+###  How to fix Hallucinations?
+
+
+
+Weight tying page120, 121. 

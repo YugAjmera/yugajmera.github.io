@@ -6,8 +6,17 @@
     <description>Recent content in Posts on YA&#39;s Almanac</description>
     <generator>Hugo -- 0.124.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 Nov 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Introduction to LLMs: Coding GPT from scratch</title>
+      <link>https://yugajmera.github.io/posts/08-gpt/post/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/08-gpt/post/</guid>
+      <description>By now, you&amp;rsquo;ve probably used OpenAI&amp;rsquo;s ChatGPT—a chatbot that has taken the AI community by storm and transformed the way we work. First released in 2022 with GPT-3.5 (Generative Pre-trained Transformer 3.5) as its backend model, it reached one million users in just five days and a staggering 100 million in two months.
+ChatGPT interface
+The unprecedented success of ChatGPT fueled further research into the technology behind it—Large Language Models (LLMs).</description>
+    </item>
     <item>
       <title>Generalizing Attention with Transformers</title>
       <link>https://yugajmera.github.io/posts/07-transformer/post/</link>
