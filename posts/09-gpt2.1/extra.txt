@@ -1,0 +1,16 @@
+As of this writing, the weights for GPT-3 are not publicily available. GPT-2 is also a better choice for learning how to implement LLMs, as it can be run on a single laptop computer, whereas GPT-3 required a GPU cluster for training and inference.
+
+The GPT-2 paper does not contain enough information about the training, however, the GPT-3 paper descrbies them properly and we are going to reference it instead. GPT-3 is fundamentally the same in terms of model architecture, except that it is scaled up version (1.5 billion params in GPT-2 to 175 billion params in GPT-3), and it trained on more data. 
+
+1. Convert character to a byte (utf-8 encoding)
+In this step we convert each unique letter and represent it as a 8-bit (=1 byte) code. For example, the character `A` will be represented as `0011100`. 
+
+2. Map each byte representation to integer ID
+As we would not prefer such long sequences, we map each unique 8-bit code to an integer ID. Each character is denoted by 8 bits with either 0/1, gives us $2^8 = 256$ possibilities. Hence we obtain an integer from 0-255 for each character, representing it as a sequence of bytes. 
+
+3. Bigram shrinking
+We want to continue shrinking the sequence representation in return for more tokens on the vocabulary. We find consecutive bytes that are commonly occuring and replace them with a new ID. We iterate this alogrithm.
+
+
+## Summary of GPT-2 paper
+No details about training, and only inference code is made public. We turn to the GPT-3 paper to obtain the training hyperparameters. 

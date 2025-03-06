@@ -33,3 +33,6 @@ Number of parameters:
 
 
 This requires the model to "see" both sides of the masked token, which the encoder of the Transformer can do using self-attention. By guessing the missing words, BERT learns how words relate to each other, improving its context awareness.
+
+
+Our Tiny Shakespeare-trained model essentially acts as a text completer, generating text in the same style as Shakespeare when given a prompt. Similarly, a base LLM (large language model) functions as an autocompleter, predicting the next most probable tokens based on internet-scale training data.

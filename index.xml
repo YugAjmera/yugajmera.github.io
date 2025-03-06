@@ -6,8 +6,16 @@
     <description>Recent content on YA&#39;s Almanac</description>
     <generator>Hugo -- 0.124.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Looking into GPT-2 Part 1: BPE Tokenizer</title>
+      <link>https://yugajmera.github.io/posts/09-gpt2.1/post/</link>
+      <pubDate>Sat, 22 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/09-gpt2.1/post/</guid>
+      <description>In this series of posts, we will explore the GPT-2 [1] architecture in detail. Unlike some other GPT models, OpenAI has released the code for GPT-2, which allows us to investigate the model&amp;rsquo;s inner workings and see how each part of the architecture is implemented. You can find the official repository here: https://github.com/openai/gpt-2/tree/master
+GPT-2 was introduced in 2019, which, by the fast-paced standards of deep learning and LLM development, is considered a long time ago.</description>
+    </item>
     <item>
       <title>Introduction to LLMs: Coding GPT from scratch</title>
       <link>https://yugajmera.github.io/posts/08-gpt/post/</link>
