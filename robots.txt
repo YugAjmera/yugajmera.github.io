@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://yugajmera.github.io/sitemap.xml
