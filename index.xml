@@ -6,14 +6,22 @@
     <description>Recent content on YA&#39;s Almanac</description>
     <generator>Hugo -- 0.124.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 22 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Looking into GPT-2 Part 2: Architecture and Sampling</title>
+      <link>https://yugajmera.github.io/posts/10-gpt2.2/post/</link>
+      <pubDate>Sat, 01 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/10-gpt2.2/post/</guid>
+      <description>Building on our previous exploration of GPT-1, let&amp;rsquo;s now modify its architecture to recreate the GPT-2 [1] small model, which has 124 million parameters. While the original paper refers to this as 117M, OpenAI later clarified the actual count.
+One major advantage of GPT-2 is that OpenAI has released its pre-trained weights, allowing us to load them into our implementation. This not only serves as a sanity check for our model but also provides a strong foundation for fine-tuning.</description>
+    </item>
     <item>
       <title>Looking into GPT-2 Part 1: BPE Tokenizer</title>
       <link>https://yugajmera.github.io/posts/09-gpt2.1/post/</link>
       <pubDate>Sat, 22 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/09-gpt2.1/post/</guid>
-      <description>In this series of posts, we will explore the GPT-2 [1] architecture in detail. Unlike some other GPT models, OpenAI has released the code for GPT-2, which allows us to investigate the model&amp;rsquo;s inner workings and see how each part of the architecture is implemented. You can find the official repository here: https://github.com/openai/gpt-2/tree/master
+      <description>In this series of posts, we will explore the GPT-2 [1] architecture in detail. Unlike other GPT models, OpenAI has released the code for GPT-2, which allows us to investigate the model&amp;rsquo;s inner workings and see how each part of the architecture is implemented. You can find the official repository here: https://github.com/openai/gpt-2/tree/master
 GPT-2 was introduced in 2019, which, by the fast-paced standards of deep learning and LLM development, is considered a long time ago.</description>
     </item>
     <item>
