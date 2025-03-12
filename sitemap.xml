@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://yugajmera.github.io/posts/10-gpt2.2/post/</loc>
+    <loc>https://yugajmera.github.io/posts/10-gpt2/post/</loc>
     <lastmod>2025-03-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://yugajmera.github.io/posts/</loc>
@@ -11,7 +11,7 @@
     <loc>https://yugajmera.github.io/</loc>
     <lastmod>2025-03-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://yugajmera.github.io/posts/09-gpt2.1/post/</loc>
+    <loc>https://yugajmera.github.io/posts/09-bpe-tokenizer/post/</loc>
     <lastmod>2025-02-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://yugajmera.github.io/posts/08-gpt/post/</loc>

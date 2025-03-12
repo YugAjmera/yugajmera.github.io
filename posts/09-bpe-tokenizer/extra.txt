@@ -14,3 +14,5 @@ We want to continue shrinking the sequence representation in return for more tok
 
 ## Summary of GPT-2 paper
 No details about training, and only inference code is made public. We turn to the GPT-3 paper to obtain the training hyperparameters. 
+
+* **Model Parallelism**: The model is partitioned across V100 GPUs, using both depth and width parallelism to minimize data transfer between nodes.

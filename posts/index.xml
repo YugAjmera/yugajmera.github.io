@@ -9,23 +9,23 @@
     <lastBuildDate>Sat, 01 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://yugajmera.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Looking into GPT-2 Part 2: Architecture and Sampling</title>
-      <link>https://yugajmera.github.io/posts/10-gpt2.2/post/</link>
+      <title>GPT Series Part 3: Building GPT-2 &amp; Sampling Techniques</title>
+      <link>https://yugajmera.github.io/posts/10-gpt2/post/</link>
       <pubDate>Sat, 01 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/10-gpt2.2/post/</guid>
+      <guid>https://yugajmera.github.io/posts/10-gpt2/post/</guid>
       <description>Building on our previous exploration of GPT-1, let&amp;rsquo;s now modify its architecture to recreate the GPT-2 [1] small model, which has 124 million parameters. While the original paper refers to this as 117M, OpenAI later clarified the actual count.
 One major advantage of GPT-2 is that OpenAI has released its pre-trained weights, allowing us to load them into our implementation. This not only serves as a sanity check for our model but also provides a strong foundation for fine-tuning.</description>
     </item>
     <item>
-      <title>Looking into GPT-2 Part 1: BPE Tokenizer</title>
-      <link>https://yugajmera.github.io/posts/09-gpt2.1/post/</link>
+      <title>GPT Series Part 2: Implementing BPE Tokenizer</title>
+      <link>https://yugajmera.github.io/posts/09-bpe-tokenizer/post/</link>
       <pubDate>Sat, 22 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/09-gpt2.1/post/</guid>
-      <description>In this series of posts, we will explore the GPT-2 [1] architecture in detail. Unlike other GPT models, OpenAI has released the code for GPT-2, which allows us to investigate the model&amp;rsquo;s inner workings and see how each part of the architecture is implemented. You can find the official repository here: https://github.com/openai/gpt-2/tree/master
-GPT-2 was introduced in 2019, which, by the fast-paced standards of deep learning and LLM development, is considered a long time ago.</description>
+      <guid>https://yugajmera.github.io/posts/09-bpe-tokenizer/post/</guid>
+      <description>In this post, we will look at tokenization, one of the most crucial preprocessing steps in LLMs. Tokenization breaks raw text into smaller units called tokens, which can be words, subwords, or special characters. These unique tokens form a vocabulary, each mapped to a unique token ID. The model then uses an embedding table to convert token IDs into dense vector representations, which are fed into the neural network.
+Unlike other GPT models, OpenAI has released the code for GPT-2 [1], giving us the opportunity to explore the model&amp;rsquo;s inner workings, including the tokenizer and its implementation within the architecture.</description>
     </item>
     <item>
-      <title>Introduction to LLMs: Coding GPT from scratch</title>
+      <title>GPT Series Part 1: Understanding LLMs &amp; Coding GPT-1 from scratch</title>
       <link>https://yugajmera.github.io/posts/08-gpt/post/</link>
       <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
       <guid>https://yugajmera.github.io/posts/08-gpt/post/</guid>
