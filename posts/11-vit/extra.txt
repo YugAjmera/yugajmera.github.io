@@ -1,0 +1,15 @@
+## Swin Transformer
+
+Swin Transformer was an effort to expand the applicability of Transformer such that it can serve as a backbone in computer vision, as it deos for NLP and as CNNs do in vision. They do so by constructing a hierarchial feature map, and use a shifted windown approach, obtaining linear computational complexity to image size.
+
+### Architecture
+
+1. Input RGB image: $(\text{H} \times \text{W} \times 3)$
+2. Patch Parition: Similar to ViT, split the input image into non-overlapping patches, each of size $(\text{P} \times \text{P} \times 3)$, and flatten them. They use a patch size of 4 in their implementation. 
+    * $(\text{H} \times \text{W} \times 3) \rightarrow (\text{H}/4 \times \text{W}/4 \times 4 \times 4 \times 3)$.
+    * Number of tokens: $\text{N} = \text{H}/4 \cdot \text{W}/4$
+    * Output:  $(\text{H}/4 \times \text{W}/4 \times 48)$
+3. Linear embedding: Maps the feature dimension into an arbitary dimension, denoted by $C$. 
+    * $(\text{H}/4 \times \text{W}/4 \times 48) \rightarrow (\text{H}/4 \times \text{W}/4 \times C)$
+
+This forms the input to the transformer blocks in "Stage 1". To produce hierarchial representation, the number of tokens is reduced by patch merging layers as the network gets deeper. 

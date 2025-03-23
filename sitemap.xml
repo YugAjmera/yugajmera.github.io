@@ -2,13 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://yugajmera.github.io/posts/10-gpt2/post/</loc>
-    <lastmod>2025-03-01T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://yugajmera.github.io/posts/</loc>
-    <lastmod>2025-03-01T00:00:00+00:00</lastmod>
+    <lastmod>2025-03-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://yugajmera.github.io/posts/11-vit/post/</loc>
+    <lastmod>2025-03-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://yugajmera.github.io/</loc>
+    <lastmod>2025-03-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://yugajmera.github.io/posts/10-gpt2/post/</loc>
     <lastmod>2025-03-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://yugajmera.github.io/posts/09-bpe-tokenizer/post/</loc>

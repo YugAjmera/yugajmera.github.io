@@ -1,0 +1,154 @@
+---
+title: "Converting a from-scratch GPT Model to LLaMA 2"
+date: 2025-03-10
+math: mathjax
+showToc: true # show contents
+TocOpen: false # open contents automantically
+---
+
+Scaling transformers lead to improvement on many NLP tasks. Notable models include BERT and GPT-2 that we discussed in the previous posts. A significant breakthrough was obtained with GPT-3 a model with
+175 billion parameters. This lead to a series of Large Language Models, and studies related to scaling laws that assumed that more parameters will lead to better performance.
+
+However, it was shown for a given compute budget, the best performances are not achieved by the largest models, but by smaller models trained on more data. This gave rise to the series of language
+models, called LLaMA, openly released by Meta in Feb 2023, that achieves the state-of-the-art performance by training on more tokens than what is typically used.
+
+It is a collection of foundation language models ranging from 7B to 65B parameters, exclusively traiined on publicly available data, making it open-source. LLaMA-13B outperforms GPT-3 (175B) on most benchmarks, despite being 10× smaller. 
+
+High computational requirements have limited the development of LLMs to a few players, hence state-of-art performing open-source models such as LLaMA is a boon to the community.  However, weights were open but under a research-only license (restricted usage), hence we will focus on LLaMA-2. 
+
+Meta released LLaMA-2 models in June 2023, that has the same architecture as llama-1 but, 
+* Doubled the context length from 2048 tokens to 4096 tokens,
+* Trained on even larger data. 
+* Released a family of pretrained and fine-tuned (with RLHF) LLMs, Llama 2 and Llama 2-Chat with a permissive commercial license:
+    * Llama-2-7b
+    * Llama-2-7b-chat
+    * Llama-2-13b
+    * Llama-2-13b-chat
+    * Llama-2-70b
+    * Llama-2-70b-chat
+
+In this post, we will convert our custom 124M GPT model from last post into Llama 2 7B architecture and load its pre-trained weights. So, lets get started. 
+The code can be found here: [https://github.com/meta-llama/llama/tree/main](https://github.com/meta-llama/llama/tree/main)
+
+## Tokenizer
+Llama 1 and 2 model uses Google's [SentencePiece](https://github.com/google/sentencepiece) library instead of OpenAI's tiktoken for tokenizing the input text with the byte-pair encoding (BPE) algorithm. It also a commonly used library that can efficienty both train and inference BPE tokenizers (unlike tiktoken). It is used in both Llama and Mistral series. 
+
+The difference is that sentence piece runs BPE on Unicode code points directly. We discussed previously that this can result in a large base vocabulary of over 130,000, and can lead to underfitting as many rare or infrequent tokens may appear only a few times in the training data. 
+
+Sentence peice handles this using special treatment of rare code points. It uses `character_coverage` hyperparameter to determines how much of the total text corpus's characters are included in the model's base vocabulary before applying subword tokenization. 
+* If `character_coverage = 1.0`, all code points from the training data would be included in the vocabulary.
+* If `character_coverage = 0.99995` which is what llama2 uses, SentencePiece adds up character frequencies until it reaches 99.995% of all text and only those are included. Very rare code points are then:
+    * If `byte_fallback=False`, mapped to the unknown UNK token
+    * If `byte_fallback=True`, which is what llama2 uses, they are encoded with UTF-8 and used a raw bytes. 
+
+To summarize, 
+
+* Tiktoken - encodes text into UTF-8 byte steams and then BPEs bytes
+* Sentence Piece - Converts text into Unicode code points and BPEs them. Optionally fall back to UTF-8 bytes for rare code points. 
+
+### Using the SentencePiece library
+Meta AI shared the original Llama 2 model weights and tokenizer vocabulary on the Hugging Face Hub. We will download the tokenizer vocabulary from the Hub and load it into SentencePiece. 
+
+Please note that Meta AI requires that you accept the Llama 2 licensing terms before you can download the files; to do this, you have to create a Hugging Face Hub account and visit the [meta-llama/Llama-2-7b](https://huggingface.co/meta-llama/Llama-2-7b) repository to accept the term. 
+
+Once you are granted access to this model, go to Files and versions section to obtain the following two files:
+1.  `tokenizer.model`-  This is the actual tokenizer model file that we can load in our SentencePiece library.
+2. `consolidated.00.pth` - Contains the weights of the model.
+
+Heres how we can encode a text:
+```python
+import sentencepiece as spm
+
+sp = spm.SentencePieceProcessor()
+sp.load('tokenizer.model')
+print(sp.encode("Hello World!"))
+
+# Print vocab size
+print("Vocabulary size:", sp.vocab_size()) 
+``` 
+```csharp
+[15043, 2787, 29991]
+Vocabulary size: 32000
+```
+
+The total vocabulary size is 32k tokens. I would not go into the details of training the tokenizer and it is out of the scope of this post. 
+
+
+
+
+## Architecture
+
+In this section, we go through the GPT model code from the last post and modify it step by step to implement the Llama 2 architecture. Later we will load the Llama 2 weights shared by Meta AI and generate text from it. 
+
+Let's take a look at the trained model weights first,
+
+```python
+# Load the checkpoint
+state_dict = torch.load('consolidated.00.pth', weights_only=True)
+
+for name, param in state_dict.items():
+    print(name, param.shape)
+```
+```
+tok_embeddings.weight torch.Size([32000, 4096])
+norm.weight torch.Size([4096])
+output.weight torch.Size([32000, 4096])
+layers.0.attention.wq.weight torch.Size([4096, 4096])
+layers.0.attention.wk.weight torch.Size([4096, 4096])
+layers.0.attention.wv.weight torch.Size([4096, 4096])
+layers.0.attention.wo.weight torch.Size([4096, 4096])
+layers.0.feed_forward.w1.weight torch.Size([11008, 4096])
+layers.0.feed_forward.w2.weight torch.Size([4096, 11008])
+layers.0.feed_forward.w3.weight torch.Size([11008, 4096])
+layers.0.attention_norm.weight torch.Size([4096])
+layers.0.ffn_norm.weight torch.Size([4096])
+...
+layers.31.ffn_norm.weight torch.Size([4096])
+rope.freqs torch.Size([64])
+```
+The output lists the layer names along with their corresponding tensor shapes, giving us insights into Llama-2's architecture. There are several modifications required to convert our GPT-2 model class into Llama-2. Let's go into each of them in detail.
+
+
+### 1. Implement Rotary Positional Embeddings (RoPE)
+In the GPT model, we used the positional embeddings that captures the absolute position of that token in the input sequence. Unlike traditional absolute positional embeddings, Llama uses rotary position embeddings (RoPE) [2], which enable it to capture both absolute and relative positional information simultaneously. 
+
+#### Limitations of Absolute Positional Embeddings
+Despite their widespread use, absolute positional embeddings are not without drawbacks:
+1. Limited Sequence Length: Since positional vectors are learned during training, it learns vectors only up to a certain point, which is its context length. It cannot inherently represent positions beyond that limit.
+2. Independence of Positional Embeddings: Each positional embedding is independent of others. This means that in the model’s view, the difference between positions 1 and 2 is the same as between positions 2 and 500. However, intuitively, positions 1 and 2 should be more closely related than position 500, which is significantly farther away. This lack of relative positioning can hinder the model’s ability to understand the nuances of language structure.
+
+
+### 1. Replace LayerNorm with RMSNorm layer
+
+### 2. Replace GELU with SwiGLU activation
+
+
+
+grouped-query attention
+
+### Updated Transformer Decoder block
+
+### Defining the LLaMA model
+
+1. Pre-norm transformer just like GPT, but with RMSNorm normalizing function. 
+2. Used SwiGLU non-linearity in the architecture, just like PaLM to improve performace. We use a dimension of 2/3*4d instead of 4d as in PaLM.
+3. We remove the absolute positional embeddings, and instead, add rotary positional embeddings (RoPE), introduced by Su et al. (2021), at each layer of the network.
+
+## Pre-training
+Exactly similar to GPT-3. 
+
+{{< figure src="../llama-1-2.png" align="center" caption="Token counts refer to pretraining data only. All models are trained with a global batch-size of 4M tokens. Bigger models — 34B and 70B — use Grouped-Query Attention (GQA) for improved inference scalability.">}}
+
+Fine-Tuning Details. For supervised fine-tuning, we use a cosine learning rate schedule with an initial
+learning rate of 2 × 10−5
+, a weight decay of 0.1, a batch size of 64, and a sequence length of 4096 tokens.
+
+For the fine-tuning process, each sample consists of a prompt and an answer. To ensure the model sequence
+length is properly filled, we concatenate all the prompts and answers from the training set. A special token is
+utilized to separate the prompt and answer segments. We utilize an autoregressive objective and zero-out
+the loss on tokens from the user prompt, so as a result, we backpropagate only on answer tokens. Finally, we
+fine-tune the model for 2 epochs.
+
+Overall, our entire training dataset contains roughly 1.4T tokens after tokenization. For most of
+our training data, each token is used only once during training, with the exception of the Wikipedia
+and Books domains, over which we perform approximately two epochs.
