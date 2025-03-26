@@ -13,3 +13,9 @@ Swin Transformer was an effort to expand the applicability of Transformer such t
     * $(\text{H}/4 \times \text{W}/4 \times 48) \rightarrow (\text{H}/4 \times \text{W}/4 \times C)$
 
 This forms the input to the transformer blocks in "Stage 1". To produce hierarchial representation, the number of tokens is reduced by patch merging layers as the network gets deeper. 
+
+Notably, the transformer's sequence length (i.e., the number of patches) is inversely proportional to the square of the patch size. This means that models with smaller patch sizes are computationally more expensive since they process longer sequences.
+
+Additionally, for a fixed patch size, higher-resolution images result in longer sequences, further increasing computational cost. In fact, the complexity grows quadratically with image size, making ViTs inefficient as general-purpose backbones for handling arbitrary-sized images.
+
+To address this limitation, Microsoft Research introduced the Swin Transformer [[2]](#references), which you can read more about here: [https://amaarora.github.io/posts/2022-07-04-swintransformerv1.html](https://amaarora.github.io/posts/2022-07-04-swintransformerv1.html). It has become go-to transformer-based backbone for vision tasks today.

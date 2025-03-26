@@ -1,0 +1,19 @@
+---
+title: "Exploring Multimodal LLMs with CLIP"
+date: 2025-03-24
+math: mathjax
+showToc: true # show contents
+TocOpen: false # open contents automantically
+---
+
+Multimodal LLMs are large language models capable of processing multiple types of inputs, where each “modality” refers to a specific type of data—such as text, sound, images, videos, and more. Until now, we have looked at two modalities seperately: text in the GPT series and images in Vision Transformer. In this post, we will focus on combining the two modalities togethor, resulting in a architecture called "Vision-Langauage" models. 
+
+
+
+
+
+
+
+
+## References
+* [Sabstian Raschka's blog: Understanding Multimodal LLMs](https://sebastianraschka.com/blog/2024/understanding-multimodal-llms.html)
