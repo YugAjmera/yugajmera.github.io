@@ -10,82 +10,91 @@
     <atom:link href="https://yugajmera.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Transformers for Image Classification: ViT and CLIP</title>
-      <link>https://yugajmera.github.io/posts/11-vit/post/</link>
+      <link>https://yugajmera.github.io/posts/07-vit/post/</link>
       <pubDate>Mon, 17 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/11-vit/post/</guid>
+      <guid>https://yugajmera.github.io/posts/07-vit/post/</guid>
       <description>Modelling in computer vision has long been dominated by convolutional neural networks (CNNs). We’ve already discussed famous architectures like VGGNet and ResNet in previous posts, which have served as the primary backbones for a variety of vision tasks.
 In contrast, network architectures in natural language processing (NLP) have evolved along a different trajectory. The dominant architecture in NLP today is the Transformer, designed for sequence modeling. Models like GPT-3 have achieved remarkable success, scaling to over 100 billion parameters thanks to their computational efficiency and scalability.</description>
     </item>
     <item>
       <title>GPT Series Part 3: Building GPT-2 &amp; Sampling Techniques</title>
-      <link>https://yugajmera.github.io/posts/10-gpt2/post/</link>
+      <link>https://yugajmera.github.io/posts/06-gpt2/post/</link>
       <pubDate>Sat, 01 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/10-gpt2/post/</guid>
+      <guid>https://yugajmera.github.io/posts/06-gpt2/post/</guid>
       <description>Building on our previous exploration of GPT-1, let&amp;rsquo;s now modify its architecture to recreate the GPT-2 [1] small model, which has 124 million parameters. While the original paper refers to this as 117M, OpenAI later clarified the actual count.
 One major advantage of GPT-2 is that OpenAI has released its pre-trained weights, allowing us to load them into our implementation. This not only serves as a sanity check for our model but also provides a strong foundation for fine-tuning.</description>
     </item>
     <item>
       <title>GPT Series Part 2: Implementing BPE Tokenizer</title>
-      <link>https://yugajmera.github.io/posts/09-bpe-tokenizer/post/</link>
+      <link>https://yugajmera.github.io/posts/06-gpt-tokenizer/post/</link>
       <pubDate>Sat, 22 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/09-bpe-tokenizer/post/</guid>
+      <guid>https://yugajmera.github.io/posts/06-gpt-tokenizer/post/</guid>
       <description>In this post, we will look at tokenization, one of the most crucial preprocessing steps in LLMs. Tokenization breaks raw text into smaller units called tokens, which can be words, subwords, or special characters. These unique tokens form a vocabulary, each mapped to a unique token ID. The model then uses an embedding table to convert token IDs into dense vector representations, which are fed into the neural network.
 Unlike other GPT models, OpenAI has released the code for GPT-2 [1], giving us the opportunity to explore the model&amp;rsquo;s inner workings, including the tokenizer and its implementation within the architecture.</description>
     </item>
     <item>
       <title>GPT Series Part 1: Understanding LLMs &amp; Coding GPT-1 from scratch</title>
-      <link>https://yugajmera.github.io/posts/08-gpt/post/</link>
+      <link>https://yugajmera.github.io/posts/06-gpt/post/</link>
       <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/08-gpt/post/</guid>
+      <guid>https://yugajmera.github.io/posts/06-gpt/post/</guid>
       <description>By now, you&amp;rsquo;ve probably used OpenAI&amp;rsquo;s ChatGPT—a chatbot that has taken the AI community by storm and transformed the way we work. First released in 2022 with GPT-3.5 (Generative Pre-trained Transformer 3.5) as its backend model, it reached one million users in just five days and a staggering 100 million in two months.
 ChatGPT interface
 The unprecedented success of ChatGPT fueled further research into the technology behind it—Large Language Models (LLMs).</description>
     </item>
     <item>
       <title>Generalizing Attention with Transformers</title>
-      <link>https://yugajmera.github.io/posts/07-transformer/post/</link>
+      <link>https://yugajmera.github.io/posts/05-transformer/post/</link>
       <pubDate>Mon, 18 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/07-transformer/post/</guid>
+      <guid>https://yugajmera.github.io/posts/05-transformer/post/</guid>
       <description>In the previous post, we explored sequence modeling using an encoder-decoder architecture connected through an attention mechanism. This mechanism the decoder to &amp;ldquo;attend&amp;rdquo; to different parts of the input at each time step while generating the output sequence.
 Attention can also be applied to a variety of tasks, such as image captioning. In this case, the decoder RNN focuses on different regions of the input image as it generates each word of the output caption.</description>
     </item>
     <item>
       <title>Sequence Modeling with Recurrent Neural Networks and Attention</title>
-      <link>https://yugajmera.github.io/posts/06-attention/post/</link>
+      <link>https://yugajmera.github.io/posts/05-attention/post/</link>
       <pubDate>Fri, 08 Nov 2024 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/06-attention/post/</guid>
+      <guid>https://yugajmera.github.io/posts/05-attention/post/</guid>
       <description>In previous discussions, we focused on feedforward neural networks, which take a single image as input, process it through multiple layers of convolution, normalization, or fully connected layers, and output a single label for image classification tasks. This is a one-to-one relationship: a single image maps to a single output label.
 However, there are other types of problems we want to solve using deep learning that involve variable-length sequences as both inputs and outputs.</description>
     </item>
     <item>
+      <title>Generative Image Models Part 1: VAE and GANs</title>
+      <link>https://yugajmera.github.io/posts/04-gen1/post/</link>
+      <pubDate>Wed, 16 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/04-gen1/post/</guid>
+      <description>Machine learning can broadly be categorized into three types:
+Supervised Learning: The model is trained to learn a mapping from input data $\mathbf{x}$ to output labels $\mathbf{y}$. This includes tasks like image classification, object detection, and image captioning. However, supervised learning depends heavily on large, labeled datasets—typically created through extensive human annotation.
+Unsupervised Learning: The model is trained to discover patterns or underlying structures within unlabelled data. A key objective here is to learn the data distribution $p_{data}(\mathbf{x})$, enabling us to sample from it to generate new data.</description>
+    </item>
+    <item>
       <title>ImageNet Challenge: The Olympics of Deep Learning</title>
-      <link>https://yugajmera.github.io/posts/05-imagenet/post/</link>
-      <pubDate>Mon, 14 Nov 2022 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/05-imagenet/post/</guid>
+      <link>https://yugajmera.github.io/posts/03-imagenet/post/</link>
+      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
+      <guid>https://yugajmera.github.io/posts/03-imagenet/post/</guid>
       <description>The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) was an annual competition that took place from 2010 to 2017, attracting teams from around the world to showcase their best-performing image classification models. This challenge became a crucial benchmark in the field, with its winners significantly influencing the landscape of image recognition and deep learning research.
 The competition used a subset of the ImageNet dataset, containing 1.3M training examples across 1000 different classes, with 50k validation and 100k test examples.</description>
     </item>
     <item>
       <title>Convolutional Neural Networks: Deep Learning for Image Recognition</title>
-      <link>https://yugajmera.github.io/posts/04-cnn/post/</link>
+      <link>https://yugajmera.github.io/posts/02-cnn/post/</link>
       <pubDate>Sun, 18 Sep 2022 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/04-cnn/post/</guid>
+      <guid>https://yugajmera.github.io/posts/02-cnn/post/</guid>
       <description>Linear classifiers or MLPs that we have discussed so far don&amp;rsquo;t respect the 2D spatial structure of input images. These images are flattened into a 1D vector before passing them through the network which destroys the spatial structure of the image.
 This creates a need for a new computational model that can operate on images while preserving spatial relationships — Convolutional Neural Networks (CNNs). Let&amp;rsquo;s understand the components of this CNN model.</description>
     </item>
     <item>
       <title>Deep Learning Basics Part 3: The Cherry on Top</title>
-      <link>https://yugajmera.github.io/posts/03-dl3/post/</link>
+      <link>https://yugajmera.github.io/posts/01-dl3/post/</link>
       <pubDate>Sun, 21 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/03-dl3/post/</guid>
+      <guid>https://yugajmera.github.io/posts/01-dl3/post/</guid>
       <description>We’ve already coded our first neural network architecture from scratch and learned how to train it. Our deep learning cake is almost ready—but we still need the toppings to make it more appealing. In this part, we’re going to discuss the available toppings—concepts that enhance optimization and help us reach a better final solution for the model’s weights. The most important topping among them is Regularization.
 Regularization When optimizing, our goal is to find the specific set of weights that minimize loss our training data, aiming for the highest possible accuracy on the test set.</description>
     </item>
     <item>
       <title>Deep Learning Basics Part 2: The Icing</title>
-      <link>https://yugajmera.github.io/posts/02-dl2/post/</link>
+      <link>https://yugajmera.github.io/posts/01-dl2/post/</link>
       <pubDate>Fri, 05 Aug 2022 00:00:00 +0000</pubDate>
-      <guid>https://yugajmera.github.io/posts/02-dl2/post/</guid>
+      <guid>https://yugajmera.github.io/posts/01-dl2/post/</guid>
       <description>In the last post, we introduced Linear Classifiers as the simplest model in deep learning for image classification problems. We discussed how Loss Functions express preferences over different choices of weights, and how Optimization minimizes these loss functions to train the model.
 However, linear classifiers have limitations: their decision boundaries are linear, which makes them inadequate for classifying complex data. One option is to manually extract features from the input image and transform them into a feature space, hoping that it makes the data linearly separable.</description>
     </item>

@@ -1,0 +1,38 @@
+Let's manually count the number of parameters in $T$ blocks.  
+
+* Number of parameters in one Multi-Head Self-Attention:
+    - Hyperparameters: Dimensions $d_{in} = d_{out} = d_{model}$, Number of Heads $H$, Context Length $N$.
+    - Calculation: 4 Linear layers = 3 without bias, and 1 with bias. 
+      $4 * (d_{model} * d_{model}) + d_{model} = 4 d_{model}^2 + d_{model}$
+* Number of Parameters in one MLP:
+     - Hyperparameters: Dimensions $d_{in} = d_{out} = d_{model}$, inner-layer dimension $d_{ff} = 4 * d_{model}$.
+     - Calculation: 2 Linear layers with bias
+     $ 2 * (d_{model} * d_{ff}) + d_{ff} + d_{model} = 8 d_{model}^2 + 5 d_{model}$
+* Number of parameters in one Block: 
+    - 1 Multi-Head Self-Attention + 1 MLP = $12 d_{model}^2 + 6 d_{model}$.
+    - 2 LayerNorms; Each Layer norm has 2 parameters (gamma and beta)
+        * Calculation: $2 * (2 * d_{model})$ = $4 d_{model}$
+* Number of parameters in GPT-model:
+    - Hyperparameters: Dimension $\text{D} = d_{model}$, Vocab size $\text{V}$, Context Length $\text{N}$, Number of Blocks $T$.
+    - Calculation:
+        - Token Embedding layer: $\text{V} * d_{model}$
+        - Position Embedding layer: $\text{N} * d_{model}$
+        - Blocks: $T * (12 d_{model}^2 + 10 d_{model})$
+        - LayerNorm layer: $2 * d_{model}$
+        - Language modelling head layer (with bias): $\text{V} * d_{model} + V$
+
+
+Number of parameters:
+- Token Embedding layer: $\text{V} * d_{model} = 65 * 64 = 4160$
+- Position Embedding layer: $\text{N} * d_{model} = 32 * 64 = 2048$
+- Blocks: $T * (12 d_{model}^2 + 10 d_{model})$ = $4 (12 * 64^2 + 10 * 64)$ = $4 (49152 + 640)$ = $199168$
+- Language modelling head: $\text{V} * d_{model} = 65 * 64 = 4160$
+- LayerNorm layer: $2 * d_{model} = 2 * 64 = 128$
+
+- Total: $209729$ parameters. 
+
+
+This requires the model to "see" both sides of the masked token, which the encoder of the Transformer can do using self-attention. By guessing the missing words, BERT learns how words relate to each other, improving its context awareness.
+
+
+Our Tiny Shakespeare-trained model essentially acts as a text completer, generating text in the same style as Shakespeare when given a prompt. Similarly, a base LLM (large language model) functions as an autocompleter, predicting the next most probable tokens based on internet-scale training data.

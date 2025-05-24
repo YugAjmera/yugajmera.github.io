@@ -1,0 +1,11 @@
+$\*$ - I have tried generating new images using an autoencoder by first obtaining the latent representation of two images and then performing the reconstruction on the linear interpolation between them. Below are the results on the CIFAR10 dataset, with the first two columns showing original images and the last one showing the new image.
+
+[![](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjWXLCNcvoDPFcNgYPn1br6j6y7Qq1umC5XREoMcX8m72IcglaPpDUw--zT9hZAeNjcwqxeRwKcRu0f_w8iIgBb0AXkO0gX8X1Nbidy33I6pf9n87j5FjJlB3erIpnCb3MDoD7KcTmu9JqGFqIAGxwSzNyh-rMlXEmm2uAx6PwZjSi6I9TeFo7EntOr6A/w294-h320/res.png)](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjWXLCNcvoDPFcNgYPn1br6j6y7Qq1umC5XREoMcX8m72IcglaPpDUw--zT9hZAeNjcwqxeRwKcRu0f_w8iIgBb0AXkO0gX8X1Nbidy33I6pf9n87j5FjJlB3erIpnCb3MDoD7KcTmu9JqGFqIAGxwSzNyh-rMlXEmm2uAx6PwZjSi6I9TeFo7EntOr6A/s425/res.png)
+
+Some prominent papers,
+
+1.  [Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks](https://arxiv.org/abs/1511.06434) (DCGAN): Architectures of Generator and Discriminator created with CNNs.
+  
+3.  [Wasserstein GAN](https://arxiv.org/abs/1701.07875) (WGAN): Improvement over traditional GAN training.
+  
+5.  [Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks](https://arxiv.org/abs/1703.10593) (CycleGAN): For image-to-image translation
